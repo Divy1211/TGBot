@@ -1,0 +1,18 @@
+{
+  "name": "aoe2tgbot2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.ts",
+  "scripts": {
+    "deploy": "ts-node src/main.ts",
+    "dev": "nodemone src/main.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^13.7.0",
+    "dotenv": "^16.0.1",
+    "wokcommands": "^1.5.3"
+  }
+}
