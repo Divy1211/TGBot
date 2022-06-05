@@ -6,6 +6,9 @@ import path from "path";
 import dotenv from "dotenv";
 dotenv.config();
 
+import { User } from "./entities/User";
+import {AppDataSource} from "./data-source";
+
 export const client = new Djs.Client({
     intents: [
         Intents.FLAGS.GUILDS,
@@ -40,6 +43,7 @@ function recursiveReaddir(dir: string): string[] {
  * When a command is renamed in or deleted from the code files, it is not automatically removed from the bot.
  *
  * @param commandsDir The directory that contains all the command code files.
+ * @param testServers The test servers to unregister the commands from
  */
 async function unregisterRenamedCommands(commandsDir: string, testServers: string[]): Promise<void> {
     const commandNames = recursiveReaddir(commandsDir).map((name) => name.replace(".ts", ""));
@@ -62,6 +66,15 @@ async function unregisterRenamedCommands(commandsDir: string, testServers: strin
 }
 
 async function main() {
+
+    await AppDataSource.initialize();
+
+    const user = new User("test")
+    await AppDataSource.manager.save(user)
+
+    const users = await AppDataSource.manager.find(User)
+    console.log("Loaded users: ", users)
+
     const commandDir = path.join(__dirname, "commands");
     const testServers = [process.env.TEST!];
 

@@ -1,3 +1,10 @@
 .env
+.idea/*
+.vscode/*
+database.sqlite
+database.sqlite-shm
+database.sqlite-wal
+dist/*
 node_modules/*
-.idea
+tmp/*
+temp/*

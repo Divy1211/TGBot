@@ -4,12 +4,15 @@ import { client } from "../main";
 
 export default {
     category: "Tools",
-    description: "Responds with the ping of the user and the bot.",
+    description: "Shows ping information for the bot",
 
     slash: true,
     testOnly: true,
 
     callback: async ({ interaction }) => {
+        // sends a message and checks the difference between the createdTimestamp of the message and original
+        // interaction for latency
+
         const message = await interaction.channel!.send('Testing Ping...');
         message.delete();
 
@@ -18,12 +21,12 @@ export default {
             .setTitle("🏓Ping Information")
             .addFields([
                 {
-                    name: `${interaction.user.username}'s Ping`,
+                    name: `Bot Latency`,
                     value: `\`${message.createdTimestamp - interaction.createdTimestamp}ms\``,
                     inline: true,
                 },
                 {
-                    name: "Bot's Ping",
+                    name: "API Latency",
                     value: `\`${client.ws.ping}ms\``,
                     inline: true,
                 }
