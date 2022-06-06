@@ -1,10 +1,10 @@
 import Djs, {Intents} from "discord.js";
 import WOKC from "wokcommands";
+import dotenv from "dotenv";
+dotenv.config();
 
 import fs from "fs";
 import path from "path";
-import dotenv from "dotenv";
-dotenv.config();
 
 import { User } from "./entities/User";
 import {AppDataSource} from "./data-source";
@@ -69,11 +69,13 @@ async function main() {
 
     await AppDataSource.initialize();
 
+    // testing code
     const user = new User("test")
     await AppDataSource.manager.save(user)
 
     const users = await AppDataSource.manager.find(User)
     console.log("Loaded users: ", users)
+    // testing code
 
     const commandDir = path.join(__dirname, "commands");
     const testServers = [process.env.TEST!];
