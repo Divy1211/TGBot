@@ -1,0 +1,23 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^7.5.3",
+    "discord-modals": "^1.3.7",
+    "discord.js": "^13.7.0",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "node-gyp": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.5.0"
+  }
+}
