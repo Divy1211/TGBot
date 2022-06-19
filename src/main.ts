@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import WOKC from "wokcommands";
-import {AppDataSource} from "./data-source";
 
+import {AppDataSource} from "./data-source";
 import {User} from "./entities/User";
 
 dotenv.config();
@@ -69,16 +69,15 @@ async function main() {
 
     await AppDataSource.initialize();
 
-    // testing code
-    // const acc = new SteamAccount("uwu");
-    // await AppDataSource.manager.save(acc);
+    // testing code start
+    const user = new User("test");
+    await user.save();
 
-    // const user = new User("test", [acc]);
-    // await AppDataSource.manager.save(user);
-    const users = await AppDataSource.manager.find(User);
-    console.log("Loaded users: ", users);
-    console.log(users[0].steamAccounts);
-    // testing code
+    // @ts-ignore
+    const users = await User.find({relations: {guilds: true, accounts: true, profiles: true, queues: true}});
+    console.log(users);
+
+    // testing code end
 
     const commandDir = path.join(__dirname, "commands");
     const testServers = [process.env.TEST!];
@@ -92,6 +91,5 @@ async function main() {
     });
 }
 
-main();
-// client.on("ready", main);
-// client.login(process.env.TOKEN);
+client.on("ready", main);
+client.login(process.env.TOKEN);
