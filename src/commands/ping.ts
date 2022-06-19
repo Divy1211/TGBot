@@ -1,6 +1,6 @@
-import { MessageEmbed } from "discord.js";
-import { ICommand } from "wokcommands";
-import { client } from "../main";
+import {MessageEmbed} from "discord.js";
+import {ICommand} from "wokcommands";
+import {client} from "../main";
 
 export default {
     category: "Tools",
@@ -9,11 +9,11 @@ export default {
     slash: true,
     testOnly: true,
 
-    callback: async ({ interaction }) => {
+    callback: async ({interaction}) => {
         // sends a message and checks the difference between the createdTimestamp of the message and original
         // interaction for latency
 
-        const message = await interaction.channel!.send('Testing Ping...');
+        const message = await interaction.channel!.send("Testing Ping...");
         message.delete();
 
         return new MessageEmbed()
@@ -29,7 +29,7 @@ export default {
                     name: "API Latency",
                     value: `\`${client.ws.ping}ms\``,
                     inline: true,
-                }
+                },
             ]);
-    }
+    },
 } as ICommand;

@@ -1,5 +1,4 @@
 .env
-.idea/*
 .vscode/*
 database.sqlite
 database.sqlite-shm

@@ -1,13 +1,13 @@
 import Djs, {Intents} from "discord.js";
-import WOKC from "wokcommands";
 import dotenv from "dotenv";
-dotenv.config();
-
 import fs from "fs";
 import path from "path";
-
-import { User } from "./entities/User";
+import WOKC from "wokcommands";
 import {AppDataSource} from "./data-source";
+
+import {User} from "./entities/User";
+
+dotenv.config();
 
 export const client = new Djs.Client({
     intents: [
@@ -29,7 +29,7 @@ function recursiveReaddir(dir: string): string[] {
     let fileNames: string[] = [];
     let names = fs.readdirSync(dir);
     names.forEach((name) => {
-        if(name.match(/^\w*?\.\w+$/)) // if name is a file
+        if (name.match(/^\w*?\.\w+$/)) // if name is a file
             fileNames.push(name);
         else
             fileNames.push(...recursiveReaddir(path.join(dir, name)));
@@ -48,17 +48,17 @@ function recursiveReaddir(dir: string): string[] {
 async function unregisterRenamedCommands(commandsDir: string, testServers: string[]): Promise<void> {
     const commandNames = recursiveReaddir(commandsDir).map((name) => name.replace(".ts", ""));
 
-    for(const guildId of testServers) {
-        console.log(`Unregistering commands from test server: ${guildId}`)
+    for (const guildId of testServers) {
+        console.log(`Unregistering commands from test server: ${guildId}`);
         const guild = client.guilds.cache.get(guildId);
         let commands = await guild?.commands.fetch();
 
-        if(!commands)
+        if (!commands)
             return;
 
         commands.forEach((command, id) => {
-            if(!commandNames.includes(command.name)) {
-                console.log(`    - '${command.name}'`, 'color: #ffda55');
+            if (!commandNames.includes(command.name)) {
+                console.log(`    - '${command.name}'`, "color: #ffda55");
                 command.delete();
             }
         });
@@ -70,11 +70,14 @@ async function main() {
     await AppDataSource.initialize();
 
     // testing code
-    const user = new User("test")
-    await AppDataSource.manager.save(user)
+    // const acc = new SteamAccount("uwu");
+    // await AppDataSource.manager.save(acc);
 
-    const users = await AppDataSource.manager.find(User)
-    console.log("Loaded users: ", users)
+    // const user = new User("test", [acc]);
+    // await AppDataSource.manager.save(user);
+    const users = await AppDataSource.manager.find(User);
+    console.log("Loaded users: ", users);
+    console.log(users[0].steamAccounts);
     // testing code
 
     const commandDir = path.join(__dirname, "commands");
@@ -89,5 +92,6 @@ async function main() {
     });
 }
 
-client.on("ready", main);
-client.login(process.env.TOKEN)
+main();
+// client.on("ready", main);
+// client.login(process.env.TOKEN);
