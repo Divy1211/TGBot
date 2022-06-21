@@ -174,13 +174,39 @@ client.on("modalSubmit",async (modal:any) => {
                 else {
                     // assign the user with a role
                     let role = modal.guild.roles.cache.find((r:any) => r.name == groupname);
-                    modal.member.roles.add(role);
-
+                    modal.member.roles.add(role);        
                     let num = group.num+1;
+                    // inform all players in the queue
+                    const playersName = group.members.split("$");
+                    
                     let in_game = 0;
                     // check whether there are enough players
                     if (num==process.env.MAX_NUM) {
                         in_game = 1;
+                        for (let i=0;i<playersName.length-1;i++){
+                            let playerName = playersName[i];
+                            try{
+                                let player = client.users.cache.find(u => u.username === playerName);
+                                player!.send(`There are enough players, you can start the game with \\command`)
+                            }
+                            catch{
+                                console.log(playerName);
+                            }
+                            
+                        }
+                    }
+                    else {
+                        for (let i=0;i<playersName.length-1;i++){
+                            let playerName = playersName[i];
+                            try{
+                                let player = client.users.cache.find(u => u.username === playerName);
+                                player!.send(`1 player joined the queue, there are ${num}} remaining players in the queue`)
+                            }
+                            catch{
+                                console.log(playerName);
+                            }
+                            
+                        }
                     }
                     let updated_group = {
                         id: group.id,

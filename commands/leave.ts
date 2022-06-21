@@ -10,7 +10,7 @@ export default {
     description : "leave the current group",
     slash : true,
     testOnly : true,
-    callback : ({interaction,guild}) => {
+    callback : ({interaction,guild,client}) => {
         let getQueue = sql.prepare("SELECT * FROM queues WHERE name = ?");
         let setQueue = sql.prepare("INSERT OR REPLACE INTO queues \
         (id, name, members, num, in_game) \
@@ -26,9 +26,9 @@ export default {
         }
         else {
             // get group information from database
-            let group_name = user.queue_name;
+            let groupName = user.queue_name;
             // console.log(group_name)
-            let group = getQueue.get(group_name);
+            let group = getQueue.get(groupName);
             // console.log(group)
             // if the group is in game
             if (group.in_game){
@@ -37,31 +37,46 @@ export default {
             // otherwise let the user leave the group
             else {
                 // remove the role of the user
-                const Role = interaction.guild!.roles.cache.find((r:any) => r.name == group_name);
+                const Role = interaction.guild!.roles.cache.find((r:any) => r.name == groupName);
                 let member = guild?.members.cache.get(interaction.user.id)
                 member?.roles.remove(Role!)
 
                 // change user's state
                 updateUser.run(user.name);
-                // change group's state
+
                 // check if the group only have this member
                 if (group.num===1){
                     // delete a role
-                    let role = interaction.guild!.roles.cache.find((r:any) => r.name == group_name);
+                    let role = interaction.guild!.roles.cache.find((r:any) => r.name == groupName);
                     role?.delete()
-                    sql.prepare("DELETE FROM queues WHERE name = ?").run(group_name);
+                    // delete the queue
+                    sql.prepare("DELETE FROM queues WHERE name = ?").run(groupName);
                 }
                 else {
-                    let new_group = {
+                    // inform all players in the queue
+                    const playersName = group.members.split("$");
+                    for (let i=0;i<playersName.length-1;i++){
+                        let playerName = playersName[i];
+                        try{
+                            let player = client.users.cache.find(u => u.username === playerName);
+                            player!.send(`1 player left the queue, there are ${group.num-1} remaining players in the queue`)
+                        }
+                        catch{
+                            console.log(playerName);
+                        }
+                        
+                    }
+                    // update the group information
+                    let newGroup = {
                         id: group.id,
                         name: group.name,
                         members: remove_name(group.members,user.name),
                         num: group.num-1,
                         in_game: 0,
                     }
-                    setQueue.run(new_group)
+                    setQueue.run(newGroup)
                 }
-                interaction.reply({content:`You have leaved the group ${group_name}`,ephemeral:true})
+                interaction.reply({content:`You have leaved the group ${groupName}`,ephemeral:true})
 
                 }
             }     
