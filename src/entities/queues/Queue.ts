@@ -1,0 +1,44 @@
+import {BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+
+import {Guild} from "../Guild";
+import {User} from "../User";
+import {Leaderboard} from "./Leaderboard";
+import {Pool} from "./Pool";
+
+@Entity()
+export class Queue extends BaseEntity {
+    @PrimaryGeneratedColumn()
+    uuid!: number;
+
+    @Column()
+    numPlayers: number;
+
+    @Column()
+    channelId: string;
+
+    @ManyToOne(() => Guild, (guild: Guild) => guild.queues, {cascade: true})
+    guild?: Guild;
+
+    @ManyToMany(() => Pool, (pool: Pool) => pool.queues)
+    @JoinTable()
+    pools?: Pool[];
+
+    @ManyToMany(() => User, (user: User) => user.queues, {cascade: true, eager: true})
+    @JoinTable()
+    users!: User[];
+
+    @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.queue, {cascade: true})
+    leaderboard?: Leaderboard;
+
+    constructor();
+    constructor(guild: Guild, leaderboard: Leaderboard, numPlayers: number, channelId: string);
+
+    constructor(guild?: Guild, leaderboard?: Leaderboard, numPlayers?: number, channelId?: string) {
+        super();
+
+        this.guild = guild;
+        this.leaderboard = leaderboard;
+        this.numPlayers = numPlayers ?? -1;
+        this.channelId = channelId ?? "";
+    }
+}

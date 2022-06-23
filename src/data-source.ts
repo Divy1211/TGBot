@@ -2,9 +2,12 @@ import "reflect-metadata";
 import {DataSource} from "typeorm";
 
 import {Guild} from "./entities/Guild";
-import {Leaderboard} from "./entities/Leaderboard";
-import {Queue} from "./entities/Queue";
-import {PlayerStatistics} from "./entities/stats/PlayerStatistics";
+import {GameMap} from "./entities/queues/GameMap";
+import {Leaderboard} from "./entities/queues/Leaderboard";
+import {Pool} from "./entities/queues/Pool";
+import {PoolMap} from "./entities/queues/PoolMap";
+import {Queue} from "./entities/queues/Queue";
+import {PlayerStats} from "./entities/stats/PlayerStats";
 import {User} from "./entities/User";
 import {Account} from "./entities/user_data/Account";
 import {Profile} from "./entities/user_data/Profile";
@@ -14,7 +17,7 @@ export const AppDataSource = new DataSource({
     database: "database.sqlite",
     synchronize: true,
     logging: true,
-    entities: [PlayerStatistics, Account, Profile, Guild, Leaderboard, Queue, User],
+    entities: [GameMap, Leaderboard, Pool, PoolMap, Queue, PlayerStats, Account, Profile, Guild, User],
     migrations: [],
     subscribers: [],
 });

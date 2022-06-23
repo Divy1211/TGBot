@@ -8,13 +8,17 @@ export class Profile extends BaseEntity {
     uuid!: number;
 
     @Column()
-    id: string;
+    id!: string;
 
     @ManyToOne(() => User, (user: User) => user.profiles)
-    user!: User;
+    user?: User;
 
-    constructor(id: string) {
+    constructor();
+    constructor(id: string);
+
+    constructor(id?: string) {
         super();
-        this.id = id;
+
+        this.id = id ?? "";
     }
 }

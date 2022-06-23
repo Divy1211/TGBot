@@ -1,44 +1,48 @@
 import {BaseEntity, Entity, ManyToMany, OneToMany, PrimaryColumn} from "typeorm";
 
 import {Guild} from "./Guild";
-import {Queue} from "./Queue";
-import {PlayerStatistics} from "./stats/PlayerStatistics";
+import {Queue} from "./queues/Queue";
+import {PlayerStats} from "./stats/PlayerStats";
 import {Account} from "./user_data/Account";
 import {Profile} from "./user_data/Profile";
+
+interface OptionalArgs {
+    guilds?: Guild[];
+    accounts?: Account[];
+    profiles?: Profile[];
+}
 
 @Entity()
 export class User extends BaseEntity {
 
     @PrimaryColumn()
-    discordId: string;
+    discordId!: string;
 
     @ManyToMany(() => Guild, (guild: Guild) => guild.users, {cascade: true})
-    guilds!: Guild[];
+    guilds?: Guild[];
 
     @OneToMany(() => Account, (account: Account) => account.user, {cascade: true})
-    accounts!: Account[];
+    accounts?: Account[];
 
     @OneToMany(() => Profile, (profile: Profile) => profile.user, {cascade: true})
-    profiles!: Profile[];
+    profiles?: Profile[];
 
     @ManyToMany(() => Queue, (queue: Queue) => queue.users)
-    queues!: Queue[];
+    queues?: Queue[];
 
-    @OneToMany(() => PlayerStatistics, (playerStatistics: PlayerStatistics) => playerStatistics.user)
-    playerStatistics!: PlayerStatistics[];
+    @OneToMany(() => PlayerStats, (playerStats: PlayerStats) => playerStats.user)
+    playerStats?: PlayerStats[];
 
-    constructor(
-        discordId: string,
-        {guilds, accounts, profiles}: {guilds?: Guild[], accounts?: Account[], profiles?: Profile[]} = {},
-    ) {
+    constructor();
+    constructor(discordId: string);
+    constructor(discordId: string, {guilds, accounts, profiles}: OptionalArgs);
+
+    constructor(discordId?: string, {guilds, accounts, profiles}: OptionalArgs = {}) {
         super();
 
-        this.discordId = discordId;
-        if (guilds && guilds.length > 0)
-            this.guilds = guilds;
-        if (accounts && accounts.length > 0)
-            this.accounts = accounts;
-        if (profiles && profiles.length > 0)
-            this.profiles = profiles;
+        this.discordId = discordId ?? "";
+        this.guilds = guilds;
+        this.accounts = accounts;
+        this.profiles = profiles;
     }
 }

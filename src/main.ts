@@ -5,7 +5,7 @@ import path from "path";
 import WOKC from "wokcommands";
 
 import {AppDataSource} from "./data-source";
-import {User} from "./entities/User";
+import {ensure} from "./utils/general";
 
 dotenv.config();
 
@@ -68,19 +68,25 @@ async function unregisterRenamedCommands(commandsDir: string, testServers: strin
 async function main() {
 
     await AppDataSource.initialize();
+    console.log("db connected!");
 
     // testing code start
-    const user = new User("test");
-    await user.save();
 
-    // @ts-ignore
-    const users = await User.find({relations: {guilds: true, accounts: true, profiles: true, queues: true}});
-    console.log(users);
+    // const g = new Guild("testId");
+    //
+    // const q = new Queue(g, new Leaderboard(g), 8, "testChannelId");
+    // await q.save();
 
+    // console.log(await Queue.find());
+    // console.log(await Guild.find());
+
+    // console.log((await Leaderboard.find())[0].playerStats);
+
+    // return;
     // testing code end
 
     const commandDir = path.join(__dirname, "commands");
-    const testServers = [process.env.TEST!];
+    const testServers = [ensure(process.env.TEST)];
 
     await unregisterRenamedCommands(commandDir, testServers);
 
@@ -92,4 +98,4 @@ async function main() {
 }
 
 client.on("ready", main);
-client.login(process.env.TOKEN);
+client.login(ensure(process.env.TOKEN)).then();

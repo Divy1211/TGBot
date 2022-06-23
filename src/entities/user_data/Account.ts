@@ -13,17 +13,21 @@ export class Account extends BaseEntity {
     uuid!: number;
 
     @Column()
-    id: string;
+    id!: string;
 
     @Column()
     type: AccountType;
 
     @ManyToOne(() => User, (user: User) => user.profiles)
-    user!: User;
+    user?: User;
 
-    constructor(id: string, type: AccountType = AccountType.STEAM) {
+    constructor();
+    constructor(id: string, type: AccountType);
+
+    constructor(id?: string, type: AccountType = AccountType.STEAM) {
         super();
-        this.id = id;
+
+        this.id = id ?? "";
         this.type = type;
     }
 }
