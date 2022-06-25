@@ -72,15 +72,18 @@ async function main() {
 
     // testing code start
 
-    // const g = new Guild("testId");
+    // const guild = new Guild("testGuildId");
     //
-    // const q = new Queue(g, new Leaderboard(g), 8, "testChannelId");
-    // await q.save();
-
-    // console.log(await Queue.find());
-    // console.log(await Guild.find());
-
-    // console.log((await Leaderboard.find())[0].playerStats);
+    // const queue = new Queue(guild, new Leaderboard(guild), 8, "testChannelId");
+    // await queue.save();
+    //
+    // const user = new User("testId");
+    // await user.save();
+    //
+    // const qMsg = new QueueMsg(user, queue, "testMsg");
+    // await qMsg.save();
+    //
+    // console.log(await QueueMsg.find({where: {user: {discordId: user.discordId}, queue: {uuid: queue.uuid}}}));
 
     // return;
     // testing code end
@@ -97,5 +100,6 @@ async function main() {
     });
 }
 
+// main();
 client.on("ready", main);
 client.login(ensure(process.env.TOKEN)).then();

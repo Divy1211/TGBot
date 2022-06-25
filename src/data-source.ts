@@ -7,6 +7,8 @@ import {Leaderboard} from "./entities/queues/Leaderboard";
 import {Pool} from "./entities/queues/Pool";
 import {PoolMap} from "./entities/queues/PoolMap";
 import {Queue} from "./entities/queues/Queue";
+import {QueueDefaults} from "./entities/queues/QueueDefaults";
+import {QueueMsg} from "./entities/queues/QueueMsg";
 import {PlayerStats} from "./entities/stats/PlayerStats";
 import {User} from "./entities/User";
 import {Account} from "./entities/user_data/Account";
@@ -17,7 +19,7 @@ export const AppDataSource = new DataSource({
     database: "database.sqlite",
     synchronize: true,
     logging: true,
-    entities: [GameMap, Leaderboard, Pool, PoolMap, Queue, PlayerStats, Account, Profile, Guild, User],
+    entities: [GameMap, Leaderboard, Pool, PoolMap, Queue, QueueDefaults, QueueMsg, PlayerStats, Account, Profile, Guild, User],
     migrations: [],
     subscribers: [],
 });

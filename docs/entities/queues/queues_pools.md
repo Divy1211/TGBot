@@ -10,7 +10,6 @@ A map has the following properties:
 
 1. `name: string`
 2. `imgLink: string`: An optional link to an external image preview of the map.
-3. `poolMaps: PoolMap[]`: This is a list of all the pool maps that use this map. `PoolMap` is a data structure that links a map to a `Pool`. Read the [Pool](#pool) section first, then read the [PoolMap](#poolmap) section for details.
 
 ## Pool
 

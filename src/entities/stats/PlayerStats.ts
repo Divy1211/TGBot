@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 
 import {Leaderboard} from "../queues/Leaderboard";
 import {User} from "../User";
@@ -31,8 +31,9 @@ export class PlayerStats extends BaseEntity {
     @Column()
     streak: number;
 
-    @ManyToOne(() => User, (user: User) => user.playerStats, {eager: true})
-    user!: User;
+    @OneToOne(() => User)
+    @JoinColumn()
+    user?: User;
 
     @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.playerStats)
     leaderboard?: Leaderboard;
@@ -46,7 +47,7 @@ export class PlayerStats extends BaseEntity {
     ) {
         super();
 
-        this.user = user ?? new User();
+        this.user = user;
         this.leaderboard = leaderboard;
         this.numGames = numGames ?? 0;
         this.numLosses = numLosses ?? 0;

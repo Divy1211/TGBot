@@ -1,6 +1,4 @@
-import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
-
-import {PoolMap} from "./PoolMap";
+import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 
 @Entity()
 export class GameMap extends BaseEntity {
@@ -12,9 +10,6 @@ export class GameMap extends BaseEntity {
 
     @Column()
     imgLink: string;
-
-    @OneToMany(() => PoolMap, (poolMap: PoolMap) => poolMap.map)
-    poolMaps?: PoolMap[];
 
     constructor();
     constructor(name: string);
