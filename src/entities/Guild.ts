@@ -3,6 +3,7 @@ import {BaseEntity, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn} fro
 import {Leaderboard} from "./queues/Leaderboard";
 import {Queue} from "./queues/Queue";
 import {User} from "./User";
+import {Ban} from "./user_data/Ban";
 
 @Entity()
 export class Guild extends BaseEntity {
@@ -12,6 +13,9 @@ export class Guild extends BaseEntity {
     @ManyToMany(() => User, (user: User) => user.guilds)
     @JoinTable()
     users?: User[];
+
+    @OneToMany(() => Ban, (ban: Ban) => ban.guild)
+    bans?: Ban[];
 
     @OneToMany(() => Queue, (queue: Queue) => queue.guild)
     queues?: Queue[];
