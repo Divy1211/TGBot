@@ -1,6 +1,6 @@
 import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
-import {Guild} from "../Guild";
 
+import {Guild} from "../Guild";
 import {User} from "../User";
 
 
@@ -19,7 +19,7 @@ export class Ban extends BaseEntity {
     @JoinColumn()
     user?: User;
 
-    @ManyToOne(() => Guild, (guild: Guild) => guild.bans)
+    @ManyToOne(() => Guild, (guild: Guild) => guild.bans, {onDelete: "CASCADE"})
     guild?: Guild;
 
     constructor();

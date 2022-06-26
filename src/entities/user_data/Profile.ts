@@ -10,7 +10,7 @@ export class Profile extends BaseEntity {
     @Column()
     id!: string;
 
-    @ManyToOne(() => User, (user: User) => user.profiles)
+    @ManyToOne(() => User, (user: User) => user.profiles, {onDelete: "CASCADE"})
     user?: User;
 
     constructor();

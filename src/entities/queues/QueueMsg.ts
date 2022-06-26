@@ -11,11 +11,11 @@ export class QueueMsg extends BaseEntity {
     @Column()
     msg: string;
 
-    @OneToOne(() => User)
+    @OneToOne(() => User, {onDelete: "CASCADE"})
     @JoinColumn()
     user?: User;
 
-    @OneToOne(() => Queue)
+    @OneToOne(() => Queue, {onDelete: "CASCADE"})
     @JoinColumn()
     queue?: Queue;
 

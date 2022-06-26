@@ -3,8 +3,8 @@ import {BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typ
 import {User} from "../User";
 
 export enum AccountType {
-    XBOX,
     STEAM,
+    XBOX,
 }
 
 @Entity()
@@ -18,7 +18,7 @@ export class Account extends BaseEntity {
     @Column()
     type: AccountType;
 
-    @ManyToOne(() => User, (user: User) => user.profiles)
+    @ManyToOne(() => User, (user: User) => user.profiles, {onDelete: "CASCADE"})
     user?: User;
 
     constructor();

@@ -1,6 +1,6 @@
 import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 
-import {Leaderboard} from "../queues/Leaderboard";
+import {Leaderboard} from "./Leaderboard";
 import {User} from "../User";
 
 interface OptionalArgs {
@@ -31,11 +31,11 @@ export class PlayerStats extends BaseEntity {
     @Column()
     streak: number;
 
-    @OneToOne(() => User)
+    @OneToOne(() => User, {eager: true, onDelete: "CASCADE"})
     @JoinColumn()
-    user?: User;
+    user: User;
 
-    @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.playerStats)
+    @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.playerStats, {onDelete: "CASCADE"})
     leaderboard?: Leaderboard;
 
     constructor();
@@ -47,7 +47,7 @@ export class PlayerStats extends BaseEntity {
     ) {
         super();
 
-        this.user = user;
+        this.user = user ?? new User();
         this.leaderboard = leaderboard;
         this.numGames = numGames ?? 0;
         this.numLosses = numLosses ?? 0;

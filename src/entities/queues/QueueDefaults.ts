@@ -10,15 +10,15 @@ export class QueueDefaults extends BaseEntity {
     @PrimaryGeneratedColumn()
     uuid!: number;
 
-    @OneToOne(() => User)
+    @OneToOne(() => User, {onDelete: "CASCADE"})
     @JoinColumn()
     user?: User;
 
-    @OneToOne(() => Queue)
+    @OneToOne(() => Queue, {onDelete: "SET NULL"})
     @JoinColumn()
     defaultQ?: Queue;
 
-    @OneToOne(() => Queue)
+    @OneToOne(() => Queue, {onDelete: "SET NULL"})
     @JoinColumn()
     lastQ?: Queue;
 

@@ -33,6 +33,10 @@ A pool map has the following properties:
 1. `map: GameMap`: A reference to a `GameMap`.
 2. `pool: Pool`: A reference to the a `Pool`.
 3. `multiplier: number`: The number of occurrences of the `GameMap` in the `Pool`.
+4. `numTotal: number`: The total number of votes this map could have received
+5. `numClicked: number`: The number of times this map is voted for
+6. `numShown: number`: The number of times this map is shown for voting
+7. `numChosen: number`: The number of times this map is chosen for a game
 
 ## Queue
 

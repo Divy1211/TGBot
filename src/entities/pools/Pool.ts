@@ -2,7 +2,7 @@ import {BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGen
 
 import {Guild} from "../Guild";
 import {PoolMap} from "./PoolMap";
-import {Queue} from "./Queue";
+import {Queue} from "../queues/Queue";
 
 @Entity()
 export class Pool extends BaseEntity {
@@ -12,7 +12,7 @@ export class Pool extends BaseEntity {
     @Column()
     name: string;
 
-    @ManyToOne(() => Guild, (guild: Guild) => guild.leaderboards)
+    @ManyToOne(() => Guild, (guild: Guild) => guild.leaderboards, {onDelete: "CASCADE"})
     guild?: Guild;
 
     @ManyToMany(() => Queue, (queue: Queue) => queue.pools)

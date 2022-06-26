@@ -27,3 +27,36 @@ export function assert(value: unknown): asserts value {
         throw new TypeError("value must be defined");
     }
 }
+
+export function choices<T>(array: T[], k: number, replacement = false): T[] {
+    let choices: T[] = [];
+
+    for(let i = 0; i < k; ++i) {
+        const choice = array[Math.floor(Math.random() * array.length)];
+        if(!replacement && choices.includes(choice)) {
+            --i;
+            continue;
+        }
+        choices.push(choice);
+    }
+    return choices;
+}
+
+export function combinations<T>(array: T[], r: number): T[][] {
+    if(r > array.length)
+        throw Error("the number of elements to choose from must be larger than the amount to choose");
+
+    if(r === 1)
+        return array.map((element: T) => [element]);
+
+    let combos: T[][] = [];
+
+    let copy = [...array]
+    while(r - 1 < copy.length) {
+        const first = copy.splice(0, 1);
+
+        for (const combo of combinations(copy, r - 1))
+            combos.push(first.concat(combo));
+    }
+    return combos;
+}

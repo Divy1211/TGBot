@@ -5,6 +5,13 @@ import path from "path";
 import WOKC from "wokcommands";
 
 import {AppDataSource} from "./data-source";
+import {Guild} from "./entities/Guild";
+import {GameMap} from "./entities/pools/GameMap";
+import {Pool} from "./entities/pools/Pool";
+import {PoolMap} from "./entities/pools/PoolMap";
+import {Leaderboard} from "./entities/queues/Leaderboard";
+import {Queue} from "./entities/queues/Queue";
+import {User} from "./entities/User";
 import {ensure} from "./utils/general";
 
 dotenv.config();
@@ -65,25 +72,79 @@ async function unregisterRenamedCommands(commandsDir: string, testServers: strin
     }
 }
 
+async function createTestingDatabase() {
+    const guild = new Guild("testId");
+    const queue = new Queue(guild, new Leaderboard(guild), 8, "testChannelId");
+    await queue.save();
+
+    const pool = new Pool("testQ", guild);
+    pool.queues = [queue];
+    pool.maps = [
+        new PoolMap(new GameMap("Arabia"), pool, 2),
+        new PoolMap(new GameMap("Arena"), pool, 1),
+        new PoolMap(new GameMap("Hideout"), pool, 1),
+        new PoolMap(new GameMap("Fortress"), pool, 1),
+        new PoolMap(new GameMap("Nomad"), pool, 1),
+        new PoolMap(new GameMap("BF"), pool, 1),
+        new PoolMap(new GameMap("MR"), pool, 1),
+    ];
+    await pool.save();
+
+    for (let i = 0; i < 16; ++i) {
+        const user = new User(`testId${i}`);
+        await user.save();
+    }
+}
+
 async function main() {
 
     await AppDataSource.initialize();
     console.log("db connected!");
 
     // testing code start
+    // await createTestingDatabase();
 
-    // const guild = new Guild("testGuildId");
+    // const queue = (await Queue.find({
+    //     where: {
+    //         channelId: "testChannelId"
+    //     },
+    //     relations: {
+    //         leaderboard: true,
+    //         pools: true
+    //     }
+    // }))[0];
     //
-    // const queue = new Queue(guild, new Leaderboard(guild), 8, "testChannelId");
-    // await queue.save();
+    // const users = (await User.find()).splice(0, 8);
     //
-    // const user = new User("testId");
-    // await user.save();
+    // const statlist = [];
     //
-    // const qMsg = new QueueMsg(user, queue, "testMsg");
-    // await qMsg.save();
+    // for(const user of users) {
+    //     let stats: PlayerStats | null;
     //
-    // console.log(await QueueMsg.find({where: {user: {discordId: user.discordId}, queue: {uuid: queue.uuid}}}));
+    //     stats = await PlayerStats.findOneBy({
+    //         user: {
+    //             discordId: user.discordId
+    //         },
+    //         leaderboard: {
+    //             uuid: ensure(queue.leaderboard).uuid
+    //         }
+    //     });
+    //     if(!stats) {
+    //         stats = new PlayerStats(user, ensure(queue.leaderboard));
+    //         console.log(`saving stats for ${user.discordId}`)
+    //         await stats.save();
+    //     }
+    //     statlist.push(stats);
+    // }
+
+    // const match = new Match(statlist, ensure(queue.pools)[0]);
+
+    // const match = (await Match.find({relations: {mapOptions: true}}))[0];
+    // console.log(match.mapOptions?.length);
+    //
+    // await match.remove();
+
+    // await match.save();
 
     // return;
     // testing code end

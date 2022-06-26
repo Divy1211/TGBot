@@ -3,7 +3,7 @@ import {BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGen
 import {Guild} from "../Guild";
 import {User} from "../User";
 import {Leaderboard} from "./Leaderboard";
-import {Pool} from "./Pool";
+import {Pool} from "../pools/Pool";
 
 @Entity()
 export class Queue extends BaseEntity {
@@ -16,7 +16,7 @@ export class Queue extends BaseEntity {
     @Column()
     channelId: string;
 
-    @ManyToOne(() => Guild, (guild: Guild) => guild.queues, {cascade: true})
+    @ManyToOne(() => Guild, (guild: Guild) => guild.queues, {cascade: true, onDelete: "CASCADE"})
     guild?: Guild;
 
     @ManyToMany(() => Pool, (pool: Pool) => pool.queues)
@@ -27,7 +27,7 @@ export class Queue extends BaseEntity {
     @JoinTable()
     users!: User[];
 
-    @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.queue, {cascade: true})
+    @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.queue, {cascade: true, onDelete: "CASCADE"})
     leaderboard?: Leaderboard;
 
     constructor();
