@@ -11,6 +11,9 @@ export class Queue extends BaseEntity {
     uuid!: number;
 
     @Column()
+    name: string;
+
+    @Column()
     numPlayers: number;
 
     @Column()
@@ -31,11 +34,12 @@ export class Queue extends BaseEntity {
     leaderboard?: Leaderboard;
 
     constructor();
-    constructor(guild: Guild, leaderboard: Leaderboard, numPlayers: number, channelId: string);
+    constructor(name: string, guild: Guild, leaderboard: Leaderboard, numPlayers: number, channelId: string);
 
-    constructor(guild?: Guild, leaderboard?: Leaderboard, numPlayers?: number, channelId?: string) {
+    constructor(name?: string, guild?: Guild, leaderboard?: Leaderboard, numPlayers?: number, channelId?: string) {
         super();
 
+        this.name = name ?? "";
         this.guild = guild;
         this.leaderboard = leaderboard;
         this.numPlayers = numPlayers ?? -1;

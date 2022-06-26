@@ -74,7 +74,7 @@ async function unregisterRenamedCommands(commandsDir: string, testServers: strin
 
 async function createTestingDatabase() {
     const guild = new Guild("testId");
-    const queue = new Queue(guild, new Leaderboard(guild), 8, "testChannelId");
+    const queue = new Queue("testName", guild, new Leaderboard(guild), 8, "testChannelId");
     await queue.save();
 
     const pool = new Pool("testQ", guild);
