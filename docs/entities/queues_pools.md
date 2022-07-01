@@ -10,6 +10,10 @@ A map has the following properties:
 
 1. `name: string`
 2. `imgLink: string`: An optional link to an external image preview of the map.
+3. `numTotal: number`: The max number of votes this map could have received if it was voted for unanimously every single time it has been shown as an option for voting.
+4. `numClicked: number`: The number of times this map has been voted for in total.
+5. `numShown: number`: The number of times this map has been shown as an option for voting in total.
+6. `numChosen: number`: The number of times this map has been chosen for a game in total.
 
 ## Pool
 
@@ -33,10 +37,6 @@ A pool map has the following properties:
 1. `map: GameMap`: A reference to a `GameMap`.
 2. `pool: Pool`: A reference to the a `Pool`.
 3. `multiplier: number`: The number of occurrences of the `GameMap` in the `Pool`.
-4. `numTotal: number`: The total number of votes this map could have received
-5. `numClicked: number`: The number of times this map is voted for
-6. `numShown: number`: The number of times this map is shown for voting
-7. `numChosen: number`: The number of times this map is chosen for a game
 
 ## Queue
 
