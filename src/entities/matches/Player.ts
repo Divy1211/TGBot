@@ -22,7 +22,7 @@ export class Player extends BaseEntity {
     @Column()
     isCaptain: boolean;
 
-    // this is the elo before the game
+    // this is the elo BEFORE the result of this.match is taken into account
     @Column()
     elo: number;
 

@@ -1,4 +1,5 @@
 import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Match} from "../matches/Match";
 
 import {Leaderboard} from "./Leaderboard";
 import {User} from "../User";
@@ -37,6 +38,10 @@ export class PlayerStats extends BaseEntity {
 
     @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.playerStats, {onDelete: "CASCADE"})
     leaderboard?: Leaderboard;
+
+    @OneToOne(() => Match, {onDelete: "CASCADE"})
+    @JoinColumn()
+    lastMatch?: Match;
 
     constructor();
     constructor(user: User, leaderboard: Leaderboard);

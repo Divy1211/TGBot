@@ -12,6 +12,7 @@ export class Ban extends BaseEntity {
     @Column()
     reason: string;
 
+    // set to -1 if permanent ban
     @Column()
     until: number;
 

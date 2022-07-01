@@ -18,19 +18,6 @@ export class PoolMap extends BaseEntity {
     @Column()
     multiplier: number;
 
-
-    @Column()
-    numTotal: number;
-
-    @Column()
-    numClicked: number;
-
-    @Column()
-    numShown: number;
-
-    @Column()
-    numChosen: number;
-
     constructor();
     constructor(map: GameMap, pool: Pool, multiplier: number);
 
@@ -39,11 +26,5 @@ export class PoolMap extends BaseEntity {
         this.map = map ?? new GameMap();
         this.pool = pool;
         this.multiplier = multiplier ?? 1;
-
-        this.numTotal = 0;
-        this.numClicked = 0;
-
-        this.numShown = 0;
-        this.numChosen = 0;
     }
 }

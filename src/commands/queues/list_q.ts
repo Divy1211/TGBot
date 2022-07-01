@@ -58,11 +58,12 @@ export default {
             .setColor("#ED2939")
             .setTitle("Queues");
 
+        // this is mostly string formatting stuff:
         let fields: EmbedFieldData[] = [
             {
-                name: "Players   Name",
-                value: queues.map(({name, numPlayers, users}) => {
-                    return `\`  ${users.length}/${numPlayers}  \` ${name}`;
+                name: "ID   Players   Name",
+                value: queues.map(({uuid, name, numPlayers, users}) => {
+                    return `\`${uuid} \` \`  ${users.length}/${numPlayers}  \` ${name}`;
                 }).join("\n"),
                 inline: true,
             },
@@ -104,7 +105,6 @@ export default {
         }
 
         embed.addFields(fields);
-
         return embed;
     },
 } as ICommand;

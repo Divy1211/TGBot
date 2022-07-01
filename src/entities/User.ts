@@ -1,6 +1,7 @@
-import {BaseEntity, Column, Entity, ManyToMany, OneToMany, PrimaryColumn} from "typeorm";
+import {BaseEntity, Column, Entity, ManyToMany, OneToMany, OneToOne, PrimaryColumn} from "typeorm";
 
 import {Guild} from "./Guild";
+import {Match} from "./matches/Match";
 import {Queue} from "./queues/Queue";
 import {Account} from "./user_data/Account";
 import {Profile} from "./user_data/Profile";
@@ -31,6 +32,9 @@ export class User extends BaseEntity {
 
     @ManyToMany(() => Queue, (queue: Queue) => queue.users)
     queues?: Queue[];
+
+    @OneToOne(() => Match, {onDelete: "SET NULL"})
+    currentMatch?: Match;
 
     constructor();
     constructor(discordId: string);
