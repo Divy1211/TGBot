@@ -401,5 +401,6 @@ A captain is a player/user
     4. <span style="color:pink">Parameters</span>:
     5. <span style="color:red">Normal Flow</span>: show an embed with the names of the banned players, the reasons for their bans and the timer until when the ban lasts.
 
-21. `phrase` command specifics yet to be decided
-22. `toss` command specifics yet to be decided
+21. `elo_graph` command specifics yet to be decided
+22. `phrase` command specifics yet to be decided
+23. `toss` command specifics yet to be decided
