@@ -5,7 +5,7 @@
   "main": "src/main.ts",
   "scripts": {
     "build": "tsc -p .",
-    "dev": "nodemone src/main.ts",
+    "dev": "nodemon src/main.ts",
     "prod": "npm run build && ts-node dist/main.js",
     "start": "ts-node src/main.ts",
     "typeorm": "typeorm-ts-node-commonjs"
