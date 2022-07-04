@@ -34,8 +34,9 @@ export default {
         const {options, channelId, guildId} = interaction;
 
         // ensure that the command is being run in a server
-        if (!channelId || !guildId)
+        if (!channelId || !guildId) {
             return "This command can only be run in a text channel in a server";
+        }
 
         // get the command parameters
         const name = ensure(options.getString("name"));
@@ -55,8 +56,9 @@ export default {
  */
 async function createQueue(name: string, numPlayers: number, guildId: string, channelId: string): Promise<string> {
     let guild = await Guild.findOneBy({id: guildId});
-    if (!guild)
+    if (!guild) {
         guild = new Guild(guildId);
+    }
 
     const queue = new Queue(name, guild, new Leaderboard(guild), numPlayers, channelId);
     await queue.save();

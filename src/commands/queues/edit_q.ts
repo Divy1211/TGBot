@@ -1,8 +1,5 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-
-import {Guild} from "../../entities/Guild";
-import {Leaderboard} from "../../entities/queues/Leaderboard";
 import {Queue} from "../../entities/queues/Queue";
 import {ensure} from "../../utils/general";
 
@@ -45,38 +42,35 @@ export default {
 
         // get the command parameters
         const uuid = ensure(options.getInteger("queue_uuid"));
-        const name = options.getString("name") || "";
-        const numPlayers = options.getInteger("num_players") || 0;
+        const name = options.getString("name") ?? "";
+        const numPlayers = options.getInteger("num_players") ?? 0;
 
-        return await editQueue(uuid,  name, numPlayers, guildId, channelId);
+        return await editQueue(uuid, name, numPlayers, channelId);
     },
 } as ICommand;
 
 /**
- * Edit an exisiting queue by changing its name and numPlayers
+ * Edit an existing queue by changing its name and numPlayers
  *
  * @param uuid
  * @param name
  * @param numPlayers The max number of players for the queue
- * @param guildId The ID of the server in which the queue should be created
- * @param channelId The ID of the channel in which the queue should be created
+ * @param channelId The ID of the channel in which the queue should be edited
  */
-async function editQueue(uuid: number, name: string, numPlayers: number, guildId: string, channelId: string): Promise<string> {
-    let guild = await Guild.findOneBy({id: guildId});
-    if (!guild)
-        guild = new Guild(guildId);
-
-    let queue = await Queue.findOneBy({uuid: uuid});
-    if (!queue){
+async function editQueue(uuid: number, name: string, numPlayers: number, channelId: string): Promise<string> {
+    let queue = await Queue.findOneBy({uuid, channelId});
+    if (!queue) {
         return `The queue id ${uuid} does not exist.`;
     }
-    if (name){
+    if (name) {
         queue.name = name;
     }
-    if (numPlayers>0){
+    if (numPlayers) {
         queue.numPlayers = numPlayers;
     }
-    await queue.save();
+    if (name || numPlayers) {
+        await queue.save();
+    }
 
     return `Queue "${name}" has been edited successfully!`;
 }

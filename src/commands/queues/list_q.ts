@@ -37,8 +37,9 @@ export default {
         const {options, channelId, guildId} = interaction;
 
         // ensure that the command is being run in a server
-        if (!channelId || !guildId)
+        if (!channelId || !guildId) {
             return "This command can only be run in a text channel in a server";
+        }
 
         // get the command parameters
         const all = options.getBoolean("all") ?? true;
@@ -50,8 +51,9 @@ export default {
             relations: {leaderboard: true, pools: true},
         });
 
-        if (queues.length === 0)
+        if (queues.length === 0) {
             return "No queues found. Create one using /create_q!";
+        }
 
         let embed = new MessageEmbed()
             .setDescription(all ? "All queues in the server" : "All queues in this channel")
@@ -72,10 +74,12 @@ export default {
         if(showPools || showLeaderboard) {
             let columns = [];
 
-            if(showLeaderboard)
+            if(showLeaderboard) {
                 columns.push("Leaderboard ID");
-            if(showPools)
+            }
+            if(showPools) {
                 columns.push("Pools");
+            }
 
             fields.push(
                 {
