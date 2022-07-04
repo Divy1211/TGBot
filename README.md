@@ -3,6 +3,7 @@
 Discord bot to allow people to easily setup and play AoE2DE team games together on a server. This bot is still under developement.
 
 # Running The Code With Your Own Bot Application
+
 In order to run this bot, you must create a bot application and invite the bot with the correct OAuth2 permissions to your server. After Cloning the source code to a local directory, follow these steps:
 
 1. Install node version `v17.3.0` or higher and npm version `8.3.0` or higher

@@ -23,8 +23,9 @@ Note: These specifications are currently ignored due to development purposes, bu
       2. <span style="color:blue">num_players</span>: The max number of players for the queue.
    5. <span style="color:red">Normal Flow</span>: A new `Queue` object is created and saved in the database.
    6. <span style="color:red">Alternate Flow</span>: An error is returned if the command is run outside a server text channel.
+   7. Sequence Diagram: ![sd](./sequence_diagrams/create_q.png)
 
-2. `delete_q`
+3. `delete_q`
    1. <span style="color:pink">Purpose</span>: This command deletes a queue in a channel.
    2. <span style="color:pink">Constraints</span>: This command can only delete queues that were created in the channel that it is run in.
    3. <span style="color:pink">Actors</span>: Admins
@@ -32,8 +33,9 @@ Note: These specifications are currently ignored due to development purposes, bu
       1. <span style="color:blue">uuid</span>: The ID of the queue to delete.
    5. <span style="color:red">Normal Flow</span>: A `Queue` object with the provided `uuid` should be fetched and removed from the database.
    6. <span style="color:red">Alternate Flow</span>: An error is returned if the uuid specified does not belong to a queue in the channel that this command is run in.
+   7. Sequence Diagram: ![sd](./sequence_diagrams/delete_q.png)
 
-3. `edit_q`
+4. `edit_q`
    1. <span style="color:pink">Purpose</span>: This command can be used to edit the settings of a queue.
    2. <span style="color:pink">Constraints</span>: This command can only edit queues in the channel that this command is run in.
    3. <span style="color:pink">Actors</span>: Admins
@@ -43,15 +45,16 @@ Note: These specifications are currently ignored due to development purposes, bu
       3. <span style="color:blue">num_players</span>: (optional) The new number of players for the queue. If unspecified, the number of players are not changed.
    5. <span style="color:red">Normal Flow</span>: the `Queue` instance with the given `uuid` is fetched from the database, modified if necessary and saved back.
    6. <span style="color:red">Alternate Flow</span>: return an appropriate message if the queue `uuid` specified is not valid or exists in a different channel than in which this command is run.
+   7. Sequence Diagram: ![sd](./sequence_diagrams/edit_q.png)
 
-4. `set_logging_channel`
-   1. <span style="color:pink">Purpose</span>: This command sets a logging channel in a serer.
+5. `set_logging_channel`
+   1. <span style="color:pink">Purpose</span>: This command sets a logging channel in a server.
    2. <span style="color:pink">Constraints</span>: This command needs to be run in the channel which the user wants to set as the logging channel.
    3. <span style="color:pink">Actors</span>: Admins
    4. <span style="color:pink">Parameters</span>:
    5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `loggingChannelId` on the guild instance and save the `Guild` object. (All commands and website interface actions must be properly logged in this channel, a logging class needs to be implemented!)
 
-5. `set_admin_role`
+6. `set_admin_role`
    1. <span style="color:pink">Purpose</span>: This command sets a role as the admin role for the server. A user with this role on the server will be allowed to run all admin and moderator commands.
    2. <span style="color:pink">Constraints</span>: This command can only set the role for a particular server.
    3. <span style="color:pink">Actors</span>: Admins
@@ -59,7 +62,7 @@ Note: These specifications are currently ignored due to development purposes, bu
       1. <span style="color:blue">role</span>: The role to set as the admin role.
    5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `adminRoleId` on the guild instance and save the `Guild` object.
 
-6. `set_mod_role`
+7. `set_mod_role`
    1. <span style="color:pink">Purpose</span>: This command sets a role as the mod role for the server. A user with this role on the server will be allowed to run all mod commands.
    2. <span style="color:pink">Constraints</span>: This command can only set the role for a particular server.
    3. <span style="color:pink">Actors</span>: Admins
@@ -67,7 +70,7 @@ Note: These specifications are currently ignored due to development purposes, bu
       1. <span style="color:blue">role</span>: The role to set as the mod role.
    5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `modRoleId` on the guild instance and save the `Guild` object.
 
-7. `set_promote_role`
+8. `set_promote_role`
    1. <span style="color:pink">Purpose</span>: This command sets a role as the promotion role for the server. A user with this role on the server will be pinged by the bot.
    2. <span style="color:pink">Constraints</span>: This command can only set the role for a particular server.
    3. <span style="color:pink">Actors</span>: Admins
@@ -75,7 +78,7 @@ Note: These specifications are currently ignored due to development purposes, bu
       1. <span style="color:blue">role</span>: The role to set as the promotion role.
    5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `promotionRoleId` on the guild instance and save the `Guild` object.
 
-8. `set_promote_cd`
+9. `set_promote_cd`
    1. <span style="color:pink">Purpose</span>: This command sets the promotion cooldown.
    2. <span style="color:pink">Constraints</span>: This command can only set the cooldown for a particular server.
    3. <span style="color:pink">Actors</span>: Admins
@@ -84,9 +87,9 @@ Note: These specifications are currently ignored due to development purposes, bu
    5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `promotion duration`on the guild instance and save the `Guild` object.
    6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the format used is incorrect.
 
-9. `add_maps` The specifics of this command are yet to be determined
-10. `remove_map` The specifics of this command are yet to be determined
-11. `create_pool` The specifics of this command are yet to be determined
+10. `add_maps` The specifics of this command are yet to be determined
+11. `remove_map` The specifics of this command are yet to be determined
+12. `create_pool` The specifics of this command are yet to be determined
 
 ## Mod Commands
 
@@ -209,6 +212,7 @@ A captain is a player/user
    6. <span style="color:red">Alternate Flow 1</span>: If none of the `defaultQ` or `lastQ`s are defined and the `queue_uuid` parameter is unspecified, return a message asking the user to specify it.
    7. <span style="color:red">Alternate Flow 2</span> If no queues are found in the channel, show a relevant message.
    8. Additional Flow: When the number of users in the queue are == `numPlayers` of the queue, then start a match in that queue. When a match is started, remove all the users from any other queues that they are in, *even queues that are on other servers*
+   9. Sequence Diagram: ![sd](./sequence_diagrams/join.png)
 
 3. `leave`
    1. <span style="color:pink">Purpose</span>: This command allows a user to leave a queue in the channel that this command is run in.
@@ -221,6 +225,7 @@ A captain is a player/user
       - The user is in just one queue, leave that queue. 
       - The user is in multiple queues, and the `queue_id` is not specified - show a message asking the user to specify which queue they want to leave.
    7. <span style="color:red">Alternate Flow 2</span> If no queues are found in the channel, show a relevant message.
+   8. Sequence Diagram: ![sd](./sequence_diagrams/leave.png)
 
 4. `leave_all`
    1. <span style="color:pink">Purpose</span>: This command allows a user to leave all queues in a server.
