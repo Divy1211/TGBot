@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, ManyToMany, OneToMany, OneToOne, PrimaryColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryColumn} from "typeorm";
 
 import {Guild} from "./Guild";
 import {Match} from "./matches/Match";
@@ -33,7 +33,8 @@ export class User extends BaseEntity {
     @ManyToMany(() => Queue, (queue: Queue) => queue.users)
     queues?: Queue[];
 
-    @OneToOne(() => Match, {onDelete: "SET NULL"})
+    @ManyToOne(() => Match, {onDelete: "SET NULL"})
+    @JoinColumn()
     currentMatch?: Match;
 
     constructor();

@@ -10,7 +10,7 @@ import {Leaderboard} from "./entities/queues/Leaderboard";
 import {Pool} from "./entities/pools/Pool";
 import {PoolMap} from "./entities/pools/PoolMap";
 import {Queue} from "./entities/queues/Queue";
-import {QueueDefaults} from "./entities/queues/QueueDefaults";
+import {QueueDefault} from "./entities/queues/QueueDefault";
 import {QueueMsg} from "./entities/queues/QueueMsg";
 import {PlayerStats} from "./entities/queues/PlayerStats";
 import {User} from "./entities/User";
@@ -32,7 +32,7 @@ export const AppDataSource = new DataSource({
         Pool,
         PoolMap,
         Queue,
-        QueueDefaults,
+        QueueDefault,
         QueueMsg,
         PlayerStats,
         Account,

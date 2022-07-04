@@ -1,7 +1,7 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {Queue} from "../../entities/queues/Queue";
+import {deleteQueue} from "../../abstract_commands/queues/delete";
 import {ensure} from "../../utils/general";
 
 export default {
@@ -34,21 +34,3 @@ export default {
         return await deleteQueue(uuid, channelId);
     },
 } as ICommand;
-
-/**
- * Deletes a queue with the given id
- *
- * @param uuid The ID of the queue to delete
- * @param channelId The ID of the channel to delete the queue in
- */
-async function deleteQueue(uuid: number, channelId: string): Promise<string> {
-    let queue = await Queue.findOneBy({uuid, channelId});
-
-    if (!queue) {
-        return `Queue with ID \`${uuid}\` was not found in this channel`;
-    }
-
-    await queue.remove();
-
-    return `Queue "${queue.name}" with ID \`${uuid}\` has been deleted successfully!`;
-}

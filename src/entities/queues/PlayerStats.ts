@@ -1,14 +1,15 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Match} from "../matches/Match";
+import {User} from "../User";
 
 import {Leaderboard} from "./Leaderboard";
-import {User} from "../User";
 
 interface OptionalArgs {
     numGames?: number;
     numLosses?: number;
     numWins?: number;
     rating?: number;
+    sigma?: number;
     streak?: number;
 }
 
@@ -30,25 +31,30 @@ export class PlayerStats extends BaseEntity {
     rating: number;
 
     @Column()
+    sigma: number;
+
+    @Column()
     streak: number;
 
-    @OneToOne(() => User, {eager: true, onDelete: "CASCADE"})
+    @ManyToOne(() => User, {eager: true, onDelete: "CASCADE"})
     @JoinColumn()
     user: User;
 
     @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.playerStats, {onDelete: "CASCADE"})
     leaderboard?: Leaderboard;
 
-    @OneToOne(() => Match, {onDelete: "CASCADE"})
+    @ManyToOne(() => Match, {onDelete: "CASCADE"})
     @JoinColumn()
     lastMatch?: Match;
 
     constructor();
     constructor(user: User, leaderboard: Leaderboard);
-    constructor(user: User, leaderboard: Leaderboard, {numGames, numLosses, numWins, rating, streak}: OptionalArgs);
+    constructor(
+        user: User, leaderboard: Leaderboard, {numGames, numLosses, numWins, rating, sigma, streak}: OptionalArgs);
 
     constructor(
-        user?: User, leaderboard?: Leaderboard, {numGames, numLosses, numWins, rating, streak}: OptionalArgs = {},
+        user?: User, leaderboard?: Leaderboard,
+        {numGames, numLosses, numWins, rating, sigma, streak}: OptionalArgs = {},
     ) {
         super();
 
@@ -58,6 +64,7 @@ export class PlayerStats extends BaseEntity {
         this.numLosses = numLosses ?? 0;
         this.numWins = numWins ?? 0;
         this.rating = rating ?? 1000;
+        this.sigma = sigma ?? 200;
         this.streak = streak ?? 0;
     }
 }

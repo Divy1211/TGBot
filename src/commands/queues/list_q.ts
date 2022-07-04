@@ -48,7 +48,7 @@ export default {
 
         const queues = await Queue.find({
             where: all ? {guild: {id: guildId}} : {channelId},
-            relations: {leaderboard: true, pools: true},
+            relations: {leaderboard: showLeaderboard, pools: showPools},
         });
 
         if (queues.length === 0) {

@@ -1,8 +1,8 @@
 import {BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 
 import {Guild} from "../Guild";
-import {PoolMap} from "./PoolMap";
 import {Queue} from "../queues/Queue";
+import {PoolMap} from "./PoolMap";
 
 @Entity()
 export class Pool extends BaseEntity {

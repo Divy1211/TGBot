@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 
 import {GameMap} from "./GameMap";
 import {Pool} from "./Pool";
@@ -8,7 +8,7 @@ export class PoolMap extends BaseEntity {
     @PrimaryGeneratedColumn()
     uuid!: number;
 
-    @OneToOne(() => GameMap, {cascade: true, eager: true, onDelete: "CASCADE"})
+    @ManyToOne(() => GameMap, {cascade: true, eager: true, onDelete: "CASCADE"})
     @JoinColumn()
     map!: GameMap;
 

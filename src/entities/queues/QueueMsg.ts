@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 
 import {User} from "../User";
 import {Queue} from "./Queue";
@@ -11,11 +11,11 @@ export class QueueMsg extends BaseEntity {
     @Column()
     msg: string;
 
-    @OneToOne(() => User, {onDelete: "CASCADE"})
+    @ManyToOne(() => User, {onDelete: "CASCADE"})
     @JoinColumn()
     user?: User;
 
-    @OneToOne(() => Queue, {onDelete: "CASCADE"})
+    @ManyToOne(() => Queue, {onDelete: "CASCADE"})
     @JoinColumn()
     queue?: Queue;
 

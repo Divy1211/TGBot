@@ -1,5 +1,6 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
+import {editQueue} from "../../abstract_commands/queues/edit";
 import {Queue} from "../../entities/queues/Queue";
 import {ensure} from "../../utils/general";
 
@@ -48,29 +49,3 @@ export default {
         return await editQueue(uuid, name, numPlayers, channelId);
     },
 } as ICommand;
-
-/**
- * Edit an existing queue by changing its name and numPlayers
- *
- * @param uuid
- * @param name
- * @param numPlayers The max number of players for the queue
- * @param channelId The ID of the channel in which the queue should be edited
- */
-async function editQueue(uuid: number, name: string, numPlayers: number, channelId: string): Promise<string> {
-    let queue = await Queue.findOneBy({uuid, channelId});
-    if (!queue) {
-        return `The queue id ${uuid} does not exist.`;
-    }
-    if (name) {
-        queue.name = name;
-    }
-    if (numPlayers) {
-        queue.numPlayers = numPlayers;
-    }
-    if (name || numPlayers) {
-        await queue.save();
-    }
-
-    return `Queue "${name}" has been edited successfully!`;
-}

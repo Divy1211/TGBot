@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 
 import {Guild} from "../Guild";
 import {User} from "../User";
@@ -16,7 +16,7 @@ export class Ban extends BaseEntity {
     @Column()
     until: number;
 
-    @OneToOne(() => User)
+    @ManyToOne(() => User)
     @JoinColumn()
     user?: User;
 

@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 
 import {Civ} from "../../interfaces/Civ";
 import {PlayerStats} from "../queues/PlayerStats";
@@ -29,7 +29,7 @@ export class Player extends BaseEntity {
     @Column()
     eloDelta: number;
 
-    @OneToOne(() => User, {onDelete: "SET NULL"})
+    @ManyToOne(() => User, {onDelete: "SET NULL"})
     @JoinColumn()
     user?: User;
 

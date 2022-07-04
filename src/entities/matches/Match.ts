@@ -1,10 +1,10 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 
 import {choices} from "../../utils/general";
 import {Guild} from "../Guild";
-import {Leaderboard} from "../queues/Leaderboard";
 import {Pool} from "../pools/Pool";
 import {PoolMap} from "../pools/PoolMap";
+import {Leaderboard} from "../queues/Leaderboard";
 import {PlayerStats} from "../queues/PlayerStats";
 import {MapOption} from "./MapOption";
 import {Player} from "./Player";
@@ -30,7 +30,7 @@ export class Match extends BaseEntity {
     @Column()
     numVotesReroll: number;
 
-    @OneToOne(() => PoolMap, {eager: true, onDelete: "SET NULL"})
+    @ManyToOne(() => PoolMap, {eager: true, onDelete: "SET NULL"})
     @JoinColumn()
     map?: PoolMap;
 
@@ -43,9 +43,9 @@ export class Match extends BaseEntity {
     @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.matches, {onDelete: "CASCADE"})
     leaderboard?: Leaderboard;
 
-    @OneToOne(() => Guild)
+    @ManyToOne(() => Guild)
     @JoinColumn()
-    guild?: Guild
+    guild?: Guild;
 
     constructor();
     constructor(playerStats: PlayerStats[], pool: Pool);

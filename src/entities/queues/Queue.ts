@@ -1,9 +1,9 @@
 import {BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 
 import {Guild} from "../Guild";
+import {Pool} from "../pools/Pool";
 import {User} from "../User";
 import {Leaderboard} from "./Leaderboard";
-import {Pool} from "../pools/Pool";
 
 @Entity()
 export class Queue extends BaseEntity {
