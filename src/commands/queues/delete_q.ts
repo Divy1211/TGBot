@@ -40,7 +40,7 @@ export default {
  * @param uuid The ID of the queue to delete
  * @param channelId The ID of the channel to delete the queue in
  */
-export async function deleteQueue(uuid: number, channelId: string): Promise<string> {
+async function deleteQueue(uuid: number, channelId: string): Promise<string> {
     let queue = await Queue.findOneBy({uuid, channelId});
 
     if (!queue)

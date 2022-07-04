@@ -8,23 +8,29 @@ import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Create a TG pickup queue in this channel",
+    description: "Edit the information of a specific queue",
 
     slash: true,
     testOnly: true,
 
     options: [
         {
+            name: "queue_uuid",
+            description: "The id of the queue",
+            type: ApplicationCommandOptionTypes.INTEGER,
+            required: true,
+        },
+        {
             name: "name",
             description: "The name of the queue",
             type: ApplicationCommandOptionTypes.STRING,
-            required: true,
+            required: false,
         },
         {
             name: "num_players",
             description: "The max number of players for the queue",
             type: ApplicationCommandOptionTypes.INTEGER,
-            required: true,
+            required: false,
             minValue: 2,
             maxValue: 8,
         },
@@ -38,28 +44,39 @@ export default {
             return "This command can only be run in a text channel in a server";
 
         // get the command parameters
-        const name = ensure(options.getString("name"));
-        const numPlayers = ensure(options.getInteger("num_players"));
+        const uuid = ensure(options.getInteger("queue_uuid"));
+        const name = options.getString("name") || "";
+        const numPlayers = options.getInteger("num_players") || 0;
 
-        return await createQueue(name, numPlayers, guildId, channelId);
+        return await editQueue(uuid,  name, numPlayers, guildId, channelId);
     },
 } as ICommand;
 
 /**
- * Creates a queue with the given name and number of players, in the specified channel and server
+ * Edit an exisiting queue by changing its name and numPlayers
  *
+ * @param uuid
  * @param name
  * @param numPlayers The max number of players for the queue
  * @param guildId The ID of the server in which the queue should be created
  * @param channelId The ID of the channel in which the queue should be created
  */
-async function createQueue(name: string, numPlayers: number, guildId: string, channelId: string): Promise<string> {
+async function editQueue(uuid: number, name: string, numPlayers: number, guildId: string, channelId: string): Promise<string> {
     let guild = await Guild.findOneBy({id: guildId});
     if (!guild)
         guild = new Guild(guildId);
 
-    const queue = new Queue(name, guild, new Leaderboard(guild), numPlayers, channelId);
+    let queue = await Queue.findOneBy({uuid: uuid});
+    if (!queue){
+        return `The queue id ${uuid} does not exist.`;
+    }
+    if (name){
+        queue.name = name;
+    }
+    if (numPlayers>0){
+        queue.numPlayers = numPlayers;
+    }
     await queue.save();
 
-    return `Queue "${name}" has been created successfully!`;
+    return `Queue "${name}" has been edited successfully!`;
 }
