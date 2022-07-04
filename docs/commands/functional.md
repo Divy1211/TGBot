@@ -1,6 +1,8 @@
 ## Functional Specifications
 
-This document describes each command, its usage and permission scope. The functionality of these commands is implemented in functions inside the code files for each command. This is to allow for both easier testing and usage from the website interface.
+This document describes each command, its usage and permission scope.
+
+The functionality of all commands is implemented as functions in corresponding code files in the `abstract_commands` directory. This is to allow for both easier testing and usage from the website interface.
 
 Note: The terms guild and server are used interchangeably.
 
