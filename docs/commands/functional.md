@@ -201,6 +201,7 @@ A captain is a player/user
       3. <span style="color:blue">show_pool_ids</span>: (default: `false`) If true, show the pool IDs for the queue.
    5. <span style="color:red">Normal Flow</span>: Show an embed with all the queues in the server. 
    6. <span style="color:red">Alternate Flow</span>: If no queues are found in the server, show a relevant message.
+   7. Sequence Diagram: ![sd](./sequence_diagrams/list_q.png)
 
 2. `join`
    1. <span style="color:pink">Purpose</span>: This command allows a user to join a queue in the channel that this command is run in.
@@ -250,6 +251,7 @@ A captain is a player/user
       1. <span style="color:blue">queue_uuid</span>: (optional) show the players in this queue.
    5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, display an embed with the list of all the players in the queue
    6. <span style="color:red">Alternate Flow</span>: If there are multiple queues in the channel and `queue_uuid` is not specified, return an appropriate message asking the user to specify the queue for which they want to see the players.
+   7. Sequence Diagram: ![sd](./sequence_diagrams/list_players.png)
 
 7. `profile`
    1. <span style="color:pink">Purpose</span>: Allow a user to see the profile of a user. This shows the user's rank, rating, total/wins/losses/streak, win rate and the rating changes in the last (max) 5 matches. This will show an embed.
