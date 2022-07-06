@@ -46,8 +46,8 @@
 | Command         | Functionality                                                                            | paras                                                                      |
 |-----------------|------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
 | `list_q`        | shows all the queues in a server                                                         | `all=True`, `show_leaderboard_id`, `show_pool_ids`                         |
-| `join`          | allows a user to join a queue in the channel                                             | `[queue_uuid]`                                                             |
-| `leave`         | allows a user to leave a queue in the channel                                            | `[queue_uuid]`                                                             |
+| `join`          | allows a user to join a queue in the channel                                             | `[queue_uuid]` `[user]`                                                    |
+| `leave`         | allows a user to leave a queue in the channel                                            | `[queue_uuid]` `[user]`                                                    |
 | `leave_all`     | allows a user to leave all queues in a server                                            |                                                                            |
 | `set_default_q` | allow a user to set a queue as their default join queue in the channel                   | `queue_uuid`                                                               |
 | `list_players`  | allow a user to see all the players in a queue                                           | `[queue_uuid]`                                                             |
