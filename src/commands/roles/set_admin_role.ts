@@ -3,6 +3,7 @@ import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
 import { Guild } from "../../entities/Guild";
+import { ensure } from "../../utils/general";
 
 export default {
     category: "General",
@@ -29,7 +30,7 @@ export default {
         }
 
         // get the command parameters
-        const role = options.getRole("rolename");
+        const role = ensure(options.getRole("role"));
 
         const guild = await Guild.findOneBy({id:guildId}) || undefined;
         if (guild != undefined){
