@@ -13,9 +13,9 @@ export default {
 
     options: [
         {
-            name: "rolename",
-            description: "a role name",
-            type: ApplicationCommandOptionTypes.STRING,
+            name: "role",
+            description: "a role",
+            type: ApplicationCommandOptionTypes.ROLE,
             required: true,
         },
     ],
@@ -29,18 +29,13 @@ export default {
         }
 
         // get the command parameters
-        const roleName = options.getString("rolename");
-        const role = interaction.guild?.roles.cache.find((r:any) => r.name == roleName);
-
-        if (!role) {
-            return `Role ${roleName} does not exist on this channel.`
-        }
+        const role = options.getRole("rolename");
 
         const guild = await Guild.findOneBy({id:guildId}) || undefined;
         if (guild != undefined){
             guild.promotionRoleId = role?.id.toString();
             guild.save()
-            return `Role ${roleName} has been set to moderate role.`;
+            return `Role ${role!.name} has been set to moderate role.`;
         }
 
     },
