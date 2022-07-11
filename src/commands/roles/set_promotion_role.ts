@@ -1,6 +1,7 @@
 import {EmbedFieldData, MessageEmbed} from "discord.js";
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
+import { setPromotionRole } from "../../abstract_commands/roles/set_promotion_role";
 
 import { Guild } from "../../entities/Guild";
 import { ensure } from "../../utils/general";
@@ -32,12 +33,8 @@ export default {
         // get the command parameters
         const role = ensure(options.getRole("role"));
 
-        const guild = await Guild.findOneBy({id:guildId}) || undefined;
-        if (guild != undefined){
-            guild.promotionRoleId = role?.id.toString();
-            guild.save()
-            return `Role ${role!.name} has been set to moderate role.`;
-        }
+        return await setPromotionRole(guildId,role);
 
     },
 } as ICommand;
+
