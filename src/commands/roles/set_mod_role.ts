@@ -1,11 +1,7 @@
-import {EmbedFieldData, MessageEmbed} from "discord.js";
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import { setAdminRole } from "../../abstract_commands/roles/set_admin";
-import { setModRole } from "../../abstract_commands/roles/set_mod_role";
-
-import { Guild } from "../../entities/Guild";
-import { ensure } from "../../utils/general";
+import {setModRole} from "../../abstract_commands/roles/set_mod_role";
+import {ensure} from "../../utils/general";
 
 export default {
     category: "General",
@@ -33,8 +29,6 @@ export default {
 
         // get the command parameters
         const role = ensure(options.getRole("role"));
-
-        return await setModRole(guildId,role);
-
+        return await setModRole(guildId, role);
     },
 } as ICommand;
