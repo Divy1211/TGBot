@@ -1,19 +1,20 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import {setModRole} from "../../abstract_commands/roles/set_mod_role";
+import {setModRole} from "../../abstract_commands/roles/set_mod";
 import {ensure} from "../../utils/general";
 
 export default {
-    category: "General",
-    description: "Set a role as moderate role for the server",
+    category: "Admin",
+    description: "Set a role for bot mods on the server",
 
     slash: true,
     testOnly: true,
+    guildOnly: true,
 
     options: [
         {
             name: "role",
-            description: "a role",
+            description: "The role to set for bot mods",
             type: ApplicationCommandOptionTypes.ROLE,
             required: true,
         },

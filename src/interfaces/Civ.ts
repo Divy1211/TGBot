@@ -1,4 +1,4 @@
-export enum Civ {
+export const enum Civ {
     GAIA,
     BRITONS,
     FRANKS,

@@ -7,6 +7,9 @@ import {Queue} from "../../entities/queues/Queue";
  * @param channelId The ID of the channel to delete the queue in
  */
 export async function deleteQueue(uuid: number, channelId: string): Promise<string> {
+    // todo: roles
+    // todo: do not allow queue to be deleted while match ongoing (same w leaderboard)
+    // todo: logging
     let queue = await Queue.findOneBy({uuid, channelId});
 
     if (!queue) {

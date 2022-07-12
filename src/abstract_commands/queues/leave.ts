@@ -16,7 +16,7 @@ export async function leaveQueue(
     discordId: string,
     channelId: string,
     guildId: string,
-    uuid?: number
+    uuid?: number,
 ): Promise<string | MessageEmbed> {
 
     // a user is created when they join a queue, so if the user is not found,

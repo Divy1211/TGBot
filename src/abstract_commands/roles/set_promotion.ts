@@ -15,7 +15,7 @@ export async function setPromotionRole(guildId: string, role: Role | APIRole): P
         guild = new Guild(guildId);
     }
 
-    guild.promotionRoleId = role.id.toString();
+    guild.promotionRoleId = role.id;
     await guild.save();
     return `Role ${role.name} has been set to promotion role.`;
 }
