@@ -15,7 +15,7 @@ export async function setAdminRole(guildId: string, role: Role | APIRole): Promi
         guild = new Guild(guildId);
     }
 
-    guild.adminRoleId = role.id.toString();
+    guild.adminRoleId = role.id;
     await guild.save();
     return `Role ${role.name} has been set to admin role.`;
 }

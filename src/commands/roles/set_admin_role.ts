@@ -4,16 +4,17 @@ import {setAdminRole} from "../../abstract_commands/roles/set_admin";
 import {ensure} from "../../utils/general";
 
 export default {
-    category: "General",
-    description: "Set a role as admin role for the server",
+    category: "Admin",
+    description: "Set a role for bot admins on the server",
 
     slash: true,
     testOnly: true,
+    guildOnly: true,
 
     options: [
         {
             name: "role",
-            description: "a role",
+            description: "The role to set for bot admins",
             type: ApplicationCommandOptionTypes.ROLE,
             required: true,
         },

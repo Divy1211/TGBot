@@ -15,7 +15,7 @@ export async function setModRole(guildId: string, role: Role | APIRole): Promise
         guild = new Guild(guildId);
     }
 
-    guild.modRoleId = role.id.toString();
+    guild.modRoleId = role.id;
     await guild.save();
     return `Role ${role.name} has been set to mod role.`;
 }

@@ -1,19 +1,20 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import {setPromotionRole} from "../../abstract_commands/roles/set_promotion_role";
+import {setPromotionRole} from "../../abstract_commands/roles/set_promotion";
 import {ensure} from "../../utils/general";
 
 export default {
-    category: "General",
-    description: "Set a role as promotion role for the server",
+    category: "Admin",
+    description: "Set a role which is pinged for queue promotions on the server",
 
     slash: true,
     testOnly: true,
+    guildOnly: true,
 
     options: [
         {
             name: "role",
-            description: "a role",
+            description: "The role to ping when a promotion happens",
             type: ApplicationCommandOptionTypes.ROLE,
             required: true,
         },
