@@ -5,6 +5,8 @@ import {Queue} from "../../entities/queues/Queue";
 import {QueueDefault} from "../../entities/queues/QueueDefault";
 import {User} from "../../entities/User";
 import {getPlayerEmbed} from "../common";
+import {Ban} from "../../entities/user_data/Ban";
+
 
 /**
  * Puts the given user into a queue in the given channel or the specified queue
@@ -34,6 +36,17 @@ export async function joinQueue(
 
         user = new User(discordId, {guilds: [guild]});
         await user.save();
+    }
+
+    const ban = await Ban.findOneBy({user:{discordId}})
+    console.log(ban);
+    if (ban){
+        if (ban.until !== -1 && ban.until < new Date().getTime()){
+            await Ban.remove(ban);
+        }
+        else {
+            return `You are banned from joining a queue`
+        }
     }
 
     // load existing or create a new QueueDefault
