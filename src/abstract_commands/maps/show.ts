@@ -1,0 +1,53 @@
+import { GameMap } from "../../entities/pools/GameMap";
+import { PoolMap } from "../../entities/pools/PoolMap";
+import {Guild} from "../../entities/Guild";
+import { EmbedFieldData, MessageEmbed } from "discord.js";
+
+/**
+ * Remove a map from a pool
+ * 
+ * @param mapName The name of the map
+ * @param guildId The ID of the server in which the Pool is created
+ */
+export async function showMap(mapName: string, guildId: string) {
+    let guild = await Guild.findOneBy({id: guildId});
+    if (!guild) {
+        guild = new Guild(guildId);
+    }
+
+    var map = await GameMap.findOne({where: {name: mapName}});
+    if (!map){
+        return `Map ${mapName} not found in the channel`
+    }
+
+    let embed = new MessageEmbed().setDescription(`Statics of Map: ${mapName}`).setColor("#ED2939").setTitle(`Map Statics - ${mapName}`)
+    let fields: EmbedFieldData[] = [];
+    fields.push({
+        name: "name",
+        value: map.name,
+        inline: false,
+    })
+    fields.push({
+        name: "uuid",
+        value: `${map.uuid}`,
+        inline: false,
+    })
+    fields.push({
+        name: "numTotal",
+        value: `${map.numTotal}`,
+        inline: false,
+    })
+    fields.push({
+        name: "numClicked",
+        value: `${map.numClicked}`,
+        inline: false,
+    })
+    fields.push({
+        name: "numChosen",
+        value: `${map.numChosen}`,
+        inline: false,
+    })
+
+    embed.addFields(fields);
+    return embed;   
+}
