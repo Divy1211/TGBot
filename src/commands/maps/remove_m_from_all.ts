@@ -13,7 +13,7 @@ export default {
 
     options: [
         {
-            name: "map_name",
+            name: "name",
             description: "the name of the map",
             type: ApplicationCommandOptionTypes.STRING,
             required: true,

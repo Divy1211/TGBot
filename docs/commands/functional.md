@@ -24,8 +24,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     5. <span style="color:red">Normal Flow</span>: A new `Queue` object is created and saved in the database.
     6. <span style="color:red">Alternate Flow</span>: An error is returned if the command is run outside a server text channel.
     7. Sequence Diagram: ![sd](./sequence_diagrams/create_q.png)
-
-3. `delete_q`
+2. `delete_q`
     1. <span style="color:pink">Purpose</span>: This command deletes a queue in a channel.
     2. <span style="color:pink">Constraints</span>: This command can only delete queues that were created in the channel that it is run in.
     3. <span style="color:pink">Actors</span>: Admins
@@ -34,8 +33,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     5. <span style="color:red">Normal Flow</span>: A `Queue` object with the provided `uuid` should be fetched and removed from the database.
     6. <span style="color:red">Alternate Flow</span>: An error is returned if the uuid specified does not belong to a queue in the channel that this command is run in.
     7. Sequence Diagram: ![sd](./sequence_diagrams/delete_q.png)
-
-4. `edit_q`
+3. `edit_q`
     1. <span style="color:pink">Purpose</span>: This command can be used to edit the settings of a queue.
     2. <span style="color:pink">Constraints</span>: This command can only edit queues in the channel that this command is run in.
     3. <span style="color:pink">Actors</span>: Admins
@@ -46,39 +44,34 @@ Note: These specifications are currently ignored due to development purposes, bu
     5. <span style="color:red">Normal Flow</span>: the `Queue` instance with the given `uuid` is fetched from the database, modified if necessary and saved back.
     6. <span style="color:red">Alternate Flow</span>: return an appropriate message if the queue `uuid` specified is not valid or exists in a different channel than in which this command is run.
     7. Sequence Diagram: ![sd](./sequence_diagrams/edit_q.png)
-
-5. `set_logging_channel`
+4. `set_logging_channel`
     1. <span style="color:pink">Purpose</span>: This command sets a logging channel in a server.
     2. <span style="color:pink">Constraints</span>: This command needs to be run in the channel which the user wants to set as the logging channel.
     3. <span style="color:pink">Actors</span>: Admins
     4. <span style="color:pink">Parameters</span>:
     5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `loggingChannelId` on the guild instance and save the `Guild` object. (All commands and website interface actions must be properly logged in this channel, a logging class needs to be implemented!)
-
-6. `set_admin_role`
+5. `set_admin_role`
     1. <span style="color:pink">Purpose</span>: This command sets a role as the admin role for the server. A user with this role on the server will be allowed to run all admin and moderator commands.
     2. <span style="color:pink">Constraints</span>: This command can only set the role for a particular server.
     3. <span style="color:pink">Actors</span>: Admins
     4. <span style="color:pink">Parameters</span>:
         1. <span style="color:blue">role</span>: The role to set as the admin role.
     5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `adminRoleId` on the guild instance and save the `Guild` object.
-
-7. `set_mod_role`
+6. `set_mod_role`
     1. <span style="color:pink">Purpose</span>: This command sets a role as the mod role for the server. A user with this role on the server will be allowed to run all mod commands.
     2. <span style="color:pink">Constraints</span>: This command can only set the role for a particular server.
     3. <span style="color:pink">Actors</span>: Admins
     4. <span style="color:pink">Parameters</span>:
         1. <span style="color:blue">role</span>: The role to set as the mod role.
     5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `modRoleId` on the guild instance and save the `Guild` object.
-
-8. `set_promote_role`
+7. `set_promote_role`
     1. <span style="color:pink">Purpose</span>: This command sets a role as the promotion role for the server. A user with this role on the server will be pinged by the bot.
     2. <span style="color:pink">Constraints</span>: This command can only set the role for a particular server.
     3. <span style="color:pink">Actors</span>: Admins
     4. <span style="color:pink">Parameters</span>:
         1. <span style="color:blue">role</span>: The role to set as the promotion role.
     5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `promotionRoleId` on the guild instance and save the `Guild` object.
-
-9. `set_promote_cd`
+8. `set_promote_cd`
     1. <span style="color:pink">Purpose</span>: This command sets the promotion cooldown.
     2. <span style="color:pink">Constraints</span>: This command can only set the cooldown for a particular server.
     3. <span style="color:pink">Actors</span>: Admins
@@ -86,10 +79,43 @@ Note: These specifications are currently ignored due to development purposes, bu
         1. <span style="color:blue">duration</span>: The duration for the cooldown `hh:mm[:ss]`.
     5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `promotion duration`on the guild instance and save the `Guild` object.
     6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the format used is incorrect.
+9. `add_maps` The specifics of this command are yet to be determined
+10. `create_pool`
+    1. <span style="color:pink">Purpose</span>: This command create a pool.
+    2. <span style="color:pink">Constraints</span>: This command can only create a pool for a particular channel.
+    3. <span style="color:pink">Actors</span>: Admins
+    4. <span style="color:pink">Parameters</span>:
+        1. <span style="color:blue">name</span>: The name of the pool.
+    5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `name` of the map and save the `Pool` object.
+    6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the input format is incorrect.
 
-10. `add_maps` The specifics of this command are yet to be determined
-11. `remove_map` The specifics of this command are yet to be determined
-12. `create_pool` The specifics of this command are yet to be determined
+11. `create_map`
+     1. <span style="color:pink">Purpose</span>: This command create a map.
+     2. <span style="color:pink">Constraints</span>: This command can only create a map for a particular server.
+     3. <span style="color:pink">Actors</span>: Admins
+     4. <span style="color:pink">Parameters</span>:
+        1. <span style="color:blue">name</span>: The name of the map.
+     5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `name`, `img_link` of the map and save the `GameMap` object.
+     6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the input format is incorrect.
+12. `remove_map_from_all` 
+     1. <span style="color:pink">Purpose</span>: This command remove a map from the sever.
+     2. <span style="color:pink">Constraints</span>: This command can only remove a map for a particular server.
+     3. <span style="color:pink">Actors</span>: Admins
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">name</span>: The name of the map.
+     5. <span style="color:red">Normal Flow</span>: A `GameMap` object with the provided `name` should be fetched and removed from the database.
+     6. <span style="color:red">Alternate Flow</span>: An error is returned if the `name` specified does not belong to a map in the channel that this command is run in.
+
+13. `remove_map_from_pool`
+     1. <span style="color:pink">Purpose</span>: This command remove a map from a pool specified in the sever.
+     2. <span style="color:pink">Constraints</span>: This command can only remove a map for a particular pool in the channel.
+     3. <span style="color:pink">Actors</span>: Admins
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">pool_name</span>: The name of the pool.
+         2. <span style="color:blue">map_name</span>: The name of the map.
+     5. <span style="color:red">Normal Flow</span>: A `PoolMap` object with the provided `map_name` in the pool with the provided `pool_name` should be fetched and removed from the pool.
+     6. <span style="color:red">Alternate Flow</span>: An error is returned if the `map_name` specified does not belong to a map or the `pool_name` specified does not belong to a pool in the channel that this command is run in.
+
 
 ## Mod Commands
 
@@ -341,9 +367,9 @@ A captain is a player/user
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show maps that
     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
     4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">map_uuid</span>: show the statistics and preview of this map (if available)
-    5. <span style="color:red">Normal Flow</span>: fetch the `GameMap` with this uuid and show its stats and preview.
-    6. <span style="color:red">Alternate Flow</span>: If no `GameMap` with this uuid is found, return an appropriate message.
+        1. <span style="color:blue">map_name</span>: show the statistics and preview of this map (if available)
+    5. <span style="color:red">Normal Flow</span>: fetch the `GameMap` with this name and show its stats and preview.
+    6. <span style="color:red">Alternate Flow</span>: If no `GameMap` with this name is found, return an appropriate message.
 
 14. `top`
     1. <span style="color:pink">Purpose</span>: show an embed with the top players of this month (or all time).
