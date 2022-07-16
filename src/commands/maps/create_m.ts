@@ -19,7 +19,7 @@ export default {
             required: true,
         },
         {
-            name: "imgLink",
+            name: "img_link",
             description: "The link to an external image preview of the map",
             type: ApplicationCommandOptionTypes.STRING,
             required: false,
@@ -36,7 +36,7 @@ export default {
 
         // get the command parameters
         const name = ensure(options.getString("name"));
-        const imgLink = options.getString("imgLink") ?? "";
+        const imgLink = options.getString("img_link") ?? "";
 
         return await createMap(name, imgLink, guildId);
     },

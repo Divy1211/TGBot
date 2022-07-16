@@ -1,4 +1,3 @@
-import { assert } from "console";
 import {EmbedFieldData, MessageEmbed} from "discord.js";
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
@@ -8,7 +7,7 @@ import {PoolMap} from "../../entities/pools/PoolMap";
 import {Queue} from "../../entities/queues/Queue"
 
 export default {
-    // THIS COMMAND IS ONLY CAPABLE FOR POOL FINDING NOW
+    // THIS COMMAND IS ONLY CAPABLE FOR POOL FINDING FOR NOW
     category: "General",
     description: "List all the maps used by a queue or a pool",
 
@@ -93,7 +92,7 @@ export default {
         }
 
         if (maps.length == 0){
-            return `The pool is empty.`
+            return `The pool is empty`
         }
 
         // find GameMaps based on PoolMaps
