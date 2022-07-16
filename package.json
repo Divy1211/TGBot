@@ -13,11 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-<<<<<<< HEAD
-    "better-sqlite3": "^7.5.3",
-=======
     "better-sqlite3": "^7.6.0",
->>>>>>> b5101f8af2d3148eeea970f4f59138c27c1a1c69
     "discord.js": "^13.8.1",
     "dotenv": "^16.0.1",
     "reflect-metadata": "^0.1.13",
