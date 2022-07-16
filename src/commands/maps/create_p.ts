@@ -1,6 +1,5 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-
 import {createPool} from "../../abstract_commands/maps/create_pool";
 import {ensure} from "../../utils/general";
 

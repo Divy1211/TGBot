@@ -21,22 +21,9 @@ export default {
         }
 
         var pools = await Pool.find();
-        
-        let embed = new MessageEmbed().setDescription("the list of pools in the channel").setColor("#ED2939").setTitle("Pools");
-        let fields: EmbedFieldData[] = [];
-        fields.push({
-            name: "uuid",
-            value: pools.map(({uuid})=>`${uuid}`).join("\n"),
-            inline: true,
-        });
-        fields.push({
-            name: "name",
-            value: pools.map(({name})=>`${name}`).join("\n"),
-            inline: true,
-        });
 
+        // find all maps in the pool
         var all_maps=[];
-
         for (let i=0; i<pools.length; i++){
             let map = await PoolMap.find({
                 where: {pool: {uuid: pools[i].uuid}}
@@ -44,6 +31,21 @@ export default {
             var maps = map.map(({map})=>`${map.name}`).join(",");
             all_maps.push(maps);
         }
+        
+        let embed = new MessageEmbed().setDescription("the list of pools in the channel").setColor("#ED2939").setTitle("Pools");
+        let fields: EmbedFieldData[] = [];
+
+        fields.push({
+            name: "uuid",
+            value: pools.map(({uuid})=>`${uuid}`).join("\n"),
+            inline: true,
+        });
+
+        fields.push({
+            name: "name",
+            value: pools.map(({name})=>`${name}`).join("\n"),
+            inline: true,
+        });
 
         fields.push({
             name: "maps",

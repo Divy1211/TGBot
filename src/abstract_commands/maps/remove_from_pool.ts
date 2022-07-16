@@ -3,7 +3,7 @@ import { GameMap } from "../../entities/pools/GameMap";
 import { PoolMap } from "../../entities/pools/PoolMap";
 
 /**
- * Remove a map from a pool
+ * Remove a map from the pool
  * 
  * @param poolName The name of the pool
  * @param mapName The name of the map
@@ -15,6 +15,7 @@ export async function removeFromPool(poolName: string, mapName: string, guildId:
         guild = new Guild(guildId);
     }
 
+    // find the corresponding map
     let game_map = await GameMap.findOneBy({name: mapName});
     if (!game_map){
         return `Map ${mapName} is not found in this channel`
@@ -25,6 +26,7 @@ export async function removeFromPool(poolName: string, mapName: string, guildId:
         return `Map ${mapName} is not found in this pool`
     }
 
+    // remove the map from the pool
     await pool_map.remove();
 
     return ` Map ${mapName} has been remove from pool ${poolName} successfully!"`

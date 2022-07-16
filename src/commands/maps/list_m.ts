@@ -7,7 +7,7 @@ import {PoolMap} from "../../entities/pools/PoolMap";
 import {Queue} from "../../entities/queues/Queue"
 
 export default {
-    // THIS COMMAND IS ONLY CAPABLE FOR POOL FINDING FOR NOW
+    // TODO: THIS COMMAND IS ONLY CAPABLE FOR POOL FINDING FOR NOW
     category: "General",
     description: "List all the maps used by a queue or a pool",
 
@@ -60,7 +60,7 @@ export default {
             }
             // found pool is in the queue's pools
             target_pools.push(pool_in);
-            description = `Map contained in pool ${pool_in.uuid}`
+            description = `Map contained in pool ${pool_in.uuid}`;
         }
 
         // only queue or pool is found 
@@ -68,12 +68,12 @@ export default {
             // only queue
             if (queue_in.pools){
                 target_pools = queue_in.pools;
-                description = `Maps contained in queue ${queue_in.uuid}`
+                description = `Maps contained in queue ${queue_in.uuid}`;
             }
         }
         else if (pool_in){
             target_pools.push(pool_in);
-            description = `Maps contained in pool ${pool_in.uuid}`
+            description = `Maps contained in pool ${pool_in.uuid}`;
         }
 
         // find all maps from targeted pools
@@ -84,15 +84,16 @@ export default {
                     pool: {uuid: target_pools[i].uuid}
                 }
             })
+
             for (let i=0; i<pool_maps.length; i++){
                 if (!maps.includes(pool_maps[i])){
-                    maps.push(pool_maps[i])
+                    maps.push(pool_maps[i]);
                 }
             }
         }
 
         if (maps.length == 0){
-            return `The pool is empty`
+            return `The pool is empty`;
         }
 
         // find GameMaps based on PoolMaps
@@ -100,26 +101,22 @@ export default {
         for (let i=0; i<maps.length; i++){
             let find = await GameMap.findOneBy({uuid: maps[i].map.uuid});
             game_maps.push(find!);
-        }
+        };
         
-
-        let embed = new MessageEmbed().setDescription(description).setColor("#ED2939").setTitle("Maps")
+        let embed = new MessageEmbed().setDescription(description).setColor("#ED2939").setTitle("Maps");
         let fields: EmbedFieldData[] = [];
+
         fields.push({
             name: "mapUuid",
             value: game_maps.map(({uuid})=>`${uuid}`).join("\n"),
             inline: true,
-        })
+        });
+
         fields.push({
             name: "name",
             value: game_maps.map(({name})=>`${name}`).join("\n"),
             inline: true,
-        })
-        // fields.push({
-        //     name: "multiplayer",
-        //     value: maps.map(({multiplier})=>multiplier).join("\n"),
-        //     inline: true,
-        // })
+        });
 
         embed.addFields(fields);
         return embed;

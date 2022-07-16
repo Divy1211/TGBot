@@ -28,17 +28,14 @@ export default {
 
     callback: async ({interaction}) => {
         const {options, channelId, guildId} = interaction;
-
         // ensure that the command is being run in a server
         if (!channelId || !guildId) {
             return "This command can only be run in a text channel in a server";
         }
-
         // get the command parameters
         const pool_name = ensure(options.getString("pool_name"));
         const map_name = ensure(options.getString("map_name"));
         
-
         return await removeFromPool(pool_name, map_name, guildId);
     },
 } as ICommand;
