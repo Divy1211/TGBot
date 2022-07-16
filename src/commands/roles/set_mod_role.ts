@@ -1,12 +1,11 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-
-import {deleteQueue} from "../../abstract_commands/queues/delete";
+import {setModRole} from "../../abstract_commands/roles/set_mod";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Create a TG pickup queue in this channel",
+    description: "Set a role for bot mods on the server",
 
     slash: true,
     testOnly: true,
@@ -14,9 +13,9 @@ export default {
 
     options: [
         {
-            name: "uuid",
-            description: "The ID of the queue to delete",
-            type: ApplicationCommandOptionTypes.INTEGER,
+            name: "role",
+            description: "The role to set for bot mods",
+            type: ApplicationCommandOptionTypes.ROLE,
             required: true,
         },
     ],
@@ -30,8 +29,7 @@ export default {
         }
 
         // get the command parameters
-        const uuid = ensure(options.getInteger("uuid"));
-
-        return await deleteQueue(uuid, channelId);
+        const role = ensure(options.getRole("role"));
+        return await setModRole(guildId, role);
     },
 } as ICommand;

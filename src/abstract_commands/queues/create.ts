@@ -10,7 +10,8 @@ import {Queue} from "../../entities/queues/Queue";
  * @param guildId The ID of the server in which the queue should be created
  * @param channelId The ID of the channel in which the queue should be created
  */
-export async function createQueue(name: string, numPlayers: number, guildId: string, channelId: string): Promise<string> {
+export async function createQueue(
+    name: string, numPlayers: number, guildId: string, channelId: string): Promise<string> {
     let guild = await Guild.findOneBy({id: guildId});
     if (!guild) {
         guild = new Guild(guildId);

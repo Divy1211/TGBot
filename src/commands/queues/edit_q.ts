@@ -1,7 +1,6 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 import {editQueue} from "../../abstract_commands/queues/edit";
-import {Queue} from "../../entities/queues/Queue";
 import {ensure} from "../../utils/general";
 
 export default {
@@ -10,6 +9,7 @@ export default {
 
     slash: true,
     testOnly: true,
+    guildOnly: true,
 
     options: [
         {
