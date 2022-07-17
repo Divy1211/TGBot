@@ -6,6 +6,9 @@ import {QueueDefault} from "../../entities/queues/QueueDefault";
 import {User} from "../../entities/User";
 import {getPlayerEmbed} from "../common";
 import {Ban} from "../../entities/user_data/Ban";
+import { Match } from "../../entities/matches/Match";
+import { Leaderboard } from "../../entities/queues/Leaderboard";
+import { PlayerStats } from "../../entities/queues/PlayerStats";
 
 
 /**
@@ -38,14 +41,25 @@ export async function joinQueue(
         await user.save();
     }
 
-    const ban = await Ban.findOneBy({user:{discordId}})
-    console.log(ban);
+    const ban = await Ban.findOne({where:{user:{discordId}}})
+    console.log(ban)
     if (ban){
         if (ban.until !== -1 && ban.until < new Date().getTime()){
             await Ban.remove(ban);
         }
         else {
-            return `You are banned from joining a queue`
+            if(ban.until !== -1){
+                if (ban.reason){
+                    return `You are banned from joining a queue until <t:${ban.until}:r> for: "${ban.reason}"`;
+                }
+                return `You are banned from joining a queue until <t:${ban.until}:r>`;
+            }
+            else{
+                if (ban.reason){
+                    return `You are permanently banned from joining a queue for: "${ban.reason}"`;
+                }
+                return `You are permanently banned from joining a queue`;
+            }
         }
     }
 
@@ -95,6 +109,20 @@ export async function joinQueue(
 
     queue.users.push(user);
     await queue.save();
+
+    if (queue.users.length === queue.numPlayers){
+        let queues = await Queue.find();
+        for (let q of queues){
+            if (q !== queue){
+                for (user of q.users){
+                    if (q.users.map(({discordId}) => discordId).includes(user.discordId)){
+                        q.users = q.users.filter((user) => user.discordId != discordId);
+                        q.save();
+                    }
+                }
+            }   
+        }
+    }
 
     qDefault.lastQ = queue;
     await qDefault.save();

@@ -1,9 +1,7 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 import {ensure} from "../../utils/general";
-import {GuildMember} from "discord.js";
-import {createBan} from "../../abstract_commands/ban/ban";
-import {deleteBan} from "../../abstract_commands/ban/unban";
+import {unbanUser} from "../../abstract_commands/ban/unban";
 
 export default {
     category: "Admin",
@@ -19,12 +17,6 @@ export default {
             type: ApplicationCommandOptionTypes.USER,
             required: true,
         },
-        {
-            name: "reason",
-            description: "The reason you want to unban the user",
-            type: ApplicationCommandOptionTypes.STRING,
-            required: false,
-        },
     ],
 
     callback: async ({interaction}) => {
@@ -36,9 +28,8 @@ export default {
         }
 
         // get the command parameters
-        const member = ensure(options.getMember("user")) as GuildMember;
-        const reason = options.getString("reason") ?? "";
+        const user = ensure(options.getUser("user"));
 
-        return await deleteBan(member, reason, guildId, channelId);
+        return await unbanUser(user.id,guildId);
     },
 } as ICommand;
