@@ -20,7 +20,7 @@ export async function showMap(mapName: string, guildId: string) {
         return `Map ${mapName} not found in the channel`
     }
 
-    let embed = new MessageEmbed().setDescription(`Statics of Map: ${mapName}`).setColor("#ED2939").setTitle(`Map Statics - ${mapName}`)
+    let embed = new MessageEmbed().setDescription(`Statics of Map: ${mapName}`).setColor("#0095F7").setTitle(`Map Statics - ${mapName}`)
     let fields: EmbedFieldData[] = [];
 
     fields.push({

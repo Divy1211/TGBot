@@ -103,7 +103,7 @@ export default {
             game_maps.push(find!);
         };
         
-        let embed = new MessageEmbed().setDescription(description).setColor("#ED2939").setTitle("Maps");
+        let embed = new MessageEmbed().setDescription(description).setColor("#0095F7").setTitle("Maps");
         let fields: EmbedFieldData[] = [];
 
         fields.push({
@@ -115,6 +115,12 @@ export default {
         fields.push({
             name: "name",
             value: game_maps.map(({name})=>`${name}`).join("\n"),
+            inline: true,
+        });
+
+        fields.push({
+            name: "multiplier",
+            value: maps.map(({multiplier})=>`${multiplier}`).join("\n"),
             inline: true,
         });
 

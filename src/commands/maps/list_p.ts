@@ -28,11 +28,11 @@ export default {
             let map = await PoolMap.find({
                 where: {pool: {uuid: pools[i].uuid}}
             });
-            var maps = map.map(({map})=>`${map.name}`).join(",");
+            var maps = map.map(({map})=>`${map.name}`).join(", ");
             all_maps.push(maps);
         }
         
-        let embed = new MessageEmbed().setDescription("the list of pools in the channel").setColor("#ED2939").setTitle("Pools");
+        let embed = new MessageEmbed().setDescription("The list of pools in the channel").setColor("#0095F7").setTitle("Pools");
         let fields: EmbedFieldData[] = [];
 
         fields.push({

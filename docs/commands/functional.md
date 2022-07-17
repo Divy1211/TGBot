@@ -79,7 +79,17 @@ Note: These specifications are currently ignored due to development purposes, bu
         1. <span style="color:blue">duration</span>: The duration for the cooldown `hh:mm[:ss]`.
     5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `promotion duration`on the guild instance and save the `Guild` object.
     6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the format used is incorrect.
-9. `add_maps` The specifics of this command are yet to be determined
+9. `add_map` 
+    1. <span style="color:pink">Purpose</span>: This add a map to a pool.
+    2. <span style="color:pink">Constraints</span>: This command can only create a map to a pool in a particular channel.
+    3. <span style="color:pink">Actors</span>: Admins
+    4. <span style="color:pink">Parameters</span>:
+        1. <span style="color:blue">map_name</span>: The name of the map.
+        2. <span style="color:blue">pool_name</span>: The name of the pool.
+        3. <span style="color:blue">multiplier</span>: The number of players for this map in the pool.
+    5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Fetch the `GameMap` and `Pool` instances, setting the `multiplier` of the map and save the `PoolMap` object to the database.
+    6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the map or the pool is not found, or, map is already in the pool.
+
 10. `create_pool`
     1. <span style="color:pink">Purpose</span>: This command create a pool.
     2. <span style="color:pink">Constraints</span>: This command can only create a pool for a particular channel.
@@ -88,33 +98,31 @@ Note: These specifications are currently ignored due to development purposes, bu
         1. <span style="color:blue">name</span>: The name of the pool.
     5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `name` of the map and save the `Pool` object.
     6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the input format is incorrect.
-
 11. `create_map`
-     1. <span style="color:pink">Purpose</span>: This command create a map.
-     2. <span style="color:pink">Constraints</span>: This command can only create a map for a particular server.
-     3. <span style="color:pink">Actors</span>: Admins
-     4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">name</span>: The name of the map.
-     5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `name`, `img_link` of the map and save the `GameMap` object.
-     6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the input format is incorrect.
-12. `remove_map_from_all` 
-     1. <span style="color:pink">Purpose</span>: This command remove a map from the sever.
-     2. <span style="color:pink">Constraints</span>: This command can only remove a map for a particular server.
-     3. <span style="color:pink">Actors</span>: Admins
-     4. <span style="color:pink">Parameters</span>:
+      1. <span style="color:pink">Purpose</span>: This command create a map.
+      2. <span style="color:pink">Constraints</span>: This command can only create a map for a particular server.
+      3. <span style="color:pink">Actors</span>: Admins
+      4. <span style="color:pink">Parameters</span>:
          1. <span style="color:blue">name</span>: The name of the map.
-     5. <span style="color:red">Normal Flow</span>: A `GameMap` object with the provided `name` should be fetched and removed from the database.
-     6. <span style="color:red">Alternate Flow</span>: An error is returned if the `name` specified does not belong to a map in the channel that this command is run in.
-
+      5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `name`, `img_link` of the map and save the `GameMap` object.
+      6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the input format is incorrect.
+12. `remove_map_from_all` 
+      1. <span style="color:pink">Purpose</span>: This command remove a map from the sever.
+      2. <span style="color:pink">Constraints</span>: This command can only remove a map for a particular server.
+      3. <span style="color:pink">Actors</span>: Admins
+      4. <span style="color:pink">Parameters</span>:
+          1. <span style="color:blue">name</span>: The name of the map.
+      5. <span style="color:red">Normal Flow</span>: A `GameMap` object with the provided `name` should be fetched and removed from the database.
+      6. <span style="color:red">Alternate Flow</span>: An error is returned if the `name` specified does not belong to a map in the channel that this command is run in.
 13. `remove_map_from_pool`
-     1. <span style="color:pink">Purpose</span>: This command remove a map from a pool specified in the sever.
-     2. <span style="color:pink">Constraints</span>: This command can only remove a map for a particular pool in the channel.
-     3. <span style="color:pink">Actors</span>: Admins
-     4. <span style="color:pink">Parameters</span>:
-         1. <span style="color:blue">pool_name</span>: The name of the pool.
-         2. <span style="color:blue">map_name</span>: The name of the map.
-     5. <span style="color:red">Normal Flow</span>: A `PoolMap` object with the provided `map_name` in the pool with the provided `pool_name` should be fetched and removed from the pool.
-     6. <span style="color:red">Alternate Flow</span>: An error is returned if the `map_name` specified does not belong to a map or the `pool_name` specified does not belong to a pool in the channel that this command is run in.
+      1. <span style="color:pink">Purpose</span>: This command remove a map from a pool specified in the sever.
+      2. <span style="color:pink">Constraints</span>: This command can only remove a map for a particular pool in the channel.
+      3. <span style="color:pink">Actors</span>: Admins
+      4. <span style="color:pink">Parameters</span>:
+          1. <span style="color:blue">pool_name</span>: The name of the pool.
+          2. <span style="color:blue">map_name</span>: The name of the map.
+      5. <span style="color:red">Normal Flow</span>: A `PoolMap` object with the provided `map_name` in the pool with the provided `pool_name` should be fetched and removed from the pool.
+      6. <span style="color:red">Alternate Flow</span>: An error is returned if the `map_name` specified does not belong to a map or the `pool_name` specified does not belong to a pool in the channel that this command is run in.
 
 
 ## Mod Commands
