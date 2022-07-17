@@ -124,30 +124,6 @@ export async function joinQueue(
                 }
             }   
         }
-
-        let pool_length = queue.pools?.length;
-        let pool_num = Math.floor(Math.random()*pool_length!)
-        // console.log(pool_num); //output 5
-        if (!queue.leaderboard){
-            const guild = await Guild.findOneBy({id: guildId});
-            let leaderboard = new Leaderboard(guild!);
-            const playerstats = [];
-            for (let u of queue.users){
-                let playerstat = await PlayerStats.findOneBy({user:{discordId:u.discordId}});
-                if (!playerstat){
-                    playerstat = new PlayerStats(u,leaderboard);
-                    playerstat.save();
-                }
-                playerstats.push(playerstat);
-            }
-            leaderboard.playerStats = playerstats;
-            queue.leaderboard = leaderboard
-            await queue.save();
-        }
-
-        let match = new Match(queue.leaderboard!.playerStats,queue.pools![pool_num]);
-        console.log(match);
-        await match.save()
     }
 
     qDefault.lastQ = queue;
