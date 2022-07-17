@@ -35,9 +35,8 @@ export async function banUser(userId: string, duration: string|null, reason: str
         }
     }
     if (!duration){
-        ban = new Ban(user,reason,-1);
-        ensure(guild.bans).push(ban);
-        await guild.save();
+        ban = new Ban(user,reason,-1,guild);
+        await ban.save();
     }
     else {
         let expireTime;
@@ -54,9 +53,8 @@ export async function banUser(userId: string, duration: string|null, reason: str
                 const h = parseInt(hh);
                 const m = parseInt(mm);
                 expireTime = h*60*60 + m*60
-                ban = new Ban(user,reason,expireTime*1000+curTime);
-                ensure(guild.bans).push(ban);
-                await guild.save();
+                ban = new Ban(user,reason,(expireTime*1000+curTime)/1000,guild);
+                await ban.save();
             }
             catch (e){
                 return "Error: The format of the specified duration is invalid, please try again;"
@@ -68,9 +66,8 @@ export async function banUser(userId: string, duration: string|null, reason: str
                 const m = parseInt(mm);
                 const s = parseInt(ss.slice(1));
                 expireTime = h*60*60 + m*60 + s;
-                ban = new Ban(user,reason,expireTime*1000+curTime);
-                ensure(guild.bans).push(ban);
-                await guild.save();
+                ban = new Ban(user,reason,(expireTime*1000+curTime)/1000,guild);
+                await ban.save();
 
             }
             catch (e){
@@ -82,12 +79,12 @@ export async function banUser(userId: string, duration: string|null, reason: str
 
     if (!ban.reason){
         if (ban.until>0){
-            return `<@${userId}> has been banned for <t:${Math.floor(ban.until/1000)}:R>`;
+            return `<@${userId}> has been banned for <t:${Math.floor(ban.until)}:R>`;
         }
         return `<@${userId}> has been banned permanently`;
     }   
     if (ban.until>0){
-        return `<@${userId}> has been banned for "${ban.reason}" for <t:${Math.floor(ban.until/1000)}:R>`;
+        return `<@${userId}> has been banned for "${ban.reason}" for <t:${Math.floor(ban.until)}:R>`;
     }
     return `<@${userId}> has been banned for "${ban.reason}" permanently`;
 

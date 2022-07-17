@@ -34,7 +34,7 @@ export class Guild extends BaseEntity {
     @JoinTable()
     users?: User[];
 
-    @OneToMany(() => Ban, (ban: Ban) => ban.guild, {cascade: true})
+    @OneToMany(() => Ban, (ban: Ban) => ban.guild)
     bans?: Ban[];
 
     @OneToMany(() => Queue, (queue: Queue) => queue.guild)

@@ -41,26 +41,28 @@ export async function joinQueue(
         await user.save();
     }
 
-    const ban = await Ban.findOne({where:{user:{discordId}}})
-    console.log(ban)
+    const ban = await Ban.findOne({where:{user:{discordId}},relations:{guild:true}})
     if (ban){
-        if (ban.until !== -1 && ban.until < new Date().getTime()){
-            await Ban.remove(ban);
-        }
-        else {
-            if(ban.until !== -1){
-                if (ban.reason){
-                    return `You are banned from joining a queue until <t:${ban.until}:r> for: "${ban.reason}"`;
-                }
-                return `You are banned from joining a queue until <t:${ban.until}:r>`;
+        if (ban.guild?.id === guildId){
+            if (ban.until !== -1 && ban.until < new Date().getTime()/1000){
+                await Ban.remove(ban);
             }
-            else{
-                if (ban.reason){
-                    return `You are permanently banned from joining a queue for: "${ban.reason}"`;
+            else {
+                if(ban.until !== -1){
+                    if (ban.reason){
+                        return `You are banned from joining a queue until <t:${Math.floor(ban.until)}:R> for: "${ban.reason}"`;
+                    }
+                    return `You are banned from joining a queue until <t:${Math.floor(ban.until)}:R>`;
                 }
-                return `You are permanently banned from joining a queue`;
+                else{
+                    if (ban.reason){
+                        return `You are permanently banned from joining a queue for: "${ban.reason}"`;
+                    }
+                    return `You are permanently banned from joining a queue`;
+                }
             }
         }
+        
     }
 
     // load existing or create a new QueueDefault
@@ -122,6 +124,30 @@ export async function joinQueue(
                 }
             }   
         }
+
+        let pool_length = queue.pools?.length;
+        let pool_num = Math.floor(Math.random()*pool_length!)
+        // console.log(pool_num); //output 5
+        if (!queue.leaderboard){
+            const guild = await Guild.findOneBy({id: guildId});
+            let leaderboard = new Leaderboard(guild!);
+            const playerstats = [];
+            for (let u of queue.users){
+                let playerstat = await PlayerStats.findOneBy({user:{discordId:u.discordId}});
+                if (!playerstat){
+                    playerstat = new PlayerStats(u,leaderboard);
+                    playerstat.save();
+                }
+                playerstats.push(playerstat);
+            }
+            leaderboard.playerStats = playerstats;
+            queue.leaderboard = leaderboard
+            await queue.save();
+        }
+
+        let match = new Match(queue.leaderboard!.playerStats,queue.pools![pool_num]);
+        console.log(match);
+        await match.save()
     }
 
     qDefault.lastQ = queue;
