@@ -20,8 +20,8 @@ export async function banUser(userId: string, duration: string|null, reason: str
 
     const discordId = userId;
     let user = await User.findOneBy({discordId});
+    console.log(user);
     if (!user) {
-        const guild = await Guild.findOneBy({id: guildId});
         user = new User(discordId, {guilds: [ensure(guild)]});
         await user.save();
     }
@@ -53,7 +53,7 @@ export async function banUser(userId: string, duration: string|null, reason: str
                 const h = parseInt(hh);
                 const m = parseInt(mm);
                 expireTime = h*60*60 + m*60
-                ban = new Ban(user,reason,(expireTime*1000+curTime)/1000,guild);
+                ban = new Ban(user,reason,Math.floor((expireTime*1000+curTime)/1000),guild);
                 await ban.save();
             }
             catch (e){
@@ -66,7 +66,7 @@ export async function banUser(userId: string, duration: string|null, reason: str
                 const m = parseInt(mm);
                 const s = parseInt(ss.slice(1));
                 expireTime = h*60*60 + m*60 + s;
-                ban = new Ban(user,reason,(expireTime*1000+curTime)/1000,guild);
+                ban = new Ban(user,reason,Math.floor((expireTime*1000+curTime)/1000),guild);
                 await ban.save();
 
             }
@@ -79,12 +79,12 @@ export async function banUser(userId: string, duration: string|null, reason: str
 
     if (!ban.reason){
         if (ban.until>0){
-            return `<@${userId}> has been banned for <t:${Math.floor(ban.until)}:R>`;
+            return `<@${userId}> has been banned for <t:${ban.until}:R>`;
         }
         return `<@${userId}> has been banned permanently`;
     }   
     if (ban.until>0){
-        return `<@${userId}> has been banned for "${ban.reason}" for <t:${Math.floor(ban.until)}:R>`;
+        return `<@${userId}> has been banned for "${ban.reason}" for <t:${ban.until}:R>`;
     }
     return `<@${userId}> has been banned for "${ban.reason}" permanently`;
 

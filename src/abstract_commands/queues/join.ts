@@ -50,9 +50,9 @@ export async function joinQueue(
             else {
                 if(ban.until !== -1){
                     if (ban.reason){
-                        return `You are banned from joining a queue until <t:${Math.floor(ban.until)}:R> for: "${ban.reason}"`;
+                        return `You are banned from joining a queue until <t:${ban.until}:R> for: "${ban.reason}"`;
                     }
-                    return `You are banned from joining a queue until <t:${Math.floor(ban.until)}:R>`;
+                    return `You are banned from joining a queue until <t:${ban.until}:R>`;
                 }
                 else{
                     if (ban.reason){
