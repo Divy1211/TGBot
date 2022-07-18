@@ -26,7 +26,6 @@ export async function banUser(userId: string, duration: string|null, reason: str
     }
 
     let ban = await Ban.findOneBy({user:{discordId}});
-    console.log(ban);
     if (ban){
         if (ban.until > 0 && ban.until < new Date().getTime()/1000){
             await ban.remove();
@@ -79,7 +78,6 @@ export async function banUser(userId: string, duration: string|null, reason: str
 
         }
         catch (e){
-            console.log(e)
             return "Error: The format of the specified duration is invalid, please try again;"
         }
     }
