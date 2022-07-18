@@ -1,4 +1,3 @@
-import { relative } from "path";
 import {Guild} from "../../entities/Guild";
 import {User} from "../../entities/User";
 import {Ban} from "../../entities/user_data/Ban";

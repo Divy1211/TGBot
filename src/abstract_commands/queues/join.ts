@@ -6,9 +6,6 @@ import {QueueDefault} from "../../entities/queues/QueueDefault";
 import {User} from "../../entities/User";
 import {getPlayerEmbed} from "../common";
 import {Ban} from "../../entities/user_data/Ban";
-import { Match } from "../../entities/matches/Match";
-import { Leaderboard } from "../../entities/queues/Leaderboard";
-import { PlayerStats } from "../../entities/queues/PlayerStats";
 
 
 /**
@@ -124,6 +121,7 @@ export async function joinQueue(
                 }
             }   
         }
+
     }
 
     qDefault.lastQ = queue;
