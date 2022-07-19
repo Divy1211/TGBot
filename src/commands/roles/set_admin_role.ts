@@ -1,20 +1,22 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {Guild} from "../../entities/Guild";
+import {setAdminRole} from "../../abstract_commands/roles/set_admin";
+import {ensure} from "../../utils/general";
 
 export default {
-    category: "General",
-    description: "Set a role as admin role for the server",
+    category: "Admin",
+    description: "Set a role for bot admins on the server",
 
     slash: true,
     testOnly: true,
+    guildOnly: true,
 
     options: [
         {
-            name: "rolename",
-            description: "a role name",
-            type: ApplicationCommandOptionTypes.STRING,
+            name: "role",
+            description: "The role to set for bot admins",
+            type: ApplicationCommandOptionTypes.ROLE,
             required: true,
         },
     ],
@@ -28,19 +30,8 @@ export default {
         }
 
         // get the command parameters
-        const roleName = options.getString("rolename");
-        const role = interaction.guild?.roles.cache.find((r: any) => r.name == roleName);
+        const role = ensure(options.getRole("role"));
 
-        if (!role) {
-            return `Role ${roleName} does not exist on this channel.`;
-        }
-
-        const guild = await Guild.findOneBy({id: guildId}) || undefined;
-        if (guild != undefined) {
-            guild.adminRoleId = role?.id.toString();
-            guild.save();
-            return `Role ${roleName} has been set to admin role.`;
-        }
-
+        return await setAdminRole(guildId, role);
     },
 } as ICommand;

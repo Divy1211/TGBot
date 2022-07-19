@@ -1,20 +1,22 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {Guild} from "../../entities/Guild";
+import {setModRole} from "../../abstract_commands/roles/set_mod";
+import {ensure} from "../../utils/general";
 
 export default {
-    category: "General",
-    description: "Set a role as moderate role for the server",
+    category: "Admin",
+    description: "Set a role for bot mods on the server",
 
     slash: true,
     testOnly: true,
+    guildOnly: true,
 
     options: [
         {
-            name: "rolename",
-            description: "a role name",
-            type: ApplicationCommandOptionTypes.STRING,
+            name: "role",
+            description: "The role to set for bot mods",
+            type: ApplicationCommandOptionTypes.ROLE,
             required: true,
         },
     ],
@@ -28,19 +30,8 @@ export default {
         }
 
         // get the command parameters
-        const roleName = options.getString("rolename");
-        const role = interaction.guild?.roles.cache.find((r: any) => r.name == roleName);
-
-        if (!role) {
-            return `Role ${roleName} does not exist on this channel.`;
-        }
-
-        const guild = await Guild.findOneBy({id: guildId}) || undefined;
-        if (guild != undefined) {
-            guild.modRoleId = role?.id.toString();
-            guild.save();
-            return `Role ${roleName} has been set to moderate role.`;
-        }
-
+        const role = ensure(options.getRole("role"));
+        
+        return await setModRole(guildId, role);
     },
 } as ICommand;
