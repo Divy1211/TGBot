@@ -8,9 +8,9 @@ export class PoolMap extends BaseEntity {
     @PrimaryGeneratedColumn()
     uuid!: number;
 
-    @ManyToOne(() => GameMap, {cascade: true, eager: true, onDelete: "CASCADE"})
+    @ManyToOne(() => GameMap, {eager: true, onDelete: "CASCADE"})
     @JoinColumn()
-    map!: GameMap;
+    map: GameMap;
 
     @ManyToOne(() => Pool, (pool: Pool) => pool.maps, {onDelete: "CASCADE"})
     pool?: Pool;

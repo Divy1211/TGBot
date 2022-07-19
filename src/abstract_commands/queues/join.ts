@@ -5,6 +5,7 @@ import {Queue} from "../../entities/queues/Queue";
 import {QueueDefault} from "../../entities/queues/QueueDefault";
 import {User} from "../../entities/User";
 import {getPlayerEmbed} from "../common";
+import {startMatch} from "../matches/start";
 
 /**
  * Puts the given user into a queue in the given channel or the specified queue
@@ -34,6 +35,10 @@ export async function joinQueue(
 
         user = new User(discordId, {guilds: [guild]});
         await user.save();
+    }
+
+    if (user.inGame) {
+        return "You cannot join a queue while in a game";
     }
 
     // load existing or create a new QueueDefault
@@ -80,11 +85,17 @@ export async function joinQueue(
         return "You are already in the queue!";
     }
 
-    queue.users.push(user);
-    await queue.save();
-
     qDefault.lastQ = queue;
     await qDefault.save();
+
+    queue.users.push(user);
+
+    if (queue.users.length === queue.numPlayers) {
+        startMatch(queue.uuid, queue.users).then();
+        queue.users = [];
+    }
+
+    await queue.save();
 
     return getPlayerEmbed(queue);
 }
