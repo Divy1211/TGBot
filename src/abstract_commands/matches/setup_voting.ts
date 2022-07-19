@@ -95,7 +95,7 @@ export async function setupVotingOptions(match: Match): Promise<void> {
                                 .setURL("https://aoe2.net/s/123456789")
                                 .setStyle("LINK")
                                 .setEmoji("👓"),
-                        )
+                        ),
                     ],
                 });
 
@@ -105,7 +105,7 @@ export async function setupVotingOptions(match: Match): Promise<void> {
     });
 
     // this callback is run when the 5-minute timer runs out
-    votes.on("end", async (collection) => {
+    votes.on("end", async () => {
         const unreadyPlayers = ensure(match.players)
             .filter((player: Player) => !player.isReady)
             .map((player: Player) => ensure(player.user).discordId);

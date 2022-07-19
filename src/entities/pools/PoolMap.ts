@@ -12,7 +12,7 @@ export class PoolMap extends BaseEntity {
     @JoinColumn()
     map: GameMap;
 
-    @ManyToOne(() => Pool, (pool: Pool) => pool.maps, {onDelete: "CASCADE"})
+    @ManyToOne(() => Pool, (pool: Pool) => pool.poolMaps, {onDelete: "CASCADE"})
     pool?: Pool;
 
     @Column()

@@ -6,8 +6,6 @@ import WOKC from "wokcommands";
 
 import {AppDataSource} from "./data-source";
 import {Guild} from "./entities/Guild";
-import {MapOption} from "./entities/matches/MapOption";
-import {Match} from "./entities/matches/Match";
 import {GameMap} from "./entities/pools/GameMap";
 import {Pool} from "./entities/pools/Pool";
 import {PoolMap} from "./entities/pools/PoolMap";
@@ -69,7 +67,7 @@ async function unregisterRenamedCommands(commandsDir: string, testServers: strin
             return;
         }
 
-        commands.forEach((command, id) => {
+        commands.forEach((command) => {
             if (!commandNames.includes(command.name)) {
                 console.log(`    - '${command.name}'`, "color: #ffda55");
                 command.delete();
@@ -86,9 +84,10 @@ async function createTestingDatabase() {
     const pool = new Pool("test", ensure((queue).guild));
     await pool.save();
 
-    pool.maps = [];
+    pool.poolMaps = [];
     for (let i = 0; i < 10; ++i) {
-        const map = new GameMap(`map #${i}`, "https://static.toiimg.com/thumb/53110049.cms?width=1200&height=900", ensure(queue.guild));
+        const map = new GameMap(
+            `map #${i}`, "https://static.toiimg.com/thumb/53110049.cms?width=1200&height=900", ensure(queue.guild));
         await map.save();
 
         const poolMap = new PoolMap(map, pool, 1);

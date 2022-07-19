@@ -1,9 +1,8 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 
 import {Civ} from "../../interfaces/Civ";
 import {PlayerStats} from "../queues/PlayerStats";
 import {User} from "../User";
-import {MapOption} from "./MapOption";
 import {Match} from "./Match";
 
 @Entity()

@@ -3,6 +3,7 @@ import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGen
 import {choose, ensure} from "../../utils/general";
 import {Guild} from "../Guild";
 import {GameMap} from "../pools/GameMap";
+import {Pool} from "../pools/Pool";
 import {Leaderboard} from "../queues/Leaderboard";
 import {PlayerStats} from "../queues/PlayerStats";
 import {Queue} from "../queues/Queue";
@@ -106,7 +107,7 @@ export class Match extends BaseEntity {
     }
 
     regenMapOptions(): void {
-        const pools = Array(5).fill(ensure(this.queue?.pools)).flat();
+        const pools: Pool[] = Array(5).fill(ensure(this.queue?.pools)).flat();
         pools.length = 5;
 
         MapOption.find({
@@ -123,7 +124,7 @@ export class Match extends BaseEntity {
 
         for (const pool of pools) {
             let mapsMultiplied: GameMap[] = [];
-            for (const poolMap of pool.maps) {
+            for (const poolMap of pool.poolMaps) {
                 mapsMultiplied.push(...Array(poolMap.multiplier).fill(poolMap.map));
             }
 
@@ -132,7 +133,7 @@ export class Match extends BaseEntity {
             let map;
             do {
                 map = choose(mapsMultiplied);
-            } while (mapUuids.includes(map.uuid) && pool.maps.length > 5);
+            } while (mapUuids.includes(map.uuid) && pool.poolMaps.length > 5);
             // if the length is < 5, a repeat is guaranteed
 
             this.mapOptions.push(new MapOption(map, this));

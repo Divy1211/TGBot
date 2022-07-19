@@ -20,7 +20,7 @@ export async function startMatch(uuid: number, users: User[]): Promise<void> {
         where: {uuid},
         relations: {
             leaderboard: true,
-            pools: {maps: true},
+            pools: {poolMaps: true},
             guild: true,
         },
     }));
