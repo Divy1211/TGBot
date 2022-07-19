@@ -1,7 +1,8 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import {ensure} from "../../utils/general";
+
 import {unbanUser} from "../../abstract_commands/ban/unban";
+import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
@@ -30,6 +31,6 @@ export default {
         // get the command parameters
         const user = ensure(options.getUser("user"));
 
-        return await unbanUser(user.id,guildId);
+        return await unbanUser(user.id, guildId);
     },
 } as ICommand;

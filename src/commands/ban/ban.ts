@@ -1,7 +1,8 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import {ensure} from "../../utils/general";
+
 import {banUser} from "../../abstract_commands/ban/ban";
+import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
@@ -41,7 +42,7 @@ export default {
 
         // get the command parameters
         const user = ensure(options.getUser("user"));
-        const duration = options.getString("duration")
+        const duration = options.getString("duration");
         const reason = options.getString("reason") ?? "";
 
         return await banUser(user.id, duration, reason, guildId);

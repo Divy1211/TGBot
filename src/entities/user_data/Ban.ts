@@ -24,9 +24,9 @@ export class Ban extends BaseEntity {
     guild?: Guild;
 
     constructor();
-    constructor(user: User, reason: string, until: number, guild:Guild);
+    constructor(user: User, reason: string, until: number, guild: Guild);
 
-    constructor(user?: User, reason?: string, until?: number, guild?:Guild) {
+    constructor(user?: User, reason?: string, until?: number, guild?: Guild) {
         super();
 
         this.user = user ?? new User();

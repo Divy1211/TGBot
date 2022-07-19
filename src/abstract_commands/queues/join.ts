@@ -4,8 +4,8 @@ import {Guild} from "../../entities/Guild";
 import {Queue} from "../../entities/queues/Queue";
 import {QueueDefault} from "../../entities/queues/QueueDefault";
 import {User} from "../../entities/User";
-import {getPlayerEmbed} from "../common";
 import {Ban} from "../../entities/user_data/Ban";
+import {getPlayerEmbed} from "../common";
 
 
 /**
@@ -38,28 +38,26 @@ export async function joinQueue(
         await user.save();
     }
 
-    const ban = await Ban.findOne({where:{user:{discordId}},relations:{guild:true}})
-    if (ban){
-        if (ban.guild?.id === guildId){
-            if (ban.until !== -1 && ban.until < new Date().getTime()/1000){
+    const ban = await Ban.findOne({where: {user: {discordId}}, relations: {guild: true}});
+    if (ban) {
+        if (ban.guild?.id === guildId) {
+            if (ban.until !== -1 && ban.until < new Date().getTime() / 1000) {
                 await Ban.remove(ban);
-            }
-            else {
-                if(ban.until !== -1){
-                    if (ban.reason){
+            } else {
+                if (ban.until !== -1) {
+                    if (ban.reason) {
                         return `You are banned from joining a queue until <t:${ban.until}:R> for: "${ban.reason}"`;
                     }
                     return `You are banned from joining a queue until <t:${ban.until}:R>`;
-                }
-                else{
-                    if (ban.reason){
+                } else {
+                    if (ban.reason) {
                         return `You are permanently banned from joining a queue for: "${ban.reason}"`;
                     }
                     return `You are permanently banned from joining a queue`;
                 }
             }
         }
-        
+
     }
 
     // load existing or create a new QueueDefault
@@ -109,17 +107,17 @@ export async function joinQueue(
     queue.users.push(user);
     await queue.save();
 
-    if (queue.users.length === queue.numPlayers){
+    if (queue.users.length === queue.numPlayers) {
         let queues = await Queue.find();
-        for (let q of queues){
-            if (q !== queue){
-                for (user of q.users){
-                    if (q.users.map(({discordId}) => discordId).includes(user.discordId)){
+        for (let q of queues) {
+            if (q !== queue) {
+                for (user of q.users) {
+                    if (q.users.map(({discordId}) => discordId).includes(user.discordId)) {
                         q.users = q.users.filter((user) => user.discordId != discordId);
                         q.save();
                     }
                 }
-            }   
+            }
         }
 
     }

@@ -1,5 +1,4 @@
 import {Guild} from "../../entities/Guild";
-import {GuildMember} from "discord.js";
 import {User} from "../../entities/User";
 import {Ban} from "../../entities/user_data/Ban";
 
@@ -20,9 +19,9 @@ export async function unbanUser(userId: string, guildId: string): Promise<string
     if (!user) {
         return "Error: The user is not banned";
     }
-    const ban = await Ban.findOneBy({user:{discordId}});
+    const ban = await Ban.findOneBy({user: {discordId}});
     console.log(ban);
-    if (!ban){
+    if (!ban) {
         return `Error: The user is not banned`;
     }
     await ban.remove();

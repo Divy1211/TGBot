@@ -1,8 +1,7 @@
-import {EmbedFieldData, MessageEmbed} from "discord.js";
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import { Guild } from "../../entities/Guild";
+import {Guild} from "../../entities/Guild";
 
 export default {
     category: "General",
@@ -30,16 +29,16 @@ export default {
 
         // get the command parameters
         const roleName = options.getString("rolename");
-        const role = interaction.guild?.roles.cache.find((r:any) => r.name == roleName);
+        const role = interaction.guild?.roles.cache.find((r: any) => r.name == roleName);
 
         if (!role) {
-            return `Role ${roleName} does not exist on this channel.`
+            return `Role ${roleName} does not exist on this channel.`;
         }
 
-        const guild = await Guild.findOneBy({id:guildId}) || undefined;
-        if (guild != undefined){
+        const guild = await Guild.findOneBy({id: guildId}) || undefined;
+        if (guild != undefined) {
             guild.adminRoleId = role?.id.toString();
-            guild.save()
+            guild.save();
             return `Role ${roleName} has been set to admin role.`;
         }
 
