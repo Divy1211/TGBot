@@ -46,15 +46,16 @@ export async function banUser(
     }
 
     // ss will be undefined if not specified
-    let [_, hh, mm, ss]: (string | number)[] = duration.match(/^(\d+):(\d{2})(:\d{2})?$/) ?? ["-1", "-1", "-1", "-1"];
+    let [_, hh, mm, ss]: (string | number)[] = duration.match(/^(\d+):(\d{2}):?(\d{2})?$/) ?? ["-1", "-1", "-1", "-1"];
     if (hh === "-1") {
         return "Error: The format of the specified duration is invalid, please try again";
     }
+
     hh = parseInt(hh);
     mm = parseInt(mm);
     ss = ss ? parseInt(ss) : 0;
 
-    ban = new Ban(user, reason, Math.floor((hh*3600+mm*60+ss + +Date.now()) / 1000), guild);
+    ban = new Ban(user, reason, hh*3600+mm*60+ss + Math.floor(+Date.now()/1000), guild);
     await ban.save();
 
     return `<@${discordId}> has been banned${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
