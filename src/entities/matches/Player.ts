@@ -22,12 +22,18 @@ export class Player extends BaseEntity {
     @Column()
     isCaptain: boolean;
 
-    // this is the elo BEFORE the result of this.match is taken into account
     @Column()
-    elo: number;
+    isReady: boolean;
 
     @Column()
-    eloDelta: number;
+    votedReroll: boolean;
+
+    // this is the elo BEFORE the result of this.match is taken into account
+    @Column()
+    rating: number;
+
+    @Column()
+    ratingDelta: number;
 
     @ManyToOne(() => User, {onDelete: "SET NULL"})
     @JoinColumn()
@@ -50,7 +56,9 @@ export class Player extends BaseEntity {
         this.isCaptain = isCaptain ?? false;
         this.civ = -1;
         this.colour = -1;
-        this.elo = playerStats?.rating ?? -1;
-        this.eloDelta = 0;
+        this.rating = playerStats?.rating ?? -1;
+        this.ratingDelta = 0;
+        this.isReady = false;
+        this.votedReroll = false;
     }
 }

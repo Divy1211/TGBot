@@ -28,26 +28,50 @@ export function assert(value: unknown): asserts value {
     }
 }
 
+/**
+ * Choose one element randomly from the given array
+ *
+ * @param array The array to chose elements from
+ */
+export function choose<T>(array: T[]): T {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+/**
+ * Choose k elements randomly from the given array
+ *
+ * @param array The array to chose elements from
+ * @param k The number of elements to choose
+ * @param replacement choose with replacement
+ */
 export function choices<T>(array: T[], k: number, replacement = false): T[] {
-    let choices: T[] = [];
+    let choicesLs: T[] = [];
 
     for (let i = 0; i < k; ++i) {
         const choice = array[Math.floor(Math.random() * array.length)];
-        if (!replacement && choices.includes(choice)) {
+        if (!replacement && choicesLs.includes(choice)) {
             --i;
             continue;
         }
-        choices.push(choice);
+        choicesLs.push(choice);
     }
-    return choices;
+    return choicesLs;
 }
 
+/**
+ * Generates a combination of r things and their complement
+ *
+ * @param array The array to generate the combinations from
+ * @param r The group size
+ */
 export function combinations<T>(array: T[], r: number): T[][] {
-    if (r > array.length)
+    if (r > array.length) {
         throw Error("the number of elements to choose from must be larger than the amount to choose");
+    }
 
-    if (r === 1)
+    if (r === 1) {
         return array.map((element: T) => [element]);
+    }
 
     let combos: T[][] = [];
 
@@ -55,8 +79,9 @@ export function combinations<T>(array: T[], r: number): T[][] {
     while (r - 1 < copy.length) {
         const first = copy.splice(0, 1);
 
-        for (const combo of combinations(copy, r - 1))
+        for (const combo of combinations(copy, r - 1)) {
             combos.push(first.concat(combo));
+        }
     }
     return combos;
 }
