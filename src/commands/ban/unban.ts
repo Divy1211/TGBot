@@ -6,7 +6,7 @@ import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "unban a user",
+    description: "Unban a user",
 
     slash: true,
     testOnly: true,
@@ -14,7 +14,7 @@ export default {
     options: [
         {
             name: "user",
-            description: "The user want to unban",
+            description: "The user to unban",
             type: ApplicationCommandOptionTypes.USER,
             required: true,
         },

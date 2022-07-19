@@ -3,27 +3,27 @@ import {User} from "../../entities/User";
 import {Ban} from "../../entities/user_data/Ban";
 
 /**
- * unban a user in a specific server
+ * Removes the ban on a user from joining queues in a specific server
  *
- * @param userId The ID of a discord user
- * @param guildId The ID of the server in which the user is unbanned
+ * @param discordId The ID of the user to ban
+ * @param guildId The ID of the server in which the user is banned
  */
-export async function unbanUser(userId: string, guildId: string): Promise<string> {
+export async function unbanUser(discordId: string, guildId: string): Promise<string> {
     let guild = await Guild.findOneBy({id: guildId});
     if (!guild) {
-        return "Error: The user is not banned";
+        return `Error: <@${discordId}> is not banned`;
     }
 
-    const discordId = userId;
     let user = await User.findOneBy({discordId});
     if (!user) {
-        return "Error: The user is not banned";
+        return `Error: <@${discordId}> is not banned`;
     }
+
     const ban = await Ban.findOneBy({user: {discordId}});
-    console.log(ban);
+
     if (!ban) {
-        return `Error: The user is not banned`;
+        return `Error: <@${discordId}> is not banned`;
     }
     await ban.remove();
-    return `The user <@${userId}> has been unbanned`;
+    return `<@${discordId}> has been unbanned`;
 }
