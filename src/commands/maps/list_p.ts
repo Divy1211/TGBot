@@ -1,6 +1,7 @@
 import {EmbedFieldData, MessageEmbed} from "discord.js";
 import {ICommand} from "wokcommands";
-import { Pool } from "../../entities/pools/Pool";
+
+import {Pool} from "../../entities/pools/Pool";
 import {PoolMap} from "../../entities/pools/PoolMap";
 
 export default {
@@ -23,37 +24,38 @@ export default {
         var pools = await Pool.find();
 
         // find all maps in the pool
-        var all_maps=[];
-        for (let i=0; i<pools.length; i++){
+        var all_maps = [];
+        for (let i = 0; i < pools.length; i++) {
             let map = await PoolMap.find({
-                where: {pool: {uuid: pools[i].uuid}}
+                where: {pool: {uuid: pools[i].uuid}},
             });
-            var maps = map.map(({map})=>`${map.name}`).join(", ");
+            var maps = map.map(({map}) => `${map.name}`).join(", ");
             all_maps.push(maps);
         }
-        
-        let embed = new MessageEmbed().setDescription("The list of pools in the channel").setColor("#0095F7").setTitle("Pools");
+
+        let embed = new MessageEmbed().setDescription("The list of pools in the channel").setColor("#0095F7")
+            .setTitle("Pools");
         let fields: EmbedFieldData[] = [];
 
         fields.push({
             name: "uuid",
-            value: pools.map(({uuid})=>`${uuid}`).join("\n"),
+            value: pools.map(({uuid}) => `${uuid}`).join("\n"),
             inline: true,
         });
 
         fields.push({
             name: "name",
-            value: pools.map(({name})=>`${name}`).join("\n"),
+            value: pools.map(({name}) => `${name}`).join("\n"),
             inline: true,
         });
 
         fields.push({
             name: "maps",
-            value: all_maps.join('\n'),
+            value: all_maps.join("\n"),
             inline: true,
         });
 
         embed.addFields(fields);
         return embed;
-    }
+    },
 } as ICommand;

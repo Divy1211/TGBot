@@ -1,10 +1,11 @@
 import {EmbedFieldData, MessageEmbed} from "discord.js";
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import { GameMap } from "../../entities/pools/GameMap";
-import { Pool } from "../../entities/pools/Pool";
+
+import {GameMap} from "../../entities/pools/GameMap";
+import {Pool} from "../../entities/pools/Pool";
 import {PoolMap} from "../../entities/pools/PoolMap";
-import {Queue} from "../../entities/queues/Queue"
+import {Queue} from "../../entities/queues/Queue";
 
 export default {
     // TODO: THIS COMMAND IS ONLY CAPABLE FOR POOL FINDING FOR NOW
@@ -46,15 +47,15 @@ export default {
 
         var target_pools: Pool[] = [];
         var description = "";
-        
+
         // neither queue nor pool was found
-        if (!queue_in && !pool_in){
+        if (!queue_in && !pool_in) {
             return `The queue id or pool id were not found in this channel`;
         }
 
         // both queue and pool are found
-        else if (queue_in && pool_in){
-            if (!queue_in.pools?.includes(pool_in)){
+        else if (queue_in && pool_in) {
+            if (!queue_in.pools?.includes(pool_in)) {
                 // found pool is not in the queue's pools
                 return `queue id and pool id do not match with each other`;
             }
@@ -64,67 +65,67 @@ export default {
         }
 
         // only queue or pool is found 
-        else if (queue_in){
+        else if (queue_in) {
             // only queue
-            if (queue_in.pools){
+            if (queue_in.pools) {
                 target_pools = queue_in.pools;
                 description = `Maps contained in queue ${queue_in.uuid}`;
             }
-        }
-        else if (pool_in){
+        } else if (pool_in) {
             target_pools.push(pool_in);
             description = `Maps contained in pool ${pool_in.uuid}`;
         }
 
         // find all maps from targeted pools
         var maps: PoolMap[] = [];
-        for (let i=0; i<target_pools.length; i++){
+        for (let i = 0; i < target_pools.length; i++) {
             let pool_maps = await PoolMap.find({
-                where:{
-                    pool: {uuid: target_pools[i].uuid}
-                }
-            })
+                where: {
+                    pool: {uuid: target_pools[i].uuid},
+                },
+            });
 
-            for (let i=0; i<pool_maps.length; i++){
-                if (!maps.includes(pool_maps[i])){
+            for (let i = 0; i < pool_maps.length; i++) {
+                if (!maps.includes(pool_maps[i])) {
                     maps.push(pool_maps[i]);
                 }
             }
         }
 
-        if (maps.length == 0){
+        if (maps.length == 0) {
             return `The pool is empty`;
         }
 
         // find GameMaps based on PoolMaps
         var game_maps: GameMap[] = [];
-        for (let i=0; i<maps.length; i++){
+        for (let i = 0; i < maps.length; i++) {
             let find = await GameMap.findOneBy({uuid: maps[i].map.uuid});
             game_maps.push(find!);
-        };
-        
+        }
+
+
         let embed = new MessageEmbed().setDescription(description).setColor("#0095F7").setTitle("Maps");
         let fields: EmbedFieldData[] = [];
 
         fields.push({
             name: "mapUuid",
-            value: game_maps.map(({uuid})=>`${uuid}`).join("\n"),
+            value: game_maps.map(({uuid}) => `${uuid}`).join("\n"),
             inline: true,
         });
 
         fields.push({
             name: "name",
-            value: game_maps.map(({name})=>`${name}`).join("\n"),
+            value: game_maps.map(({name}) => `${name}`).join("\n"),
             inline: true,
         });
 
         fields.push({
             name: "multiplier",
-            value: maps.map(({multiplier})=>`${multiplier}`).join("\n"),
+            value: maps.map(({multiplier}) => `${multiplier}`).join("\n"),
             inline: true,
         });
 
         embed.addFields(fields);
         return embed;
-    }
+    },
 } as ICommand;

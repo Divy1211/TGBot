@@ -1,6 +1,7 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import { addMap } from "../../abstract_commands/maps/add_map";
+
+import {addMap} from "../../abstract_commands/maps/add_map";
 import {ensure} from "../../utils/general";
 
 export default {
@@ -44,6 +45,6 @@ export default {
         const pool_name = ensure(options.getString("pool_name"));
         const multiplier = ensure(options.getInteger("multiplier"));
 
-        return await addMap(map_name, pool_name, multiplier, guildId)
+        return await addMap(map_name, pool_name, multiplier, guildId);
     },
 } as ICommand;

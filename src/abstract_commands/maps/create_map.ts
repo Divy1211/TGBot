@@ -3,7 +3,7 @@ import {GameMap} from "../../entities/pools/GameMap";
 
 /**
  * Create a map with given name and imgLink, in the specified sever
- * 
+ *
  * @param name The name of the map
  * @param imgLink The link of the preview image
  * @param guildId The ID of the server in which the Map should be added
@@ -17,5 +17,5 @@ export async function createMap(name: string, imgLink: string, guildId: string) 
     const map = new GameMap(name, imgLink, guild);
     await map.save();
 
-    return `Map "${name} has been created successfully!"`
+    return `Map "${name} has been created successfully!"`;
 }

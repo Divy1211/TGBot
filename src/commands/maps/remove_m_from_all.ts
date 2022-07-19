@@ -1,6 +1,7 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import { removeFromAll } from "../../abstract_commands/maps/remove_from_all";
+
+import {removeFromAll} from "../../abstract_commands/maps/remove_from_all";
 import {ensure} from "../../utils/general";
 
 export default {
@@ -28,7 +29,7 @@ export default {
         }
         // get the command parameters
         const map_name = ensure(options.getString("map_name"));
-        
+
         return await removeFromAll(map_name, guildId);
     },
 } as ICommand;

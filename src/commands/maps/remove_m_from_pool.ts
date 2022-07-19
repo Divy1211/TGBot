@@ -1,6 +1,7 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import { removeFromPool } from "../../abstract_commands/maps/remove_from_pool";
+
+import {removeFromPool} from "../../abstract_commands/maps/remove_from_pool";
 import {ensure} from "../../utils/general";
 
 export default {
@@ -35,7 +36,7 @@ export default {
         // get the command parameters
         const pool_name = ensure(options.getString("pool_name"));
         const map_name = ensure(options.getString("map_name"));
-        
+
         return await removeFromPool(pool_name, map_name, guildId);
     },
 } as ICommand;
