@@ -4,8 +4,10 @@ import {Guild} from "../../entities/Guild";
 import {Queue} from "../../entities/queues/Queue";
 import {QueueDefault} from "../../entities/queues/QueueDefault";
 import {User} from "../../entities/User";
+import {Ban} from "../../entities/user_data/Ban";
 import {getPlayerEmbed} from "../common";
 import {startMatch} from "../matches/start";
+
 
 /**
  * Puts the given user into a queue in the given channel or the specified queue
@@ -39,6 +41,17 @@ export async function joinQueue(
 
     if (user.inGame) {
         return "You cannot join a queue while in a game";
+    }
+    
+    const ban = await Ban.findOne({where: {user: {discordId}, guild: {id: guildId}}});
+    if (ban) {
+        if (ban.until !== -1 && ban.until < +Date.now() / 1000) {
+            await ban.remove();
+        } else if (ban.until !== -1) {
+            return `You are banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
+        } else {
+            return `You are permanently banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``}\``;
+        }
     }
 
     // load existing or create a new QueueDefault
