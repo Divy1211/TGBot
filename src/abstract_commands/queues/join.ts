@@ -16,12 +16,14 @@ import {startMatch} from "../matches/start";
  * @param channelId The ID of the channel in which this command is used
  * @param guildId The ID of the server in which this command is used
  * @param uuid The ID of the queue to join
+ * @param bypassBan If true, bypasses a ban if any on joining the queue
  */
 export async function joinQueue(
     discordId: string,
     channelId: string,
     guildId: string,
     uuid?: number,
+    bypassBan: boolean = false,
 ): Promise<string | MessageEmbed> {
 
     // load existing or create a new user
@@ -42,15 +44,17 @@ export async function joinQueue(
     if (user.inGame) {
         return "You cannot join a queue while in a game";
     }
-    
-    const ban = await Ban.findOne({where: {user: {discordId}, guild: {id: guildId}}});
-    if (ban) {
-        if (ban.until !== -1 && ban.until < +Date.now() / 1000) {
-            await ban.remove();
-        } else if (ban.until !== -1) {
-            return `You are banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
-        } else {
-            return `You are permanently banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``}\``;
+
+    if(!bypassBan) {
+        const ban = await Ban.findOne({where: {user: {discordId}, guild: {id: guildId}}});
+        if (ban) {
+            if (ban.until !== -1 && ban.until < +Date.now() / 1000) {
+                await ban.remove();
+            } else if (ban.until !== -1) {
+                return `You are banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
+            } else {
+                return `You are permanently banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``}`;
+            }
         }
     }
 
@@ -60,7 +64,6 @@ export async function joinQueue(
         qDefault = new QueueDefault(user, channelId);
         await qDefault.save();
     }
-
 
     // If the uuid is provided, load that queue. If not,
     // load all the queues in the channel that this command is run.
