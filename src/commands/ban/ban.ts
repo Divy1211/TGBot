@@ -1,11 +1,12 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import {editQueue} from "../../abstract_commands/queues/edit";
+
+import {banUser} from "../../abstract_commands/ban/ban";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Edit the information of a specific queue",
+    description: "Ban a user",
 
     slash: true,
     testOnly: true,
@@ -13,24 +14,22 @@ export default {
 
     options: [
         {
-            name: "queue_uuid",
-            description: "The id of the queue",
-            type: ApplicationCommandOptionTypes.INTEGER,
+            name: "user",
+            description: "The user to ban",
+            type: ApplicationCommandOptionTypes.USER,
             required: true,
         },
         {
-            name: "name",
-            description: "The name of the queue",
+            name: "duration",
+            description: "The duration to ban the user for",
             type: ApplicationCommandOptionTypes.STRING,
             required: false,
         },
         {
-            name: "num_players",
-            description: "The max number of players for the queue",
-            type: ApplicationCommandOptionTypes.INTEGER,
+            name: "reason",
+            description: "The reason for banning the user",
+            type: ApplicationCommandOptionTypes.STRING,
             required: false,
-            minValue: 2,
-            maxValue: 8,
         },
     ],
 
@@ -43,10 +42,10 @@ export default {
         }
 
         // get the command parameters
-        const uuid = ensure(options.getInteger("queue_uuid"));
-        const name = options.getString("name") ?? "";
-        const numPlayers = options.getInteger("num_players") ?? 0;
+        const user = ensure(options.getUser("user"));
+        const duration = options.getString("duration") ?? "";
+        const reason = options.getString("reason") ?? "";
 
-        return await editQueue(uuid, name, numPlayers, channelId);
+        return await banUser(user.id, duration, reason, guildId);
     },
 } as ICommand;

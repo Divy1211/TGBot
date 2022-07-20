@@ -1,12 +1,12 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {setPromotionRole} from "../../abstract_commands/roles/set_promotion";
+import {unbanUser} from "../../abstract_commands/ban/unban";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Set a role which is pinged for queue promotions on the server",
+    description: "Unban a user",
 
     slash: true,
     testOnly: true,
@@ -14,9 +14,9 @@ export default {
 
     options: [
         {
-            name: "role",
-            description: "The role to ping when a promotion happens",
-            type: ApplicationCommandOptionTypes.ROLE,
+            name: "user",
+            description: "The user to unban",
+            type: ApplicationCommandOptionTypes.USER,
             required: true,
         },
     ],
@@ -30,9 +30,8 @@ export default {
         }
 
         // get the command parameters
-        const role = ensure(options.getRole("role"));
+        const user = ensure(options.getUser("user"));
 
-        return await setPromotionRole(guildId, role);
-
+        return await unbanUser(user.id, guildId);
     },
 } as ICommand;

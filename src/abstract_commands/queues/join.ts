@@ -4,7 +4,10 @@ import {Guild} from "../../entities/Guild";
 import {Queue} from "../../entities/queues/Queue";
 import {QueueDefault} from "../../entities/queues/QueueDefault";
 import {User} from "../../entities/User";
+import {Ban} from "../../entities/user_data/Ban";
 import {getPlayerEmbed} from "../common";
+import {startMatch} from "../matches/start";
+
 
 /**
  * Puts the given user into a queue in the given channel or the specified queue
@@ -13,12 +16,14 @@ import {getPlayerEmbed} from "../common";
  * @param channelId The ID of the channel in which this command is used
  * @param guildId The ID of the server in which this command is used
  * @param uuid The ID of the queue to join
+ * @param bypassBan If true, bypasses a ban if any on joining the queue
  */
 export async function joinQueue(
     discordId: string,
     channelId: string,
     guildId: string,
     uuid?: number,
+    bypassBan: boolean = false,
 ): Promise<string | MessageEmbed> {
 
     // load existing or create a new user
@@ -36,13 +41,29 @@ export async function joinQueue(
         await user.save();
     }
 
+    if (user.inGame) {
+        return "You cannot join a queue while in a game";
+    }
+
+    if(!bypassBan) {
+        const ban = await Ban.findOne({where: {user: {discordId}, guild: {id: guildId}}});
+        if (ban) {
+            if (ban.until !== -1 && ban.until < +Date.now() / 1000) {
+                await ban.remove();
+            } else if (ban.until !== -1) {
+                return `You are banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
+            } else {
+                return `You are permanently banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``}`;
+            }
+        }
+    }
+
     // load existing or create a new QueueDefault
     let qDefault = await QueueDefault.findOneBy({channelId, user: {discordId}});
     if (!qDefault) {
         qDefault = new QueueDefault(user, channelId);
         await qDefault.save();
     }
-
 
     // If the uuid is provided, load that queue. If not,
     // load all the queues in the channel that this command is run.
@@ -80,11 +101,17 @@ export async function joinQueue(
         return "You are already in the queue!";
     }
 
-    queue.users.push(user);
-    await queue.save();
-
     qDefault.lastQ = queue;
     await qDefault.save();
+
+    queue.users.push(user);
+
+    if (queue.users.length === queue.numPlayers) {
+        startMatch(queue.uuid, queue.users).then();
+        queue.users = [];
+    }
+
+    await queue.save();
 
     return getPlayerEmbed(queue);
 }
