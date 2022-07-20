@@ -5,14 +5,15 @@ import {Guild} from "../../../src/entities/Guild";
 import {Leaderboard} from "../../../src/entities/queues/Leaderboard";
 import {Queue} from "../../../src/entities/queues/Queue";
 import {User} from "../../../src/entities/User";
-import {ensure} from "../../../src/utils/general";
 
+let queue1: Queue;
 let queue2: Queue;
 
 beforeAll(async () => {
     const guild = new Guild("guild-1");
     await guild.save();
-    const queue1 = new Queue("queue-1", guild, new Leaderboard(guild), 4, "channel-1");
+
+    queue1 = new Queue("queue-1", guild, new Leaderboard(guild), 4, "channel-1");
     queue2 = new Queue("queue-2", guild, new Leaderboard(guild), 4, "channel-2");
     const queue3 = new Queue("queue-3", guild, new Leaderboard(guild), 4, "channel-2");
     await Queue.save([queue1, queue2, queue3]);
@@ -35,8 +36,8 @@ describe("Valid Join Single Queue", () => {
             await joinQueue("discord-id-1", "channel-1", "guild-1"),
         ).toBeInstanceOf(MessageEmbed);
 
-        const queue = ensure(await Queue.findOneBy({name: "queue-1"}));
-        expect(queue.users[0].discordId).toBe("discord-id-1");
+        await queue1.reload();
+        expect(queue1.users[0].discordId).toBe("discord-id-1");
     });
 
     test("With UUID", async () => {
@@ -44,8 +45,8 @@ describe("Valid Join Single Queue", () => {
             await joinQueue("discord-id-1", "channel-2", "guild-1", queue2.uuid),
         ).toBeInstanceOf(MessageEmbed);
 
-        const queue = ensure(await Queue.findOneBy({uuid: queue2.uuid}));
-        expect(queue.users[0].discordId).toBe("discord-id-1");
+        await queue2.reload();
+        expect(queue2.users[0].discordId).toBe("discord-id-1");
     });
 
     // todo: join with bypass ban
@@ -80,4 +81,4 @@ describe("Invalid Join Multiple Queues", () => {
     // DO NOT remove the full comment, as it its still useful for documentation
 
     // todo: join when multiple queues but no uuid and no queue default for user
-})
+});
