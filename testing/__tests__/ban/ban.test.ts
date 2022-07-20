@@ -2,11 +2,12 @@ import {Guild} from "../../../src/entities/Guild";
 import {User} from "../../../src/entities/User";
 import {Ban} from "../../../src/entities/user_data/Ban";
 
-beforeAll(async () => {
-    const guild = new Guild("guild-1");
-    await guild.save();
+let guild: Guild;
+let user: User;
 
-    const user = new User("discord-id-1");
+beforeAll(async () => {
+    guild = new Guild("guild-1");
+    user = new User("discord-id-1", {guilds: [guild]});
     await user.save();
 });
 
@@ -58,8 +59,10 @@ describe("Re-Banning", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
 
+    beforeAll(async () => {
+        const ban = new Ban(user, "", -1, guild);
+        await ban.save();
+    })
+
     // todo: ban when already banned
-    // todo: ban when already perm banned
-    // todo: remember to create the ban before calling the function, do not use
-    // todo: beforeEach because both the bans are different in duration
 });

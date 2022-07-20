@@ -7,29 +7,30 @@ import {Queue} from "../../../src/entities/queues/Queue";
 import {User} from "../../../src/entities/User";
 import {ensure} from "../../../src/utils/general";
 
+let queue2: Queue;
+
 beforeAll(async () => {
     const guild = new Guild("guild-1");
     await guild.save();
     const queue1 = new Queue("queue-1", guild, new Leaderboard(guild), 4, "channel-1");
-    const queue2 = new Queue("queue-2", guild, new Leaderboard(guild), 4, "channel-2");
-    await Queue.save([queue1, queue2]);
+    queue2 = new Queue("queue-2", guild, new Leaderboard(guild), 4, "channel-2");
+    const queue3 = new Queue("queue-3", guild, new Leaderboard(guild), 4, "channel-2");
+    await Queue.save([queue1, queue2, queue3]);
 });
 
 afterAll(async () => {
     await Guild.remove(await Guild.find());
-    await Queue.remove(await Queue.find());
 });
 
-afterEach(async () => {
-    await User.remove(await User.find());
-});
-
-describe("Valid Join", () => {
+describe("Valid Join Single Queue", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
 
-    // join when there is just one single queue w/o queue uuid
-    test("One Queue No UUID", async () => {
+    afterEach(async () => {
+        await User.remove(await User.find());
+    });
+
+    test("No UUID", async () => {
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-1"),
         ).toBeInstanceOf(MessageEmbed);
@@ -38,31 +39,45 @@ describe("Valid Join", () => {
         expect(queue.users[0].discordId).toBe("discord-id-1");
     });
 
-    // join when there is just one single queue w/ queue uuid
-    test("Join With 1 UUID", async() =>{
-        const uuid = 2;
-
+    test("With UUID", async () => {
         expect(
-            await joinQueue("discord-id-1", "channel-2", "guild-1", uuid),
+            await joinQueue("discord-id-1", "channel-2", "guild-1", queue2.uuid),
         ).toBeInstanceOf(MessageEmbed);
 
-        const queue = ensure(await Queue.findOneBy({uuid}));
+        const queue = ensure(await Queue.findOneBy({uuid: queue2.uuid}));
         expect(queue.users[0].discordId).toBe("discord-id-1");
     });
 
-    // todo: join when there are multiple queues w/o queue uuid but user has a queue default
-    // todo: join when there are multiple queues w/ queue uuid
     // todo: join with bypass ban
 });
 
-describe("Invalid Join", () => {
+describe("Valid Join Multiple Queues", () => {
+    // !! Once done with writing the test cases, just remove the "todo: "
+    // DO NOT remove the full comment, as it its still useful for documentation
+
+    afterEach(async () => {
+        await User.remove(await User.find());
+    });
+
+    // todo: join w/o queue uuid but user has a queue default
+    // todo: join w/ queue uuid
+});
+
+describe("Invalid Join Singe Queue", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
 
     // todo: join no queues
     // todo: join when ingame
-    // todo: join when already in queue
     // todo: join when banned
-    // todo: join invalid queue uuid or queue uuid of another channel
-    // todo: join when multiple queues but no uuid and no queue default for user
+    // todo: join invalid queue uuid
+    // todo: join with uuid of queue in another channel
+    // todo: join when already in queue
 });
+
+describe("Invalid Join Multiple Queues", () => {
+    // !! Once done with writing the test cases, just remove the "todo: "
+    // DO NOT remove the full comment, as it its still useful for documentation
+
+    // todo: join when multiple queues but no uuid and no queue default for user
+})

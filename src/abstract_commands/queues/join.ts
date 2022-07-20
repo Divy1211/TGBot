@@ -29,10 +29,9 @@ export async function joinQueue(
     // load existing or create a new user
     let user = await User.findOneBy({discordId});
     if (!user) {
-        const guild = await Guild.findOneBy({id: guildId});
-
         // a guild is created when a queue is created, so if the guild is not created
         // that means that there is no queue either, since guilds can't be deleted
+        const guild = await Guild.findOneBy({id: guildId});
         if (!guild) {
             return "There are no queues in this channel. Ask an admin to create one using /create_q!";
         }

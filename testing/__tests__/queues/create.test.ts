@@ -12,13 +12,11 @@ afterAll(async () => {
     await Guild.remove(await Guild.find());
 });
 
-afterEach(async () => {
-    await Queue.remove(await Queue.find());
-});
+describe("Valid Create", () => {
+    afterEach(async () => {
+        await Queue.remove(await Queue.find());
+    });
 
-describe("Create", () => {
-
-    // create a queue
     test("Create Queue", async () => {
         const name = "queue-1", numPlayers = 4, channelId = "channel-id-1";
         expect(

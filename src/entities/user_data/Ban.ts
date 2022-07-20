@@ -16,7 +16,7 @@ export class Ban extends BaseEntity {
     @Column()
     until: number;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, {cascade: true})
     @JoinColumn()
     user?: User;
 

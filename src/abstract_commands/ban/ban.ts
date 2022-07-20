@@ -25,7 +25,6 @@ export async function banUser(
     let user = await User.findOneBy({discordId});
     if (!user) {
         user = new User(discordId, {guilds: [ensure(guild)]});
-        await user.save();
     }
 
     let ban = await Ban.findOneBy({user: {discordId}, guild: {id: guildId}});
