@@ -20,7 +20,7 @@ import {Profile} from "../src/entities/user_data/Profile";
 
 export const TestDataSource = new DataSource({
     type: "better-sqlite3",
-    database: "__tests__/data/database.sqlite",
+    database: "testing/data/database.sqlite",
     synchronize: true,
     logging: false,
     entities: [
