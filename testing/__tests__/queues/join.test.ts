@@ -1,11 +1,11 @@
 import {MessageEmbed} from "discord.js";
 
-import {joinQueue} from "../../src/abstract_commands/queues/join";
-import {Guild} from "../../src/entities/Guild";
-import {User} from "../../src/entities/User";
-import {Leaderboard} from "../../src/entities/queues/Leaderboard";
-import {Queue} from "../../src/entities/queues/Queue";
-import {ensure} from "../../src/utils/general";
+import {joinQueue} from "../../../src/abstract_commands/queues/join";
+import {Guild} from "../../../src/entities/Guild";
+import {User} from "../../../src/entities/User";
+import {Leaderboard} from "../../../src/entities/queues/Leaderboard";
+import {Queue} from "../../../src/entities/queues/Queue";
+import {ensure} from "../../../src/utils/general";
 
 beforeAll(async () => {
     const guild = new Guild("guild-1");
@@ -16,8 +16,9 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    Guild.find().then(guilds => guilds.forEach(guild => guild.remove()));
-    Queue.find().then(queues => queues.forEach(queue => queue.remove()));
+    const q1 = Guild.find().then(guilds => guilds.forEach(guild => guild.remove()));
+    const q2 = Queue.find().then(queues => queues.forEach(queue => queue.remove()));
+    await Promise.all([q1, q2]);
 });
 
 afterEach(async () => {
@@ -29,7 +30,7 @@ describe("Allow Join", () => {
     // DO NOT remove the full comment, as it its still useful for documentation
 
     // join when there is just one single queue w/o queue uuid
-    it("puts user in queue of correct channel", async () => {
+    it("puts a user in a queue", async () => {
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-1")
         ).toBeInstanceOf(MessageEmbed);

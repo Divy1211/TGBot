@@ -100,7 +100,7 @@
     },
     "include": ["src/**/*"],                                  /* Specify the source code directory */
     "exclude": [                                              /* Specify the directories excluded from compilation */
-        "__tests__",
+        "testing/**/*",
         "data",
         "dist",
         "docs",
