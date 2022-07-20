@@ -46,7 +46,8 @@ export async function banUser(
     }
 
     // ss will be undefined if not specified
-    let [_, hh, mm, ss]: (string | number)[] = duration.match(/^(\d+):(\d{2}):?(\d{2})?$/) ?? ["-1", "-1", "-1", "-1"];
+    // todo: do not push this change lol
+    let [_, hh, mm, ss]: (string | number)[] = duration.match(/^(\d+):(\d{2})(?::(\d{2}))?$/) ?? ["-1", "-1", "-1", "-1"];
     if (hh === "-1") {
         return "Error: The format of the specified duration is invalid, please try again";
     }
@@ -54,6 +55,11 @@ export async function banUser(
     hh = parseInt(hh);
     mm = parseInt(mm);
     ss = ss ? parseInt(ss) : 0;
+
+    if(mm > 59)
+        return "Error: Minutes cannot be greater than 59";
+    if(ss > 59)
+        return "Error: Seconds cannot be greater than 59";
 
     ban = new Ban(user, reason, hh*3600+mm*60+ss + Math.floor(+Date.now()/1000), guild);
     await ban.save();
