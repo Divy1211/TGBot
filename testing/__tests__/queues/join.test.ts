@@ -24,12 +24,12 @@ afterEach(async () => {
     await User.remove(await User.find());
 });
 
-describe("Allow Join", () => {
+describe("Valid Join", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
 
     // join when there is just one single queue w/o queue uuid
-    test("Join Single No UUID", async () => {
+    test("One Queue No UUID", async () => {
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-1"),
         ).toBeInstanceOf(MessageEmbed);
@@ -44,7 +44,7 @@ describe("Allow Join", () => {
     // todo: join with bypass ban
 });
 
-describe("Reject Join", () => {
+describe("Invalid Join", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
 
