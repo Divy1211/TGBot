@@ -38,15 +38,18 @@ describe("Valid Join", () => {
         expect(queue.users[0].discordId).toBe("discord-id-1");
     });
 
-    //join when there is just one single queue w/ queue uuid
-    test("Join with 1 UUID", async() =>{
+    // join when there is just one single queue w/ queue uuid
+    test("Join With 1 UUID", async() =>{
+        const uuid = 2;
+
         expect(
-            await joinQueue("discord-id-1", "channel-2", "guild-1",2),
+            await joinQueue("discord-id-1", "channel-2", "guild-1", uuid),
         ).toBeInstanceOf(MessageEmbed);
 
-        const queue = ensure(await Queue.findOneBy({uuid: 2}));
+        const queue = ensure(await Queue.findOneBy({uuid}));
         expect(queue.users[0].discordId).toBe("discord-id-1");
     });
+
     // todo: join when there are multiple queues w/o queue uuid but user has a queue default
     // todo: join when there are multiple queues w/ queue uuid
     // todo: join with bypass ban
