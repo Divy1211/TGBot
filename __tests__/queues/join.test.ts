@@ -2,6 +2,7 @@ import {MessageEmbed} from "discord.js";
 
 import {joinQueue} from "../../src/abstract_commands/queues/join";
 import {Guild} from "../../src/entities/Guild";
+import {User} from "../../src/entities/User";
 import {Leaderboard} from "../../src/entities/queues/Leaderboard";
 import {Queue} from "../../src/entities/queues/Queue";
 import {ensure} from "../../src/utils/general";
@@ -15,15 +16,17 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await Guild.clear();
-    await Queue.clear();
+    Guild.find().then(guilds => guilds.forEach(guild => guild.remove()));
+    Queue.find().then(queues => queues.forEach(queue => queue.remove()));
 });
 
-describe("allowJoin", () => {
+afterEach(async () => {
+    await User.find().then(users => users.forEach(user => user.remove()));
+});
+
+describe("Allow Join", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
-
-    afterEach(async () => await Queue.clear());
 
     // join when there is just one single queue w/o queue uuid
     it("puts user in queue of correct channel", async () => {
@@ -41,11 +44,9 @@ describe("allowJoin", () => {
     // todo: join with bypass ban
 });
 
-describe("rejectJoin", () => {
+describe("Reject Join", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
-
-    afterEach(async () => await Queue.clear());
 
     // todo: join no queues
     // todo: join when ingame
