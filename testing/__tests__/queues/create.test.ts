@@ -19,7 +19,7 @@ afterEach(async () => {
 describe("Create", () => {
 
     // create a queue
-    it("creates a queue", async () => {
+    test("Create Queue", async () => {
         const name = "queue-1", numPlayers = 4, channelId = "channel-id-1";
         expect(
             await createQueue(name, numPlayers, "guild-1", channelId),

@@ -30,7 +30,7 @@ describe("Allow Join", () => {
     // DO NOT remove the full comment, as it its still useful for documentation
 
     // join when there is just one single queue w/o queue uuid
-    it("puts a user in a queue", async () => {
+    test("Join Single No UUID", async () => {
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-1")
         ).toBeInstanceOf(MessageEmbed);
