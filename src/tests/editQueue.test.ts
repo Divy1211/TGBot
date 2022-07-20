@@ -9,6 +9,10 @@ beforeAll(async () => {
     }   
 )
 
+afterAll(async () => {
+  await TestDataSource.destroy();
+  }   
+)
 
 afterEach(async () => {
     await Queue.clear();

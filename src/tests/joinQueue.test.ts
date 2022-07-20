@@ -7,10 +7,14 @@ import { Queue } from '../entities/queues/Queue';
 import { ensure } from '../utils/general';
 
 beforeAll(async () => {
-    await TestDataSource.initialize();
+        await TestDataSource.initialize();
     }   
 )
 
+afterAll(async () => {
+        await TestDataSource.destroy();
+        }   
+)
 
 afterEach(async () => {
     await Queue.clear();
