@@ -1,7 +1,7 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {setModRole} from "../../abstract_commands/roles/set_mod";
+import {setRole} from "../../abstract_commands/roles/set_role";
 import {ensure} from "../../utils/general";
 
 export default {
@@ -31,7 +31,7 @@ export default {
 
         // get the command parameters
         const role = ensure(options.getRole("role"));
-        
-        return await setModRole(guildId, role);
+
+        return await setRole(guildId, "mod", role.id);
     },
 } as ICommand;
