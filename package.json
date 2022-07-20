@@ -6,9 +6,10 @@
   "scripts": {
     "build": "tsc -p .",
     "dev": "nodemon src/main.ts",
-    "deploy": "npm run build && ts-node dist/main.js",
     "start": "ts-node src/main.ts",
-    "test": "jest"
+    "tests": "jest --colors",
+    "coverage": "jest --coverage --colors --reporters",
+    "deploy": "npm run build && ts-node dist/main.js"
   },
   "keywords": [],
   "author": "",

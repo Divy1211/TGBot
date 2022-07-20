@@ -9,11 +9,11 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await Guild.find().then(guilds => guilds.forEach(guild => guild.remove()));
+    await Guild.remove(await Guild.find());
 });
 
 afterEach(async () => {
-    await Queue.find().then(queues => queues.forEach(queue => queue.remove()));
+    await Queue.remove(await Queue.find());
 });
 
 describe("Create", () => {

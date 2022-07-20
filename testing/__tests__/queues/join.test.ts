@@ -2,9 +2,9 @@ import {MessageEmbed} from "discord.js";
 
 import {joinQueue} from "../../../src/abstract_commands/queues/join";
 import {Guild} from "../../../src/entities/Guild";
-import {User} from "../../../src/entities/User";
 import {Leaderboard} from "../../../src/entities/queues/Leaderboard";
 import {Queue} from "../../../src/entities/queues/Queue";
+import {User} from "../../../src/entities/User";
 import {ensure} from "../../../src/utils/general";
 
 beforeAll(async () => {
@@ -12,17 +12,16 @@ beforeAll(async () => {
     await guild.save();
     const queue1 = new Queue("queue-1", guild, new Leaderboard(guild), 4, "channel-1");
     const queue2 = new Queue("queue-2", guild, new Leaderboard(guild), 4, "channel-2");
-    await Promise.all([queue1.save(), queue2.save()]);
+    await Queue.save([queue1, queue2]);
 });
 
 afterAll(async () => {
-    const q1 = Guild.find().then(guilds => guilds.forEach(guild => guild.remove()));
-    const q2 = Queue.find().then(queues => queues.forEach(queue => queue.remove()));
-    await Promise.all([q1, q2]);
+    await Guild.remove(await Guild.find());
+    await Queue.remove(await Queue.find());
 });
 
 afterEach(async () => {
-    await User.find().then(users => users.forEach(user => user.remove()));
+    await User.remove(await User.find());
 });
 
 describe("Allow Join", () => {
@@ -32,7 +31,7 @@ describe("Allow Join", () => {
     // join when there is just one single queue w/o queue uuid
     test("Join Single No UUID", async () => {
         expect(
-            await joinQueue("discord-id-1", "channel-1", "guild-1")
+            await joinQueue("discord-id-1", "channel-1", "guild-1"),
         ).toBeInstanceOf(MessageEmbed);
 
         const queue = ensure(await Queue.findOneBy({name: "queue-1"}));
