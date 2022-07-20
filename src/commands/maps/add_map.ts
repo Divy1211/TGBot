@@ -13,15 +13,15 @@ export default {
 
     options: [
         {
-            name: "map_name",
-            description: "The name of the map",
-            type: ApplicationCommandOptionTypes.STRING,
+            name: "map_uuid",
+            description: "The uuid of the map",
+            type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
         },
         {
-            name: "pool_name",
-            description: "The name of the pool",
-            type: ApplicationCommandOptionTypes.STRING,
+            name: "pool_uuid",
+            description: "The uuid of the pool",
+            type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
         },
         {
@@ -41,10 +41,10 @@ export default {
         }
 
         // get the command parameters
-        const map_name = ensure(options.getString("map_name"));
-        const pool_name = ensure(options.getString("pool_name"));
+        const map_name = ensure(options.getInteger("map_uuid"));
+        const pool_uuid = ensure(options.getInteger("pool_uuid"));
         const multiplier = ensure(options.getInteger("multiplier"));
 
-        return await addMap(map_name, pool_name, multiplier, guildId);
+        return await addMap(map_name, pool_uuid, multiplier, guildId);
     },
 } as ICommand;

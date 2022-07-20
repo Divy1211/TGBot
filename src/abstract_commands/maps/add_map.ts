@@ -4,46 +4,48 @@ import {Pool} from "../../entities/pools/Pool";
 import {PoolMap} from "../../entities/pools/PoolMap";
 
 /**
- * Create a map with given name and imgLink, in the specified sever
+ * Adds a given map with the specified multiplier to the provided pool in the stated server
  *
- * @param map_name The name of the map
- * @param pool_name The name of the pool
+ * @param mapUuid The uuid of the map
+ * @param poolUuid The uuid of the pool
  * @param multiplier The number of players for this map
  * @param guildId The ID of the server in which the Map should be added
  */
-export async function addMap(map_name: string, pool_name: string, multiplier: number, guildId: string) {
+export async function addMap(mapUuid: number, poolUuid: number, multiplier: number, guildId: string) {
     let guild = await Guild.findOneBy({id: guildId});
     if (!guild) {
         guild = new Guild(guildId);
     }
 
     let pool = await Pool.findOneBy({
-        name: pool_name,
+        uuid: poolUuid,
+        guild: {id: guildId}
     });
 
     let map = await GameMap.findOneBy({
-        name: map_name,
+        uuid: mapUuid,
+        guild: {id: guildId}
     });
 
     if (!pool) {
-        return `Pool ${pool_name} is not found in this channel.`;
+        return `Pool with ID \`${poolUuid}\` was not found.`;
     } else if (!map) {
-        return `Map ${map_name} is not found in this channel.`;
+        return `Map with ID \`${mapUuid}\` was not found.`;
     }
 
     // else: check if map is already in the pool
-    let pool_map = await PoolMap.find({
+    let poolMap = await PoolMap.find({
         where: {pool: {uuid: pool.uuid}},
     });
 
-    for (let i = 0; i < pool_map.length; i++) {
-        if (pool_map[i].map.name == map_name) {
-            return `Invalid Operation: Map ${map_name} has already been in pool ${pool_name}!`;
+    for (let i = 0; i < poolMap.length; i++) {
+        if (poolMap[i].map.uuid == mapUuid) {
+            return `Invalid Operation: Map ${mapUuid} has already been in pool ${poolUuid}!`;
         }
     }
 
     // else: add the map into the pool
-    const target_map = new PoolMap(map, pool, multiplier);
-    await target_map.save();
-    return `Map ${map_name} is successfully added into Pool ${pool_name}!`;
+    const targetMap = new PoolMap(map, pool, multiplier);
+    await targetMap.save();
+    return `Map "${map.name}" added to Pool "${pool.name}"`;
 }

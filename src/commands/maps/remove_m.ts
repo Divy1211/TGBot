@@ -1,12 +1,12 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {removeFromAll} from "../../abstract_commands/maps/remove_from_all";
+import {removeMap} from "../../abstract_commands/maps/remove_map";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Remove a map from the channel",
+    description: "Remove a map from a pool",
 
     slash: true,
     testOnly: true,
@@ -14,9 +14,15 @@ export default {
 
     options: [
         {
-            name: "name",
-            description: "the name of the map",
-            type: ApplicationCommandOptionTypes.STRING,
+            name: "pool_uuid",
+            description: "the uuid of the pool",
+            type: ApplicationCommandOptionTypes.INTEGER,
+            required: true,
+        },
+        {
+            name: "map_uuid",
+            description: "the uuid of the map",
+            type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
         },
     ],
@@ -28,8 +34,9 @@ export default {
             return "This command can only be run in a text channel in a server";
         }
         // get the command parameters
-        const map_name = ensure(options.getString("map_name"));
+        const pool_uuid = ensure(options.getInteger("pool_uuid"));
+        const map_uuid = ensure(options.getInteger("map_uuid"));
 
-        return await removeFromAll(map_name, guildId);
+        return await removeMap(map_uuid, pool_uuid, guildId);
     },
 } as ICommand;

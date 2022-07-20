@@ -2,11 +2,11 @@ import {Guild} from "../../entities/Guild";
 import {GameMap} from "../../entities/pools/GameMap";
 
 /**
- * Create a map with given name and imgLink, in the specified sever
+ * Creates a map with the given name and image link in the specified server
  *
  * @param name The name of the map
  * @param imgLink The link of the preview image
- * @param guildId The ID of the server in which the Map should be added
+ * @param guildId The ID of the server in which the map should be added
  */
 export async function createMap(name: string, imgLink: string, guildId: string) {
     let guild = await Guild.findOneBy({id: guildId});
@@ -17,5 +17,5 @@ export async function createMap(name: string, imgLink: string, guildId: string) 
     const map = new GameMap(name, imgLink, guild);
     await map.save();
 
-    return `Map "${name} has been created successfully!"`;
+    return `Map "${name}" has been created successfully!`;
 }
