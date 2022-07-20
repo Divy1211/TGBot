@@ -43,3 +43,4 @@ test('should fail to delete a queue', async () => {
             let result = await deleteQueue(uuid!, "1234567890");
             expect(result).toBe(`Queue with ID \`${uuid}\` was not found in this channel`);
 });
+
