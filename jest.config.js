@@ -2,5 +2,5 @@
 module.exports = {
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
-  setupFilesAfterEnv: ['__tests__/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>\\__tests__\\setup.ts'],
 };

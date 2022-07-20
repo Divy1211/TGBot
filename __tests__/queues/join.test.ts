@@ -1,4 +1,5 @@
 import {MessageEmbed} from "discord.js";
+
 import {joinQueue} from "../../src/abstract_commands/queues/join";
 import {Guild} from "../../src/entities/Guild";
 import {Leaderboard} from "../../src/entities/queues/Leaderboard";
@@ -7,23 +8,25 @@ import {ensure} from "../../src/utils/general";
 
 beforeAll(async () => {
     const guild = new Guild("guild-1");
+    await guild.save();
     const queue1 = new Queue("queue-1", guild, new Leaderboard(guild), 4, "channel-1");
     const queue2 = new Queue("queue-2", guild, new Leaderboard(guild), 4, "channel-2");
     await Promise.all([queue1.save(), queue2.save()]);
 });
 
 afterAll(async () => {
+    await Guild.clear();
     await Queue.clear();
 });
 
-describe("allowJoin", async () => {
+describe("allowJoin", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
 
     afterEach(async () => await Queue.clear());
 
     // join when there is just one single queue w/o queue uuid
-    it("should put the user in the queue of the correct channel", async () => {
+    it("Single Queue No UUID", async () => {
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-1")
         ).toBeInstanceOf(MessageEmbed);
@@ -38,7 +41,7 @@ describe("allowJoin", async () => {
     // todo: join with bypass ban
 });
 
-describe("rejectJoin", async () => {
+describe("rejectJoin", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
 
