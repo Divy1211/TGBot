@@ -26,7 +26,7 @@ describe("allowJoin", () => {
     afterEach(async () => await Queue.clear());
 
     // join when there is just one single queue w/o queue uuid
-    it("Single Queue No UUID", async () => {
+    it("puts user in queue of correct channel", async () => {
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-1")
         ).toBeInstanceOf(MessageEmbed);
