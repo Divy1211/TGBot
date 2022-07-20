@@ -1,15 +1,16 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {addMap} from "../../abstract_commands/maps/add_map";
+import {addMap} from "../../abstract_commands/pools/add_map";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Add a map into a pool",
+    description: "Add a map to a pool",
 
     slash: true,
     testOnly: true,
+    guildOnly: true,
 
     options: [
         {
@@ -28,7 +29,7 @@ export default {
             name: "multiplier",
             description: "The number of players for this map",
             type: ApplicationCommandOptionTypes.INTEGER,
-            required: true,
+            required: false,
         },
     ],
 
@@ -43,7 +44,7 @@ export default {
         // get the command parameters
         const map_name = ensure(options.getInteger("map_uuid"));
         const pool_uuid = ensure(options.getInteger("pool_uuid"));
-        const multiplier = ensure(options.getInteger("multiplier"));
+        const multiplier = options.getInteger("multiplier") ?? 1;
 
         return await addMap(map_name, pool_uuid, multiplier, guildId);
     },

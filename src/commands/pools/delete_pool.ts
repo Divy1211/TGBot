@@ -1,12 +1,11 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-
-import {deleteGameMap} from "../../abstract_commands/maps/delete_map";
+import {deletePool} from "../../abstract_commands/pools/delete_pool";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Remove a map from the channel",
+    description: "Delete a pool from the sever",
 
     slash: true,
     testOnly: true,
@@ -15,7 +14,7 @@ export default {
     options: [
         {
             name: "uuid",
-            description: "the uuid of the map",
+            description: "the uuid of the pool",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
         },
@@ -28,8 +27,8 @@ export default {
             return "This command can only be run in a text channel in a server";
         }
         // get the command parameters
-        const map_uuid = ensure(options.getInteger("uuid"));
+        const pool_uuid = ensure(options.getInteger("uuid"));
 
-        return await deleteGameMap(map_uuid, guildId);
+        return await deletePool(pool_uuid, guildId);
     },
 } as ICommand;

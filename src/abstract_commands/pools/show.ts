@@ -25,6 +25,8 @@ export async function showMap(mapName: string, guildId: string) {
         .setTitle(`Map Statics - ${mapName}`);
     let fields: EmbedFieldData[] = [];
 
+    // todo: design embed
+
     fields.push({
         name: "name",
         value: map.name,

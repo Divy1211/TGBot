@@ -1,7 +1,7 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {showMap} from "../../abstract_commands/maps/show";
+import {showMap} from "../../abstract_commands/pools/show";
 import {ensure} from "../../utils/general";
 
 export default {
@@ -10,6 +10,7 @@ export default {
 
     slash: true,
     testOnly: true,
+    guildOnly: true,
 
     options: [
         {

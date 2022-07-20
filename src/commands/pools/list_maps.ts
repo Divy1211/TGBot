@@ -10,10 +10,11 @@ import {Queue} from "../../entities/queues/Queue";
 export default {
     // TODO: THIS COMMAND IS ONLY CAPABLE FOR POOL FINDING FOR NOW
     category: "General",
-    description: "List all the maps used by a queue or a pool",
+    description: "List all the maps on the server, or all the maps of a specific pool",
 
     slash: true,
     testOnly: true,
+    guildOnly: true,
 
     options: [
         {
@@ -24,7 +25,7 @@ export default {
         },
         {
             name: "pool_uuid",
-            description: "The id if the pool",
+            description: "If specified, only list the maps of this pool",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: false,
         },
@@ -45,8 +46,8 @@ export default {
         const queue_in = await Queue.findOneBy({uuid: queue_uuid, channelId: channelId});
         const pool_in = await Pool.findOneBy({uuid: pool_uuid});
 
-        var target_pools: Pool[] = [];
-        var description = "";
+        let target_pools: Pool[] = [];
+        let description = "";
 
         // neither queue nor pool was found
         if (!queue_in && !pool_in) {
