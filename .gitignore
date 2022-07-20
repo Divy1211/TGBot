@@ -1,8 +1,7 @@
 .env
 .vscode/*
-database.sqlite
-database.sqlite-shm
-database.sqlite-wal
+data/*
+__tests__/database.*
 dist/*
 node_modules/*
 tmp/*

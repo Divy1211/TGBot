@@ -53,7 +53,7 @@ export async function joinQueue(
             } else if (ban.until !== -1) {
                 return `You are banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
             } else {
-                return `You are permanently banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``}`;
+                return `You are banned from joining a queue permanently${ban.reason ? ` for "${ban.reason}"` : ``}`;
             }
         }
     }
