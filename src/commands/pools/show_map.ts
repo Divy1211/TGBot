@@ -1,13 +1,11 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-
 import {showMap} from "../../abstract_commands/pools/show";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "General",
     description: "Show statics of a map",
-
     slash: true,
     testOnly: true,
     guildOnly: true,

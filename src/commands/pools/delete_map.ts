@@ -1,13 +1,11 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-
 import {deleteGameMap} from "../../abstract_commands/pools/delete_map";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
     description: "Remove a map from the channel",
-
     slash: true,
     testOnly: true,
     guildOnly: true,

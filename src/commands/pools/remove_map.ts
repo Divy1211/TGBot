@@ -1,13 +1,11 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-
 import {removeMap} from "../../abstract_commands/pools/remove_map";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
     description: "Remove a map from a pool",
-
     slash: true,
     testOnly: true,
     guildOnly: true,
