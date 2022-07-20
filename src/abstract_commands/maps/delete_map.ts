@@ -1,6 +1,5 @@
 import {Guild} from "../../entities/Guild";
 import {GameMap} from "../../entities/pools/GameMap";
-import {PoolMap} from "../../entities/pools/PoolMap";
 
 /**
  * Deletes a given game map from the server
@@ -25,5 +24,5 @@ export async function deleteGameMap(gameMapUuid: number, guildId: string) {
     // remove the map from the channel
     await gameMap.remove();
 
-    return ` Map ${gameMap.name} has been deleted."`;
+    return `Map ${gameMap.name} has been deleted.`;
 }
