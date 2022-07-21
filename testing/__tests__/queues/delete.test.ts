@@ -8,6 +8,7 @@ import { PlayerStats } from "../../../src/entities/queues/PlayerStats";
 import { User } from "../../../src/entities/User";
 import { PoolMap } from "../../../src/entities/pools/PoolMap";
 import { Pool } from "../../../src/entities/pools/Pool";
+import { GameMap } from "../../../src/entities/pools/GameMap";
 
 
 
@@ -34,6 +35,7 @@ describe("Invalid Delete", () => {
 
     afterEach(async () => {
         await Queue.remove(await Queue.find());
+        await Pool.remove(await Pool.find());
     });
 
     // invalid uuid
@@ -52,33 +54,15 @@ describe("Invalid Delete", () => {
         ).toBe(`Error: Queue with ID \`${queue2.uuid}\` was not found in this channel.`)
     })
 
-    // // todo: delete queue while match ongoing (create a match in the queue)
-    // test("Queue With Ongoing Match",async () => {
-    //     const queue = ensure(await Queue.findOne({
-    //         where: {name: "queue-1"},
-    //         relations: {
-    //             leaderboard: true,
-    //             pools: {poolMaps: true},
-    //             guild: true,
-    //         },
-    //     }));
-    //     const pool = new Pool("pool1",guild);
-    //     queue.pools = [pool]
-    //     await queue.save();
-
-    //     const user = new User("user1");
-    //     const playerStats = new PlayerStats(user,new Leaderboard(guild));
-    //     const match = new Match([playerStats],queue);
-    //     await match.save();
-    //     console.log(await Match.find());
-    //     const matches = await Match.findBy({
-    //         endTime: -1,
-    //         queue: {uuid: queue.uuid}
-    //     });
-    //     expect(
-    //         await deleteQueue(queue.uuid, "channel-1")
-    //     ).toBe(`Error: Cannot delete queue when a match is being played in the queue.`)
-    // })
+    // todo: delete queue while match ongoing (create a match in the queue)
+    test("Queue With Ongoing Match",async () => {
+        const match = new Match();
+        match.queue = queue;
+        await match.save();
+        expect(
+            await deleteQueue(queue.uuid, "channel-1")
+        ).toBe(`Error: Cannot delete queue when a match is being played in the queue.`)
+    })
 
 });
 
