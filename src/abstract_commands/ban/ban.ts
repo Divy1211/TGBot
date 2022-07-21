@@ -55,12 +55,17 @@ export async function banUser(
     mm = parseInt(mm);
     ss = ss ? parseInt(ss) : 0;
 
-    if(mm > 59)
+    if (ss > 59 && mm > 59) {
+        return "Error: Minutes & Seconds cannot be greater than 59";
+    }
+    if (mm > 59) {
         return "Error: Minutes cannot be greater than 59";
-    if(ss > 59)
+    }
+    if (ss > 59) {
         return "Error: Seconds cannot be greater than 59";
+    }
 
-    ban = new Ban(user, reason, hh*3600+mm*60+ss + Math.floor(+Date.now()/1000), guild);
+    ban = new Ban(user, reason, hh * 3600 + mm * 60 + ss + Math.floor(+Date.now() / 1000), guild);
     await ban.save();
 
     return `<@${discordId}> has been banned${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;

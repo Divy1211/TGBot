@@ -44,31 +44,3 @@ export const AppDataSource = new DataSource({
     migrations: [],
     subscribers: [],
 });
-
-export const TestDataSource = new DataSource({
-    type: "better-sqlite3",
-    database: "test.sqlite",
-    synchronize: true,
-    logging: false,
-    entities: [
-        MapOption,
-        Match,
-        Player,
-        GameMap,
-        Leaderboard,
-        Pool,
-        PoolMap,
-        Queue,
-        QueueDefault,
-        QueueMsg,
-        PlayerStats,
-        Account,
-        Ban,
-        Profile,
-        Guild,
-        User,
-    ],
-    migrations: [],
-    subscribers: [],
-});
-
