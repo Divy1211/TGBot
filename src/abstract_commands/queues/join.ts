@@ -47,7 +47,7 @@ export async function joinQueue(
     if(!bypassBan) {
         const ban = await Ban.findOne({where: {user: {discordId}, guild: {id: guildId}}});
         if (ban) {
-            if (ban.until !== -1 && ban.until < +Date.now() / 1000) {
+            if (ban.until !== -1 && ban.until < Date.now() / 1000) {
                 await ban.remove();
             } else if (ban.until !== -1) {
                 return `You are banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;

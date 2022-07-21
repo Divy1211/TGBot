@@ -2,6 +2,7 @@ import {banUser} from "../../../src/abstract_commands/ban/ban";
 import {Guild} from "../../../src/entities/Guild";
 import {User} from "../../../src/entities/User";
 import {Ban} from "../../../src/entities/user_data/Ban";
+import {ensure} from "../../../src/utils/general";
 
 let guild: Guild;
 let user: User;
@@ -83,61 +84,107 @@ describe("Invalid Duration", () => {
 });
 
 describe("Valid Duration", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
-
     afterEach(async () => {
         await Ban.remove(await Ban.find());
     });
 
     // no duration (perm ban)
     test("No Duration", async () => {
+        const discordId = "discord-id-1";
+
         expect(await banUser(
-            "discord-id-1", "22:50", "", "guild-1",
-        )).toBe("Error: Minutes & Seconds cannot be greater than 59");
+            discordId, "", "", "guild-1",
+        )).toBe(`<@${discordId}> has been banned permanently`);
+
+        const ban = ensure(await Ban.findOne({
+            where: {
+                user: {discordId},
+                guild: {id: "guild-1"},
+            },
+        }));
+        expect(ban.until).toBe(-1);
+        expect(ban.reason).toBe("");
     });
 
     // hh:mm
-    test("Minutes & Seconds > 59", async () => {
+    test("Hours Minutes", async () => {
+        const discordId = "discord-id-1";
+
         expect(await banUser(
-            "discord-id-1", "22:70:70", "", "guild-1",
-        )).toBe("Error: Minutes & Seconds cannot be greater than 59");
+            discordId, "01:10", "", "guild-1",
+        )).toMatch(/<@discord-id-1> has been banned until <t:\d+> which is <t:\d+:R>/);
+
+        const ban = ensure(await Ban.findOne({
+            where: {
+                user: {discordId},
+                guild: {id: "guild-1"},
+            },
+        }));
+        // the above function call should ban the user for 70 minutes. Since it uses Date.now() we just test
+        // it to be about the same time as this:
+        expect(ban.until - (70 * 60 + Math.floor(Date.now() / 1000))).toBeLessThan(5);
+        expect(ban.reason).toBe("");
     });
 
     // h:mm:ss
-    test("Minutes & Seconds > 59", async () => {
+    test("Hours Minutes Seconds", async () => {
+        const discordId = "discord-id-1";
+
         expect(await banUser(
-            "discord-id-1", "22:70:70", "", "guild-1",
-        )).toBe("Error: Minutes & Seconds cannot be greater than 59");
+            discordId, "01:10:30", "", "guild-1",
+        )).toMatch(/<@discord-id-1> has been banned until <t:\d+> which is <t:\d+:R>/);
+
+        const ban = ensure(await Ban.findOne({
+            where: {
+                user: {discordId},
+                guild: {id: "guild-1"},
+            },
+        }));
+        // the above function call should ban the user for 70 minutes. Since it uses Date.now() we just test
+        // it to be about the same time as this:
+        expect(ban.until - (70 * 60 + 30 + Math.floor(Date.now() / 1000))).toBeLessThan(5);
+        expect(ban.reason).toBe("");
     });
 });
 
 describe("Reasons", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
-
     afterEach(async () => {
         await Ban.remove(await Ban.find());
     });
 
     // reason given
-    test("Minutes & Seconds > 59", async () => {
+    test("Reason Provided", async () => {
+        const discordId = "discord-id-1";
+        const reason = "test";
+
         expect(await banUser(
-            "discord-id-1", "22:70:70", "", "guild-1",
-        )).toBe("Error: Minutes & Seconds cannot be greater than 59");
+            discordId, "", reason, "guild-1",
+        )).toBe(`<@${discordId}> has been banned permanently for "${reason}"`);
+
+        const ban = ensure(await Ban.findOne({
+            where: {
+                user: {discordId},
+                guild: {id: "guild-1"},
+            },
+        }));
+        expect(ban.until).toBe(-1);
+        expect(ban.reason).toBe(reason);
     });
 
-    // todo: reason not given
+    // reason not given - none of the other test cases give reasons
 });
 
 describe("Re-Banning", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
-
     beforeAll(async () => {
         const ban = new Ban(user, "", -1, guild);
         await ban.save();
     });
 
-    // todo: ban when already banned
+    test("Already Banned", async () => {
+        const discordId = "discord-id-1";
+
+        expect(await banUser(
+            discordId, "", "", "guild-1",
+        )).toBe(`Error: <@${discordId}> is already banned permanently`);
+    });
 });

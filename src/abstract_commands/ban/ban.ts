@@ -29,7 +29,7 @@ export async function banUser(
 
     let ban = await Ban.findOneBy({user: {discordId}, guild: {id: guildId}});
     if (ban) {
-        if (ban.until > 0 && ban.until < +Date.now() / 1000) {
+        if (ban.until > 0 && ban.until < Date.now() / 1000) {
             await ban.remove();
         } else if (ban.until > 0) {
             return `Error: <@${discordId}> is already banned${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
@@ -41,7 +41,7 @@ export async function banUser(
     if (!duration) {
         ban = new Ban(user, reason, -1, guild);
         await ban.save();
-        return `<@${discordId}> has been banned permanently${reason ? ` for ${reason}` : ``}`;
+        return `<@${discordId}> has been banned permanently${reason ? ` for "${reason}"` : ``}`;
     }
 
     // ss will be undefined if not specified
@@ -65,7 +65,7 @@ export async function banUser(
         return "Error: Seconds cannot be greater than 59";
     }
 
-    ban = new Ban(user, reason, hh * 3600 + mm * 60 + ss + Math.floor(+Date.now() / 1000), guild);
+    ban = new Ban(user, reason, hh * 3600 + mm * 60 + ss + Math.floor(Date.now() / 1000), guild);
     await ban.save();
 
     return `<@${discordId}> has been banned${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
