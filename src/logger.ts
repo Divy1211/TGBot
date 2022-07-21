@@ -3,8 +3,9 @@ import path from "path";
 import {ICommand} from "wokcommands";
 
 import {Guild} from "./entities/Guild";
-import {client, recursiveReaddir} from "./main";
+import {client} from "./main";
 import {ensure} from "./utils/general";
+import {recursiveReaddir} from "./utils/node";
 
 export function startLogger() {
     const files = recursiveReaddir(path.join(__dirname, "commands"), true);
