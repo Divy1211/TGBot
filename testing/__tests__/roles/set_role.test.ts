@@ -4,7 +4,7 @@ import {Guild} from "../../../src/entities/Guild";
 let guild: Guild;
 
 beforeAll(async () => {
-    const guild = new Guild("guild-1");
+    guild = new Guild("guild-1");
     await guild.save();
 });
 
