@@ -13,6 +13,12 @@ export async function createPool(name: string, guildId: string) {
         guild = new Guild(guildId);
     }
 
+    // check if the pool name already exists
+    let existPool = await Pool.findOneBy({name: name});
+    if (existPool){
+        return `Invalid: pool with name ${name} already exists in the database.`
+    }
+
     const pool = new Pool(name, guild);
     await pool.save();
 

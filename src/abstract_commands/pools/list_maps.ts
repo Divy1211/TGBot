@@ -29,7 +29,7 @@ export async function listMaps(poolUuid: number, showPoolIds: boolean, guildId: 
             return `The pool with ID ${poolUuid} was not found.`;
         }
         // pool was found
-        poolMaps = pool.maps;
+        poolMaps = pool.poolMaps;
         gameMaps = poolMaps.map((poolMap: PoolMap) => poolMap.map);
         description = `Maps in pool ${pool.name}`
     }

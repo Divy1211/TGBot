@@ -14,6 +14,12 @@ export async function createMap(name: string, imgLink: string, guildId: string) 
         guild = new Guild(guildId);
     }
 
+    // check if the map name already exists
+    let existMap = await GameMap.findOneBy({name: name});
+    if (existMap){
+        return `Invalid: map with name ${name} already exists in the database.`
+    }
+
     const map = new GameMap(name, imgLink, guild);
     await map.save();
 
