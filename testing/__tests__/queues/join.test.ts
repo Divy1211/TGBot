@@ -1,5 +1,4 @@
 import {MessageEmbed} from "discord.js";
-
 import {joinQueue} from "../../../src/abstract_commands/queues/join";
 import {Guild} from "../../../src/entities/Guild";
 import {Leaderboard} from "../../../src/entities/queues/Leaderboard";

@@ -2,7 +2,6 @@ import {Guild} from "../../../src/entities/Guild";
 import {Leaderboard} from "../../../src/entities/queues/Leaderboard";
 import {Queue} from "../../../src/entities/queues/Queue";
 import {editQueue} from "../../../src/abstract_commands/queues/edit"
-import { User } from "../../../src/entities/User";
 
 let guild: Guild;
 let queue: Queue;
@@ -21,8 +20,6 @@ afterAll(async () => {
 
 
 describe("Invalid Edit", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
 
     // invalid uuid
     test("Invalid UUID", async () => {
@@ -41,11 +38,6 @@ describe("Invalid Edit", () => {
 });
 
 describe("Valid Edit", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
-
-    // todo: rmb, don't only check for what *should* be modified, but also check
-    // todo: for stuff that should *remain* the same while editing
 
     // no parameters
     test("No Parameters", async () => {
@@ -57,7 +49,7 @@ describe("Valid Edit", () => {
         expect(queue.numPlayers).toBe(4);
     })
 
-    // todo: only name
+    // only name
     test("Edit Name", async () => {
         expect(
             await editQueue(queue.uuid, "edit queue-1", 0, "channel-id-1"),
@@ -67,7 +59,7 @@ describe("Valid Edit", () => {
         expect(queue.numPlayers).toBe(4);
     })
 
-    // todo: only numPlayers
+    // only numPlayers
     test("Edit NumPlayers", async () => {
         expect(
             await editQueue(queue.uuid, "queue-1", 8, "channel-1"),
