@@ -53,7 +53,6 @@ describe("Valid Leave Multiple Queues", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
 
-    const uuid = 2;
     beforeEach(async () => {
         queue2.users = [user];
         await queue2.save();
