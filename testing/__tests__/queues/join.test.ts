@@ -1,13 +1,13 @@
 import {MessageEmbed} from "discord.js";
 
-import {banUser} from "../../../src/abstract_commands/ban/ban";
 import {joinQueue} from "../../../src/abstract_commands/queues/join";
 import {Guild} from "../../../src/entities/Guild";
 import {Leaderboard} from "../../../src/entities/queues/Leaderboard";
 import {Queue} from "../../../src/entities/queues/Queue";
-import {QueueDefault} from "../../../src/entities/queues/QueueDefault";
 import {User} from "../../../src/entities/User";
-import {ensure} from "../../../src/utils/general";
+import { ensure } from "../../../src/utils/general";
+import {banUser} from "../../../src/abstract_commands/ban/ban"
+import { QueueDefault } from "../../../src/entities/queues/QueueDefault";
 
 let queue1: Queue;
 let queue2: Queue;
@@ -66,7 +66,7 @@ describe("Valid Join Multiple Queues", () => {
     });
 
     // join w/o queue uuid but user has a queue default
-    test("Join multiple No UUID with default queue", async () => {
+    test("Join Multiple No UUID With Default Queue", async () => {
         const queue3 = ensure(await Queue.findOneBy({name: "queue-3"}));
         const user = new User("discord-id-1");
         await user.save();
@@ -82,7 +82,7 @@ describe("Valid Join Multiple Queues", () => {
     });
 
     // join w/ queue uuid
-    test("Join multiple with UUID", async () => {
+    test("Join Multiple With UUID", async () => {
         const uuid = queue2.uuid;
         expect(
             await joinQueue("discord-id-1", "channel-2", "guild-1", uuid),
@@ -99,14 +99,14 @@ describe("Invalid Join Singe Queue", () => {
     });
 
     // join no queues
-    test("Join no queues", async () => {
+    test("Join No Queues", async () => {
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-3"),
         ).toBe("There are no queues in this channel. Ask an admin to create one using /create_q!");
     });
 
     // join when ingame
-    test("The user is in game", async () => {
+    test("The User Is In Game", async () => {
         const user = new User("discord-id-1");
         user.inGame = true;
         await user.save();
@@ -126,14 +126,14 @@ describe("Invalid Join Singe Queue", () => {
     });
 
     // join invalid queue uuid
-    test("Join invalid queue uuid", async () => {
+    test("Join Invalid Queue UUID", async () => {
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-1", 1000000),
         ).toBe("Queue with ID 1000000 does not exist in this channel");
     });
 
     // join with uuid of queue in another channel
-    test("Join queue uuid of another channel", async () => {
+    test("Join Queue UUID of Another Channel", async () => {
         const uuid = queue2.uuid;
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-1", uuid),
@@ -141,7 +141,7 @@ describe("Invalid Join Singe Queue", () => {
     });
 
     // join when already in queue
-    test("The user is in game", async () => {
+    test("The User Is In Game", async () => {
         await joinQueue("discord-id-1", "channel-1", "guild-1"),
             expect(
                 await joinQueue("discord-id-1", "channel-1", "guild-1"),
