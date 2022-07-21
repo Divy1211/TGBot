@@ -34,7 +34,7 @@ export function startLogger() {
             if (option.type === ApplicationCommandOptionTypes.ROLE) {
                 const id = options.get(option.name)?.role?.id;
                 if (id) {
-                    args += ` ${option.name}: <@${id}>`;
+                    args += ` ${option.name}: <@&${id}>`;
                 }
             } else if (option.type === ApplicationCommandOptionTypes.USER) {
                 const id = options.get(option.name)?.user?.id;

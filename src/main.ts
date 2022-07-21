@@ -1,6 +1,5 @@
 import Djs, {Intents} from "discord.js";
 import dotenv from "dotenv";
-import fs from "fs";
 import path from "path";
 import WOKC from "wokcommands";
 
@@ -11,6 +10,7 @@ import {Pool} from "./entities/pools/Pool";
 import {PoolMap} from "./entities/pools/PoolMap";
 import {Leaderboard} from "./entities/queues/Leaderboard";
 import {Queue} from "./entities/queues/Queue";
+import {User} from "./entities/User";
 import {startLogger} from "./logger";
 import {ensure} from "./utils/general";
 import {recursiveReaddir} from "./utils/node";
@@ -55,8 +55,6 @@ async function unregisterRenamedCommands(commandsDir: string, testServers: strin
 }
 
 async function createTestingDatabase() {
-    fs.rmdirSync(path.join(__dirname, "..", "data"));
-
     const guild = new Guild("979245239116136448");
     const queue = new Queue("test", guild, new Leaderboard(guild), 2, "979245239384539187");
     await queue.save();

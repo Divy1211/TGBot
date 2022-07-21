@@ -40,10 +40,13 @@ export async function setupVotingOptions(match: Match): Promise<void> {
 
 
         if (vote.customId === "reroll") {
-            vote.reply({
-                ephemeral: true,
-                content: match.voteReroll(player),
-            }).then();
+            try {
+                vote.reply({
+                    ephemeral: true,
+                    content: match.voteReroll(player),
+                }).then();
+            } catch (e) {
+            }
 
             // if the vote count for rerolls reaches a majority, actually reroll
             if (match.numVotesReroll >= ensure(match.players).length / 2) {
@@ -58,7 +61,10 @@ export async function setupVotingOptions(match: Match): Promise<void> {
             await match.save();
 
         } else if (vote.customId === "cancel") {
-            vote.deferUpdate().then();
+            try {
+                await vote.deferUpdate();
+            } catch (e) {
+            }
 
             await msg.edit({
                 content: `<@${vote.user.id}> cancelled the match, reverting to the queue stage...`,
@@ -69,10 +75,13 @@ export async function setupVotingOptions(match: Match): Promise<void> {
 
         } else {
             const mapOption = match.getMapOptionByName(vote.customId);
-            vote.reply({
-                ephemeral: true,
-                content: mapOption.updateVote(player),
-            }).then();
+            try {
+                vote.reply({
+                    ephemeral: true,
+                    content: mapOption.updateVote(player),
+                }).then();
+            } catch (e) {
+            }
 
             await mapOption.save();
 

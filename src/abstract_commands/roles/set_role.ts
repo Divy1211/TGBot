@@ -15,5 +15,5 @@ export async function setRole(guildId: string, role: "admin" | "mod" | "promotio
 
     guild[`${role}RoleId`] = roleId;
     await guild.save();
-    return `Role <@<${roleId}> has been set as the ${role} role.`;
+    return `Role <@&${roleId}> has been set as the ${role} role.`;
 }
