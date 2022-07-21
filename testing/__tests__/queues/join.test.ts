@@ -1,13 +1,13 @@
 import {MessageEmbed} from "discord.js";
 
+import {banUser} from "../../../src/abstract_commands/ban/ban";
 import {joinQueue} from "../../../src/abstract_commands/queues/join";
 import {Guild} from "../../../src/entities/Guild";
 import {Leaderboard} from "../../../src/entities/queues/Leaderboard";
 import {Queue} from "../../../src/entities/queues/Queue";
+import {QueueDefault} from "../../../src/entities/queues/QueueDefault";
 import {User} from "../../../src/entities/User";
-import { ensure } from "../../../src/utils/general";
-import {banUser} from "../../../src/abstract_commands/ban/ban"
-import { QueueDefault } from "../../../src/entities/queues/QueueDefault";
+import {ensure} from "../../../src/utils/general";
 
 let queue1: Queue;
 let queue2: Queue;
@@ -28,9 +28,6 @@ afterAll(async () => {
 });
 
 describe("Valid Join Single Queue", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
-
     afterEach(async () => {
         await User.remove(await User.find());
     });
@@ -54,8 +51,8 @@ describe("Valid Join Single Queue", () => {
     });
 
     // join with bypass ban
-    test("Join with bypass ban", async () => {
-        await banUser("discord-id-1","00:00:00","","guild-1");
+    test("Bypass Ban", async () => {
+        await banUser("discord-id-1", "00:00:00", "", "guild-1");
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-1"),
         ).toBeInstanceOf(MessageEmbed);
@@ -64,19 +61,16 @@ describe("Valid Join Single Queue", () => {
 });
 
 describe("Valid Join Multiple Queues", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
-
     afterEach(async () => {
         await User.remove(await User.find());
     });
 
     // join w/o queue uuid but user has a queue default
     test("Join multiple No UUID with default queue", async () => {
-        const queue3 = ensure(await Queue.findOneBy({name:"queue-3"}));
+        const queue3 = ensure(await Queue.findOneBy({name: "queue-3"}));
         const user = new User("discord-id-1");
         await user.save();
-        const qDefault = new QueueDefault(user, "channel-1", {defaultQ: queue2,lastQ: queue3});
+        const qDefault = new QueueDefault(user, "channel-1", {defaultQ: queue2, lastQ: queue3});
         await qDefault.save();
 
         expect(
@@ -100,13 +94,10 @@ describe("Valid Join Multiple Queues", () => {
 });
 
 describe("Invalid Join Singe Queue", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
-
     afterEach(async () => {
         await User.remove(await User.find());
     });
-    
+
     // join no queues
     test("Join no queues", async () => {
         expect(
@@ -152,16 +143,13 @@ describe("Invalid Join Singe Queue", () => {
     // join when already in queue
     test("The user is in game", async () => {
         await joinQueue("discord-id-1", "channel-1", "guild-1"),
-        expect(
-            await joinQueue("discord-id-1", "channel-1", "guild-1"),
-        ).toBe("You are already in the queue!");
+            expect(
+                await joinQueue("discord-id-1", "channel-1", "guild-1"),
+            ).toBe("You are already in the queue!");
     });
 });
 
 describe("Invalid Join Multiple Queues", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
-
     afterEach(async () => {
         await User.remove(await User.find());
     });
