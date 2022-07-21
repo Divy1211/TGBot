@@ -46,6 +46,6 @@ export default {
         const duration = options.getString("duration") ?? "";
         const reason = options.getString("reason") ?? "";
 
-        return await banUser(user.id, duration, reason, guildId);
+        return await banUser(user.id, guildId, duration, reason);
     },
 } as ICommand;

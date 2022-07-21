@@ -77,6 +77,8 @@ async function unregisterRenamedCommands(commandsDir: string, testServers: strin
 }
 
 async function createTestingDatabase() {
+    fs.rmdirSync(path.join(__dirname, "..", "data"));
+
     const guild = new Guild("979245239116136448");
     const queue = new Queue("test", guild, new Leaderboard(guild), 2, "979245239384539187");
     await queue.save();
@@ -104,7 +106,7 @@ async function main() {
     console.log("db connected!");
 
     // testing code start
-    // await createTestingDatabase();
+    await createTestingDatabase();
 
     // return;
     // testing code end

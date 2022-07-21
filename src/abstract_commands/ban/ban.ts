@@ -7,15 +7,15 @@ import {ensure} from "../../utils/general";
  * Bans a user from joining queues in a specific server
  *
  * @param discordId The ID of the user to ban
+ * @param guildId The ID of the server in which the user is banned
  * @param duration The duration to ban the user for
  * @param reason The reason for banning the user
- * @param guildId The ID of the server in which the user is banned
  */
 export async function banUser(
     discordId: string,
+    guildId: string,
     duration: string,
     reason: string,
-    guildId: string,
 ): Promise<string> {
     let guild = await Guild.findOne({where: {id: guildId}, relations: {bans: true}});
     if (!guild) {
@@ -25,12 +25,11 @@ export async function banUser(
     let user = await User.findOneBy({discordId});
     if (!user) {
         user = new User(discordId, {guilds: [ensure(guild)]});
-        await user.save();
     }
 
     let ban = await Ban.findOneBy({user: {discordId}, guild: {id: guildId}});
     if (ban) {
-        if (ban.until > 0 && ban.until < +Date.now() / 1000) {
+        if (ban.until > 0 && ban.until < Date.now() / 1000) {
             await ban.remove();
         } else if (ban.until > 0) {
             return `Error: <@${discordId}> is already banned${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
@@ -42,7 +41,7 @@ export async function banUser(
     if (!duration) {
         ban = new Ban(user, reason, -1, guild);
         await ban.save();
-        return `<@${discordId}> has been banned permanently${reason ? ` for ${reason}` : ``}`;
+        return `<@${discordId}> has been banned permanently${reason ? ` for "${reason}"` : ``}`;
     }
 
     // ss will be undefined if not specified
@@ -56,12 +55,17 @@ export async function banUser(
     mm = parseInt(mm);
     ss = ss ? parseInt(ss) : 0;
 
-    if(mm > 59)
+    if (ss > 59 && mm > 59) {
+        return "Error: Minutes & Seconds cannot be greater than 59";
+    }
+    if (mm > 59) {
         return "Error: Minutes cannot be greater than 59";
-    if(ss > 59)
+    }
+    if (ss > 59) {
         return "Error: Seconds cannot be greater than 59";
+    }
 
-    ban = new Ban(user, reason, hh*3600+mm*60+ss + Math.floor(+Date.now()/1000), guild);
+    ban = new Ban(user, reason, hh * 3600 + mm * 60 + ss + Math.floor(Date.now() / 1000), guild);
     await ban.save();
 
     return `<@${discordId}> has been banned${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;

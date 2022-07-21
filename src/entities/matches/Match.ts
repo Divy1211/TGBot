@@ -58,7 +58,7 @@ export class Match extends BaseEntity {
         super();
 
         this.lobbyId = -1;
-        this.startTime = Math.floor(+Date.now() / 1000);
+        this.startTime = Math.floor(Date.now() / 1000);
         this.endTime = -1;
         this.winningTeam = -1;
         this.numVotesReroll = 0;

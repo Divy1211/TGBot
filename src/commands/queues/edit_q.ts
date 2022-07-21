@@ -44,9 +44,9 @@ export default {
 
         // get the command parameters
         const uuid = ensure(options.getInteger("queue_uuid"));
-        const name = options.getString("name") ?? "";
-        const numPlayers = options.getInteger("num_players") ?? 0;
+        const name = options.getString("name");
+        const numPlayers = options.getInteger("num_players");
 
-        return await editQueue(uuid, name, numPlayers, channelId);
+        return await editQueue(uuid, channelId, name, numPlayers);
     },
 } as ICommand;

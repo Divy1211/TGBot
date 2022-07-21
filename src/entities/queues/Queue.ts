@@ -26,7 +26,7 @@ export class Queue extends BaseEntity {
     @JoinTable()
     pools?: Pool[];
 
-    @ManyToMany(() => User, (user: User) => user.queues, {cascade: true, eager: true})
+    @ManyToMany(() => User, (user: User) => user.queues, {cascade: true, eager: true, onDelete: "CASCADE"})
     @JoinTable()
     users!: User[];
 
