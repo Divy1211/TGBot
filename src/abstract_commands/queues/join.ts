@@ -8,6 +8,16 @@ import {Ban} from "../../entities/user_data/Ban";
 import {getPlayerEmbed} from "../common";
 import {startMatch} from "../matches/start";
 
+export async function joinQueue(discordId: string, channelId: string, guildId: string): Promise<string | MessageEmbed>
+export async function joinQueue(
+    discordId: string, channelId: string, guildId: string, bypassBan: boolean,
+): Promise<string | MessageEmbed>
+export async function joinQueue(
+    discordId: string, channelId: string, guildId: string, uuid: number,
+): Promise<string | MessageEmbed>
+export async function joinQueue(
+    discordId: string, channelId: string, guildId: string, bypassBan: boolean, uuid?: number,
+): Promise<string | MessageEmbed>
 
 /**
  * Puts the given user into a queue in the given channel or the specified queue
@@ -15,17 +25,20 @@ import {startMatch} from "../matches/start";
  * @param discordId The discord ID of the user trying to join a queue
  * @param channelId The ID of the channel in which this command is used
  * @param guildId The ID of the server in which this command is used
- * @param uuid The ID of the queue to join
  * @param bypassBan If true, bypasses a ban if any on joining the queue
+ * @param uuid? The ID of the queue to join
  */
 export async function joinQueue(
     discordId: string,
     channelId: string,
     guildId: string,
+    bypassBan: boolean | number = false,
     uuid?: number,
-    bypassBan: boolean = false,
 ): Promise<string | MessageEmbed> {
-
+    if (typeof bypassBan === "number") {
+        uuid = bypassBan;
+        bypassBan = false;
+    }
     // load existing or create a new user
     let user = await User.findOneBy({discordId});
     if (!user) {
@@ -44,7 +57,7 @@ export async function joinQueue(
         return "You cannot join a queue while in a game";
     }
 
-    if(!bypassBan) {
+    if (!bypassBan) {
         const ban = await Ban.findOne({where: {user: {discordId}, guild: {id: guildId}}});
         if (ban) {
             if (ban.until !== -1 && ban.until < Date.now() / 1000) {
@@ -70,7 +83,7 @@ export async function joinQueue(
     // If there is just one queue, use that as the queue
     // If there are more than 1 queues, check the QueueDefault for the user and channel.
     // If there is no QueueDefault, return
-    // If there is a queue default, use it as the queue
+    // If there is a queue default, use it as the queue (default before last)
 
     let queue;
     if (uuid) {

@@ -7,15 +7,15 @@ import {ensure} from "../../utils/general";
  * Bans a user from joining queues in a specific server
  *
  * @param discordId The ID of the user to ban
+ * @param guildId The ID of the server in which the user is banned
  * @param duration The duration to ban the user for
  * @param reason The reason for banning the user
- * @param guildId The ID of the server in which the user is banned
  */
 export async function banUser(
     discordId: string,
+    guildId: string,
     duration: string,
     reason: string,
-    guildId: string,
 ): Promise<string> {
     let guild = await Guild.findOne({where: {id: guildId}, relations: {bans: true}});
     if (!guild) {

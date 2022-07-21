@@ -7,8 +7,9 @@
     "build": "tsc -p .",
     "dev": "nodemon src/main.ts",
     "start": "ts-node src/main.ts",
-    "tests": "jest --colors",
-    "coverage": "jest --coverage --colors --reporters",
+    "tests": "jest --colors --runInBand",
+    "coverage:print": "jest --coverage --colors --runInBand",
+    "coverage:report": "jest --coverage --colors --runInBand --reporters",
     "deploy": "npm run build && ts-node dist/main.js"
   },
   "keywords": [],

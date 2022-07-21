@@ -41,6 +41,6 @@ export default {
         const uuid = options.getInteger("queue_uuid") ?? undefined;
         user = options.getUser("user") ?? user;
 
-        return await joinQueue(user.id, channelId, guildId, uuid, options.getUser("user") !== null);
+        return await joinQueue(user.id, channelId, guildId, options.getUser("user") !== null, uuid);
     },
 } as ICommand;

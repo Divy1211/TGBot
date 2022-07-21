@@ -21,65 +21,47 @@ afterAll(async () => {
 describe("Invalid Duration", () => {
     // missing minutes (hh)
     test("Missing Minutes", async () => {
-        expect(await banUser(
-            "discord-id-1", "22", "", "guild-1",
-        )).toBe("Error: The format of the specified duration is invalid, please try again");
+        expect(await banUser("discord-id-1", "guild-1", "22", "")).toBe("Error: The format of the specified duration is invalid, please try again");
     });
 
     // missing minutes with seconds (hh::ss)
     test("Missing Minutes With Seconds", async () => {
-        expect(await banUser(
-            "discord-id-1", "22::44", "", "guild-1",
-        )).toBe("Error: The format of the specified duration is invalid, please try again");
+        expect(await banUser("discord-id-1", "guild-1", "22::44", "")).toBe("Error: The format of the specified duration is invalid, please try again");
     });
 
     // missing seconds even though a second : was typed (hh:mm:)
     test("Missing Seconds", async () => {
-        expect(await banUser(
-            "discord-id-1", "22:33:", "", "guild-1",
-        )).toBe("Error: The format of the specified duration is invalid, please try again");
+        expect(await banUser("discord-id-1", "guild-1", "22:33:", "")).toBe("Error: The format of the specified duration is invalid, please try again");
     });
 
     // non digit character
     test("Non Digit Char", async () => {
-        expect(await banUser(
-            "discord-id-1", "22h:44m", "", "guild-1",
-        )).toBe("Error: The format of the specified duration is invalid, please try again");
+        expect(await banUser("discord-id-1", "guild-1", "22h:44m", "")).toBe("Error: The format of the specified duration is invalid, please try again");
     });
 
     // only one digit in mm
     test("One Digit Minutes", async () => {
-        expect(await banUser(
-            "discord-id-1", "22:4", "", "guild-1",
-        )).toBe("Error: The format of the specified duration is invalid, please try again");
+        expect(await banUser("discord-id-1", "guild-1", "22:4", "")).toBe("Error: The format of the specified duration is invalid, please try again");
     });
 
     // only one digit in ss
     test("One Digit Seconds", async () => {
-        expect(await banUser(
-            "discord-id-1", "22:44:3", "", "guild-1",
-        )).toBe("Error: The format of the specified duration is invalid, please try again");
+        expect(await banUser("discord-id-1", "guild-1", "22:44:3", "")).toBe("Error: The format of the specified duration is invalid, please try again");
     });
 
     // mm > 59
     test("Minutes > 59", async () => {
-        expect(await banUser(
-            "discord-id-1", "22:70", "", "guild-1",
-        )).toBe("Error: Minutes cannot be greater than 59");
+        expect(await banUser("discord-id-1", "guild-1", "22:70", "")).toBe("Error: Minutes cannot be greater than 59");
     });
 
     // ss > 59
     test("Seconds > 59", async () => {
-        expect(await banUser(
-            "discord-id-1", "22:44:70", "", "guild-1",
-        )).toBe("Error: Seconds cannot be greater than 59");
+        expect(await banUser("discord-id-1", "guild-1", "22:44:70", "")).toBe("Error: Seconds cannot be greater than 59");
     });
 
     // mm > 59 && ss > 59
     test("Minutes & Seconds > 59", async () => {
-        expect(await banUser(
-            "discord-id-1", "22:70:70", "", "guild-1",
-        )).toBe("Error: Minutes & Seconds cannot be greater than 59");
+        expect(await banUser("discord-id-1", "guild-1", "22:70:70", "")).toBe("Error: Minutes & Seconds cannot be greater than 59");
     });
 });
 
@@ -92,9 +74,7 @@ describe("Valid Duration", () => {
     test("No Duration", async () => {
         const discordId = "discord-id-1";
 
-        expect(await banUser(
-            discordId, "", "", "guild-1",
-        )).toBe(`<@${discordId}> has been banned permanently`);
+        expect(await banUser(discordId, "guild-1", "", "")).toBe(`<@${discordId}> has been banned permanently`);
 
         const ban = ensure(await Ban.findOne({
             where: {
@@ -110,9 +90,7 @@ describe("Valid Duration", () => {
     test("Hours Minutes", async () => {
         const discordId = "discord-id-1";
 
-        expect(await banUser(
-            discordId, "01:10", "", "guild-1",
-        )).toMatch(/<@discord-id-1> has been banned until <t:\d+> which is <t:\d+:R>/);
+        expect(await banUser(discordId, "guild-1", "01:10", "")).toMatch(/<@discord-id-1> has been banned until <t:\d+> which is <t:\d+:R>/);
 
         const ban = ensure(await Ban.findOne({
             where: {
@@ -130,9 +108,7 @@ describe("Valid Duration", () => {
     test("Hours Minutes Seconds", async () => {
         const discordId = "discord-id-1";
 
-        expect(await banUser(
-            discordId, "01:10:30", "", "guild-1",
-        )).toMatch(/<@discord-id-1> has been banned until <t:\d+> which is <t:\d+:R>/);
+        expect(await banUser(discordId, "guild-1", "01:10:30", "")).toMatch(/<@discord-id-1> has been banned until <t:\d+> which is <t:\d+:R>/);
 
         const ban = ensure(await Ban.findOne({
             where: {
@@ -157,9 +133,7 @@ describe("Reasons", () => {
         const discordId = "discord-id-1";
         const reason = "test";
 
-        expect(await banUser(
-            discordId, "", reason, "guild-1",
-        )).toBe(`<@${discordId}> has been banned permanently for "${reason}"`);
+        expect(await banUser(discordId, "guild-1", "", reason)).toBe(`<@${discordId}> has been banned permanently for "${reason}"`);
 
         const ban = ensure(await Ban.findOne({
             where: {
@@ -183,8 +157,6 @@ describe("Re-Banning", () => {
     test("Already Banned", async () => {
         const discordId = "discord-id-1";
 
-        expect(await banUser(
-            discordId, "", "", "guild-1",
-        )).toBe(`Error: <@${discordId}> is already banned permanently`);
+        expect(await banUser(discordId, "guild-1", "", "")).toBe(`Error: <@${discordId}> is already banned permanently`);
     });
 });

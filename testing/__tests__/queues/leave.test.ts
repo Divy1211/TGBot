@@ -29,7 +29,6 @@ afterAll(async () => {
 });
 
 describe("Valid Leave Single Queue", () => {
-
     beforeEach(async () => {
         queue1.users = [user];
         await queue1.save();
@@ -41,51 +40,47 @@ describe("Valid Leave Single Queue", () => {
             await leaveQueue("discord-id-1", "channel-1", "guild-1"),
         ).toBeInstanceOf(MessageEmbed);
         await queue1.reload();
-        expect(queue1.users).toStrictEqual([]);
+        expect(queue1.users.length).toBe(0);
     });
 
     // leave w/ queue uuid
     test("With UUID", async () => {
-        const uuid_test = 1
         expect(
-            await leaveQueue("discord-id-1", "channel-1", "guild-1", uuid_test),
+            await leaveQueue("discord-id-1", "channel-1", "guild-1", queue1.uuid),
         ).toBeInstanceOf(MessageEmbed);
-        await queue1.reload()
-        expect(queue1.users).toStrictEqual([]);
+        await queue1.reload();
+        expect(queue1.users.length).toBe(0);
     });
 });
 
 describe("Valid Leave Multiple Queues", () => {
-
     beforeEach(async () => {
         queue2.users = [user];
         await queue2.save();
     });
-
 
     // leave w/o queue uuid but user is in only one queue
     test("No UUID", async () => {
         expect(
             await leaveQueue("discord-id-1", "channel-2", "guild-1"),
         ).toBeInstanceOf(MessageEmbed);
-        await queue2.reload()
+        await queue2.reload();
 
-        expect(queue2.users).toStrictEqual([]);
+        expect(queue2.users.length).toBe(0);
     });
+
     //leave w/ queue uuid
     test("With UUID", async () => {
-        const uuid_test = 2
         expect(
-            await leaveQueue("discord-id-1", "channel-2", "guild-1", uuid_test),
+            await leaveQueue("discord-id-1", "channel-2", "guild-1", queue2.uuid),
         ).toBeInstanceOf(MessageEmbed);
-        await queue2.reload()
+        await queue2.reload();
 
-        expect(queue2.users).toStrictEqual([]);
+        expect(queue2.users.length).toBe(0);
     });
 });
 
 describe("Invalid Leave Single Queue", () => {
-
     beforeAll(async () => {
         queue1.users = [user];
         await queue1.save();
@@ -97,33 +92,32 @@ describe("Invalid Leave Single Queue", () => {
             await leaveQueue("discord-id-1", "channel-2", "guild-1"),
         ).toBe("You are not in any queues");
     });
+
     // leave invalid queue uuid
     test("Invalid UUID", async () => {
-        const uuid_test = 5
+        const uuid = 5;
         expect(
-            await leaveQueue("discord-id-1", "channel-1", "guild-1", uuid_test),
-        ).toBe(`Queue with ID ${uuid_test} does not exist in this channel`);
+            await leaveQueue("discord-id-1", "channel-1", "guild-1", uuid),
+        ).toBe(`Queue with ID ${uuid} does not exist in this channel`);
     });
 
     // leave when not in queue
-    test("Not in Queue ", async () => {
-        const uuid_test = 2;
+    test("Not In Queue ", async () => {
         expect(
-            await leaveQueue("discord-id-1", "channel-2", "guild-1", uuid_test),
+            await leaveQueue("discord-id-1", "channel-2", "guild-1", queue2.uuid),
         ).toBe("You are not in any queues");
     });
+
     // leave uuid of queue in another channel
-    test("UUID in other Channel ", async () => {
-        const uuid_test = 2;
+    test("Foreign UUID ", async () => {
         expect(
-            await leaveQueue("discord-id-1", "channel-1", "guild-1", uuid_test),
-        ).toBe(`Queue with ID ${uuid_test} does not exist in this channel`);
+            await leaveQueue("discord-id-1", "channel-1", "guild-1", queue2.uuid),
+        ).toBe(`Queue with ID ${queue2.uuid} does not exist in this channel`);
     });
 });
 
-describe("Invalid Leave Multiple Queue", () => {
-
-    beforeAll(async () => {
+describe("Invalid Leave Multiple Queues", () => {
+    beforeEach(async () => {
         queue2.users = [user];
         queue3.users = [user];
         await Queue.save([queue2, queue3]);

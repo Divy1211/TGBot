@@ -16,7 +16,7 @@ export class QueueDefault extends BaseEntity {
     @Column()
     channelId: string;
 
-    @ManyToOne(() => User, {onDelete: "CASCADE"})
+    @ManyToOne(() => User, {cascade: true, onDelete: "CASCADE"})
     @JoinColumn()
     user?: User;
 
