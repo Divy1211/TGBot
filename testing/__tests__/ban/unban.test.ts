@@ -49,6 +49,7 @@ describe("Valid Unban", () => {
         await ban.save();
     });
 
+    // already banned
     test("Already Banned", async () => {
         const discordId = "discord-id-1";
 
