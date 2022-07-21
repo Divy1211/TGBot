@@ -25,8 +25,6 @@ afterAll(async () => {
 });
 
 describe("Invalid Delete", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
 
     beforeEach(async () => {
         queue = new Queue("queue-1", guild, new Leaderboard(guild), 4, "channel-1");
@@ -54,7 +52,7 @@ describe("Invalid Delete", () => {
         ).toBe(`Error: Queue with ID \`${queue2.uuid}\` was not found in this channel.`)
     })
 
-    // todo: delete queue while match ongoing (create a match in the queue)
+    // delete queue while match ongoing (create a match in the queue)
     test("Queue With Ongoing Match",async () => {
         const match = new Match();
         match.queue = queue;
@@ -67,8 +65,6 @@ describe("Invalid Delete", () => {
 });
 
 describe("Valid Delete", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
 
     beforeEach(async () => {
         queue = new Queue("queue-1", guild, new Leaderboard(guild), 4, "channel-1");
@@ -79,7 +75,7 @@ describe("Valid Delete", () => {
         await Queue.remove(await Queue.find());
     });
 
-    // todo: correct uuid
+    // correct uuid
     test("Valid UUID",async () => {
         expect(
             await deleteQueue(queue.uuid,"channel-1")
