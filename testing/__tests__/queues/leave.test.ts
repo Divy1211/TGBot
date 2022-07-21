@@ -29,8 +29,6 @@ afterAll(async () => {
 });
 
 describe("Valid Leave Single Queue", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
 
     beforeEach(async () => {
         queue1.users = [user];
@@ -47,10 +45,10 @@ describe("Valid Leave Single Queue", () => {
     });
 
     // leave w/ queue uuid
-        test("With UUID", async()=>{
+    test("With UUID", async () => {
         const uuid_test = 1
         expect(
-            await leaveQueue("discord-id-1", "channel-1","guild-1", uuid_test),
+            await leaveQueue("discord-id-1", "channel-1", "guild-1", uuid_test),
         ).toBeInstanceOf(MessageEmbed);
         await queue1.reload()
         expect(queue1.users).toStrictEqual([]);
@@ -58,8 +56,6 @@ describe("Valid Leave Single Queue", () => {
 });
 
 describe("Valid Leave Multiple Queues", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
 
     beforeEach(async () => {
         queue2.users = [user];
@@ -68,19 +64,19 @@ describe("Valid Leave Multiple Queues", () => {
 
 
     // leave w/o queue uuid but user is in only one queue
-    test("No UUID", async()=>{
+    test("No UUID", async () => {
         expect(
-            await leaveQueue("discord-id-1", "channel-2","guild-1"),
+            await leaveQueue("discord-id-1", "channel-2", "guild-1"),
         ).toBeInstanceOf(MessageEmbed);
         await queue2.reload()
 
         expect(queue2.users).toStrictEqual([]);
     });
     //leave w/ queue uuid
-    test("With UUID", async()=>{
+    test("With UUID", async () => {
         const uuid_test = 2
         expect(
-            await leaveQueue("discord-id-1", "channel-2","guild-1", uuid_test),
+            await leaveQueue("discord-id-1", "channel-2", "guild-1", uuid_test),
         ).toBeInstanceOf(MessageEmbed);
         await queue2.reload()
 
@@ -89,8 +85,6 @@ describe("Valid Leave Multiple Queues", () => {
 });
 
 describe("Invalid Leave Single Queue", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
 
     beforeAll(async () => {
         queue1.users = [user];
@@ -98,38 +92,36 @@ describe("Invalid Leave Single Queue", () => {
     });
 
     // leave when no queues in channel
-    test("No Queues", async()=>{
+    test("No Queues", async () => {
         expect(
-            await leaveQueue("discord-id-1", "channel-2","guild-1"),
+            await leaveQueue("discord-id-1", "channel-2", "guild-1"),
         ).toBe("You are not in any queues");
     });
     // leave invalid queue uuid
-    test("Invalid UUID", async()=>{
+    test("Invalid UUID", async () => {
         const uuid_test = 5
         expect(
-            await leaveQueue("discord-id-1", "channel-1","guild-1",uuid_test),
+            await leaveQueue("discord-id-1", "channel-1", "guild-1", uuid_test),
         ).toBe(`Queue with ID ${uuid_test} does not exist in this channel`);
     });
 
     // leave when not in queue
-    test("Not in Queue ", async()=>{
+    test("Not in Queue ", async () => {
         const uuid_test = 2;
         expect(
-            await leaveQueue("discord-id-1", "channel-2","guild-1",uuid_test),
+            await leaveQueue("discord-id-1", "channel-2", "guild-1", uuid_test),
         ).toBe("You are not in any queues");
     });
     // leave uuid of queue in another channel
-    test("UUID in other Channel ", async()=>{
+    test("UUID in other Channel ", async () => {
         const uuid_test = 2;
         expect(
-            await leaveQueue("discord-id-1", "channel-1","guild-1",uuid_test),
+            await leaveQueue("discord-id-1", "channel-1", "guild-1", uuid_test),
         ).toBe(`Queue with ID ${uuid_test} does not exist in this channel`);
     });
 });
 
 describe("Invalid Leave Multiple Queue", () => {
-    // !! Once done with writing the test cases, just remove the "todo: "
-    // DO NOT remove the full comment, as it its still useful for documentation
 
     beforeAll(async () => {
         queue2.users = [user];
@@ -138,9 +130,9 @@ describe("Invalid Leave Multiple Queue", () => {
     });
 
     // leave when in multiple queues w/o uuid
-    test("No UUID ", async()=>{
+    test("No UUID ", async () => {
         expect(
-            await leaveQueue("discord-id-1", "channel-2","guild-1"),
+            await leaveQueue("discord-id-1", "channel-2", "guild-1"),
         ).toBe("You are in multiple queues, please specify which queue you wish to leave");
     });
 });
