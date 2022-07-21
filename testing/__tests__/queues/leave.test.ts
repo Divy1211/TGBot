@@ -1,16 +1,20 @@
+import {MessageEmbed} from "discord.js";
+
+import {leaveQueue} from "../../../src/abstract_commands/queues/leave";
 import {Guild} from "../../../src/entities/Guild";
 import {Leaderboard} from "../../../src/entities/queues/Leaderboard";
 import {Queue} from "../../../src/entities/queues/Queue";
 import {User} from "../../../src/entities/User";
 
+let guild: Guild;
 let user: User;
 let queue1: Queue;
 let queue2: Queue;
 let queue3: Queue;
 
 beforeAll(async () => {
-    const guild = new Guild("guild-1");
-    const user = new User("discord-id-1", {guilds: [guild]});
+    guild = new Guild("guild-1");
+    user = new User("discord-id-1", {guilds: [guild]});
     await user.save();
 
     queue1 = new Queue("queue-1", guild, new Leaderboard(guild), 4, "channel-1");
@@ -33,7 +37,15 @@ describe("Valid Leave Single Queue", () => {
         await queue1.save();
     });
 
-    // todo: leave w/o queue uuid
+    // leave w/o queue uuid
+    test("No UUID", async () => {
+        expect(
+            await leaveQueue("discord-id-1", "channel-1", "guild-1"),
+        ).toBeInstanceOf(MessageEmbed);
+        await queue1.reload();
+        expect(queue1.users).toStrictEqual([]);
+    });
+
     // todo: leave w/ queue uuid
 });
 
@@ -44,6 +56,7 @@ describe("Valid Leave Multiple Queues", () => {
     const uuid = 2;
     beforeEach(async () => {
         queue2.users = [user];
+        await queue2.save();
     });
 
     // todo: leave w/o queue uuid but user is in only one queue
