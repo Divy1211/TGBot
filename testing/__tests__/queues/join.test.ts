@@ -5,6 +5,9 @@ import {Guild} from "../../../src/entities/Guild";
 import {Leaderboard} from "../../../src/entities/queues/Leaderboard";
 import {Queue} from "../../../src/entities/queues/Queue";
 import {User} from "../../../src/entities/User";
+import { ensure } from "../../../src/utils/general";
+import {banUser} from "../../../src/abstract_commands/ban/ban"
+import { QueueDefault } from "../../../src/entities/queues/QueueDefault";
 
 let queue1: Queue;
 let queue2: Queue;
@@ -21,6 +24,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
     await Guild.remove(await Guild.find());
+    await Queue.remove(await Queue.find());
 });
 
 describe("Valid Join Single Queue", () => {
@@ -49,7 +53,14 @@ describe("Valid Join Single Queue", () => {
         expect(queue2.users[0].discordId).toBe("discord-id-1");
     });
 
-    // todo: join with bypass ban
+    // join with bypass ban
+    test("Join with bypass ban", async () => {
+        await banUser("discord-id-1","00:00:00","","guild-1");
+        expect(
+            await joinQueue("discord-id-1", "channel-1", "guild-1"),
+        ).toBeInstanceOf(MessageEmbed);
+        expect(queue1.users[0].discordId).toBe("discord-id-1");
+    });
 });
 
 describe("Valid Join Multiple Queues", () => {
@@ -60,25 +71,105 @@ describe("Valid Join Multiple Queues", () => {
         await User.remove(await User.find());
     });
 
-    // todo: join w/o queue uuid but user has a queue default
-    // todo: join w/ queue uuid
+    // join w/o queue uuid but user has a queue default
+    test("Join multiple No UUID with default queue", async () => {
+        const queue3 = ensure(await Queue.findOneBy({name:"queue-3"}));
+        const user = new User("discord-id-1");
+        await user.save();
+        const qDefault = new QueueDefault(user, "channel-1", {defaultQ: queue2,lastQ: queue3});
+        await qDefault.save();
+
+        expect(
+            await joinQueue("discord-id-1", "channel-1", "guild-1"),
+        ).toBeInstanceOf(MessageEmbed);
+
+        await queue1.reload();
+        expect(queue1.users[0].discordId).toBe("discord-id-1");
+    });
+
+    // join w/ queue uuid
+    test("Join multiple with UUID", async () => {
+        const uuid = queue2.uuid;
+        expect(
+            await joinQueue("discord-id-1", "channel-2", "guild-1", uuid),
+        ).toBeInstanceOf(MessageEmbed);
+
+        await queue2.reload();
+        expect(queue2.users[0].discordId).toBe("discord-id-1");
+    });
 });
 
 describe("Invalid Join Singe Queue", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
 
-    // todo: join no queues
-    // todo: join when ingame
-    // todo: join when banned
-    // todo: join invalid queue uuid
-    // todo: join with uuid of queue in another channel
-    // todo: join when already in queue
+    afterEach(async () => {
+        await User.remove(await User.find());
+    });
+    
+    // join no queues
+    test("Join no queues", async () => {
+        expect(
+            await joinQueue("discord-id-1", "channel-1", "guild-3"),
+        ).toBe("There are no queues in this channel. Ask an admin to create one using /create_q!");
+    });
+
+    // join when ingame
+    test("The user is in game", async () => {
+        const user = new User("discord-id-1");
+        user.inGame = true;
+        await user.save();
+        expect(
+            await joinQueue("discord-id-1", "channel-1", "guild-1"),
+        ).toBe("You cannot join a queue while in a game");
+    });
+
+    // join when banned
+    test("Join Single No UUID", async () => {
+        expect(
+            await joinQueue("discord-id-1", "channel-1", "guild-1"),
+        ).toBeInstanceOf(MessageEmbed);
+
+        await queue1.reload();
+        expect(queue1.users[0].discordId).toBe("discord-id-1");
+    });
+
+    // join invalid queue uuid
+    test("Join invalid queue uuid", async () => {
+        expect(
+            await joinQueue("discord-id-1", "channel-1", "guild-1", 1000000),
+        ).toBe("Queue with ID 1000000 does not exist in this channel");
+    });
+
+    // join with uuid of queue in another channel
+    test("Join queue uuid of another channel", async () => {
+        const uuid = queue2.uuid;
+        expect(
+            await joinQueue("discord-id-1", "channel-1", "guild-1", uuid),
+        ).toBe(`Queue with ID ${uuid} does not exist in this channel`);
+    });
+
+    // join when already in queue
+    test("The user is in game", async () => {
+        await joinQueue("discord-id-1", "channel-1", "guild-1"),
+        expect(
+            await joinQueue("discord-id-1", "channel-1", "guild-1"),
+        ).toBe("You are already in the queue!");
+    });
 });
 
 describe("Invalid Join Multiple Queues", () => {
     // !! Once done with writing the test cases, just remove the "todo: "
     // DO NOT remove the full comment, as it its still useful for documentation
 
-    // todo: join when multiple queues but no uuid and no queue default for user
+    afterEach(async () => {
+        await User.remove(await User.find());
+    });
+
+    // join when multiple queues but no uuid and no queue default for user
+    test("Join when multiple queues but no uuid and no queue default for user", async () => {
+        expect(
+            await joinQueue("discord-id-1", "channel-2", "guild-1"),
+        ).toBe("There are multiple queues in this channel, please specify the ID of the queue that you wish to join.");
+    });
 });
