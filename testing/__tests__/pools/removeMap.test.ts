@@ -1,6 +1,5 @@
 import { Guild } from "../../../src/entities/Guild";
 import { Pool } from "../../../src/entities/pools/Pool";
-import { deletePool } from "../../../src/abstract_commands/pools/delete_pool";
 import { GameMap } from "../../../src/entities/pools/GameMap";
 import { PoolMap } from "../../../src/entities/pools/PoolMap";
 import { removeMap } from "../../../src/abstract_commands/pools/remove_map";
