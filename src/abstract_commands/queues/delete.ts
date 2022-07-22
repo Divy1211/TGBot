@@ -1,3 +1,4 @@
+import {Match} from "../../entities/matches/Match";
 import {Queue} from "../../entities/queues/Queue";
 
 /**
@@ -7,12 +8,18 @@ import {Queue} from "../../entities/queues/Queue";
  * @param channelId The ID of the channel to delete the queue in
  */
 export async function deleteQueue(uuid: number, channelId: string): Promise<string> {
-    // todo: roles
-    // todo: do not allow queue to be deleted while match ongoing (same w leaderboard)
     let queue = await Queue.findOneBy({uuid, channelId});
-
     if (!queue) {
-        return `Queue with ID \`${uuid}\` was not found in this channel`;
+        return `Error: Queue with ID \`${uuid}\` was not found in this channel.`;
+    }
+
+    // do not allow deletion if a game is unfinished
+    const matches = await Match.findBy({
+        endTime: -1,
+        queue: {uuid: queue.uuid}
+    });
+    if(matches.length > 0) {
+        return `Error: Cannot delete queue when a match is being played in the queue.`;
     }
 
     await queue.remove();

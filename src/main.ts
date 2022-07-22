@@ -1,6 +1,5 @@
 import Djs, {Intents} from "discord.js";
 import dotenv from "dotenv";
-import fs from "fs";
 import path from "path";
 import WOKC from "wokcommands";
 
@@ -11,8 +10,10 @@ import {Pool} from "./entities/pools/Pool";
 import {PoolMap} from "./entities/pools/PoolMap";
 import {Leaderboard} from "./entities/queues/Leaderboard";
 import {Queue} from "./entities/queues/Queue";
+import {User} from "./entities/User";
 import {startLogger} from "./logger";
 import {ensure} from "./utils/general";
+import {recursiveReaddir} from "./utils/node";
 
 dotenv.config();
 
@@ -23,29 +24,6 @@ export const client = new Djs.Client({
         Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
     ],
 });
-
-/**
- *
- * Finds the names of all the files inside a given directory and its sub directories.
- *
- * @param dir The directory to scan for files.
- * @param full_paths if true, the full relative path of the file is included instead of just filename.
- *
- * @returns A list of file names inside the directory and subdirectories in that directory.
- */
-export function recursiveReaddir(dir: string, full_paths: boolean = false): string[] {
-    let fileNames: string[] = [];
-    let names = fs.readdirSync(dir);
-    names.forEach((name) => {
-        if (name.match(/^\w*?\.\w+$/)) // if name is a file
-        {
-            fileNames.push(full_paths ? dir + "\\" + name : name);
-        } else {
-            fileNames.push(...recursiveReaddir(path.join(dir, name), full_paths));
-        }
-    });
-    return fileNames;
-}
 
 /**
  *
@@ -104,7 +82,7 @@ async function main() {
     console.log("db connected!");
 
     // testing code start
-    // await createTestingDatabase();
+    await createTestingDatabase();
 
     // return;
     // testing code end

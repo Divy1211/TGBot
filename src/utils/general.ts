@@ -1,8 +1,10 @@
 /**
- * Ensure that the parameter exists. Mostly useful in combination with 'Array.find()' which can return undefined.
+ * Ensure that the parameter is not null or undefined. Returns the given argument
  *
  * @param argument The argument which is ensured to not be undefined or null
  * @param message The message to use in the error throw when the argument is undefined or null
+ *
+ * @throws TypeError if the parameter is null or undefined
  *
  * @author Karol Majewski @ https://stackoverflow.com/a/54738437/7230293
  */
@@ -15,10 +17,10 @@ export function ensure<T>(argument: T | undefined | null, message = "This value 
 }
 
 /**
- * Assert the parameter given to not be undefined or null. Works in the same way `ensure` does except no
- * value is returned. This is useful for already existing values that might also be 'null' or 'undefined'.
+ * Assert the parameter given to not be undefined or null. Does not return the given argument
  *
  * @param value The value which is asserted to not be undefined or null
+ * @throws TypeError if the parameter is null or undefined
  *
  * @author Aleksey L. @ https://stackoverflow.com/a/59017341/7230293
  */
