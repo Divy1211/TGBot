@@ -33,7 +33,7 @@ describe("Valid Add", () => {
         await pool.save();
 
         expect(
-            await addMap(1, 1, 5, guildId)
+            await addMap(map.uuid, pool.uuid, 5, guildId)
             ).toBe(`Map "${mapName}" added to Pool "${poolName}"`);
     })
 })

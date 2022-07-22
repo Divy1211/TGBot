@@ -16,7 +16,7 @@ export async function deletePool(poolUuid: number, guildId: string) {
     // find the corresponding Pool
     let pool = await Pool.findOneBy({uuid: poolUuid});
     if (!pool) {
-        return `Map with ID ${poolUuid} was not found`;
+        return `Pool with ID ${poolUuid} was not found`;
     }
 
     // remove the pool from the sever
