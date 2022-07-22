@@ -30,6 +30,7 @@ describe("Valid Delete", () => {
             await deleteGameMap(map.uuid, guildId)
         ).toBe(`Map ${mapName} has been deleted.`);
 
+        await deleteGameMap(map.uuid, guildId);
         expect(
             await GameMap.findOneBy({name: mapName})
         ).toBeNull();

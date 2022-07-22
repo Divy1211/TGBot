@@ -32,7 +32,7 @@ export async function removeMap(gameMapUuid: number, poolUuid: number, guildId: 
         });
         if (!poolMap) {
             // poolMap not found
-            return `Map with ID ${gameMapUuid} was not found in this pool`;
+            return `Map with ID ${gameMapUuid} was not found in pool with ID ${poolUuid}`;
         }
         // poolMap was found
         // remove the map from the pool

@@ -35,7 +35,7 @@ describe("Valid Add", () => {
         expect(
             await addMap(map.uuid, pool.uuid, 5, guildId)
             ).toBe(`Map "${mapName}" added to Pool "${poolName}"`);
-    })
+    });
 })
 
 describe("Invalid Add", () => {
@@ -64,5 +64,5 @@ describe("Invalid Add", () => {
         expect(
             await addMap(map.uuid, 1, 5, guildId)
             ).toBe("Pool with ID `1` was not found.");
-    })
+    });
 })

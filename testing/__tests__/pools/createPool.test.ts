@@ -32,7 +32,7 @@ describe("Valid Create", () => {
                 relations: {guild: true}
             }));
         expect(pool.name).toBe(name);
-        expect(pool.guild?.id).toBe("guild-1")
+        expect(pool.guild?.id).toBe("guild-1");
     })
 })
 
