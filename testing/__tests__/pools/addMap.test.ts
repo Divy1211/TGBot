@@ -1,13 +1,15 @@
 import { addMap } from "../../../src/abstract_commands/pools/add_map";
-import { createMap } from "../../../src/abstract_commands/pools/create_map";
-import { createPool } from "../../../src/abstract_commands/pools/create_pool";
 import { Guild } from "../../../src/entities/Guild";
 import { GameMap } from "../../../src/entities/pools/GameMap";
 import { Pool } from "../../../src/entities/pools/Pool";
-import { ensure } from "../../../src/utils/general";
+
+
+let guild: Guild;
+let map: GameMap;
+let pool: Pool;
 
 beforeAll(async () => {
-    const guild = new Guild("guild-1");
+    guild = new Guild("guild-1");
     await guild.save();
 })
 
@@ -25,8 +27,10 @@ describe("Valid Add", () => {
         const mapName = "mapTest", poolName = "poolTest", guildId = "guild-1",
         imgLink = "https://upload.wikimedia.org/wikipedia/en/9/9b/Aoeiii-cover.jpg";
         
-        await createMap(mapName, imgLink, guildId);
-        await createPool(poolName, guildId);
+        map = new GameMap(mapName, imgLink, guild);
+        await map.save();
+        pool = new Pool(poolName,guild);
+        await pool.save();
 
         expect(
             await addMap(1, 1, 5, guildId)
@@ -42,8 +46,9 @@ describe("Invalid Add", () => {
 
     test("Add a non-existing map to a pool", async () => {
         const poolName = "poolTest", guildId = "guild-1";
-        await createPool(poolName, guildId);
-        let pool = ensure(await Pool.findOneBy({name: poolName}));
+        pool = new Pool(poolName, guild);
+        await pool.save();
+
         expect(
             await addMap(1, pool.uuid, 5, guildId)
             ).toBe("Map with ID `1` was not found.");
@@ -53,8 +58,9 @@ describe("Invalid Add", () => {
         const mapName = "mapTest", guildId = "guild-1",
         imgLink = "https://upload.wikimedia.org/wikipedia/en/9/9b/Aoeiii-cover.jpg";
 
-        await createMap(mapName, imgLink, guildId);
-        let map = ensure(await GameMap.findOneBy({name: mapName}));
+        map = new GameMap(mapName, imgLink, guild);
+        await map.save();
+
         expect(
             await addMap(map.uuid, 1, 5, guildId)
             ).toBe("Pool with ID `1` was not found.");

@@ -1,11 +1,14 @@
 import { MessageEmbed } from "discord.js";
-import { createMap } from "../../../src/abstract_commands/pools/create_map";
 import { showMap } from "../../../src/abstract_commands/pools/show";
 import { Guild } from "../../../src/entities/Guild";
 import { GameMap } from "../../../src/entities/pools/GameMap";
 
+
+let guild: Guild;
+let map: GameMap;
+
 beforeAll(async () => {
-    const guild = new Guild("guild-1");
+    guild = new Guild("guild-1");
     await guild.save();
 })
 
@@ -20,7 +23,9 @@ describe("Valid Show", () => {
 
     test("Show a map statics", async () => {
         const name = "mapTest", guildId = "guild-1", imgLink = "https://upload.wikimedia.org/wikipedia/en/9/9b/Aoeiii-cover.jpg";
-        await createMap(name, imgLink, guildId);
+        map = new GameMap(name, imgLink, guild);
+        await map.save();
+
         expect(
             await showMap(name, guildId)
             ).toBeInstanceOf(MessageEmbed);

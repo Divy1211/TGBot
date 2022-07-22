@@ -3,8 +3,11 @@ import { Guild } from "../../../src/entities/Guild";
 import { GameMap } from "../../../src/entities/pools/GameMap";
 import { ensure } from "../../../src/utils/general";
 
+
+let guild: Guild;
+
 beforeAll(async () => {
-    const guild = new Guild("guild-1");
+    guild = new Guild("guild-1");
     await guild.save();
 });
 

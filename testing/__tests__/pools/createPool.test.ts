@@ -3,8 +3,11 @@ import { Guild } from "../../../src/entities/Guild";
 import { Pool } from "../../../src/entities/pools/Pool";
 import { ensure } from "../../../src/utils/general";
 
+
+let guild: Guild;
+
 beforeAll(async () => {
-    const guild = new Guild("guild-1");
+    guild = new Guild("guild-1");
     await guild.save();
 })
 
@@ -49,6 +52,7 @@ describe("Invalid Create", () => {
         const pools = await Pool.find(
             {where: {guild: {id: guildId}}}
         );
+        
         const pool = ensure(await Pool.findOneBy({name: name}));
         expect(pools.length).toBe(1);    // only one pool is in the Pool table
         expect(pool.name).toBe(name);
