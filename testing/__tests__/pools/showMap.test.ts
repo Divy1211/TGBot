@@ -27,16 +27,16 @@ describe("Valid Show", () => {
         await map.save();
 
         expect(
-            await showMap(name, guildId)
+            await showMap(map.uuid, guildId)
             ).toBeInstanceOf(MessageEmbed);
     })
 })
 
 describe("Invalid Show", () => {
     test("Show a non-existing map statics", async () => {
-        const name = "mapTest", guildId = "guild-1";
+        const guildId = "guild-1";
         expect(
-            await showMap(name, guildId)
-            ).toBe(`Map ${name} not found in the channel`);
+            await showMap(1, guildId)
+            ).toBe(`Map with ID 1 was not found.`);
     })
 })
