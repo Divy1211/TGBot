@@ -18,7 +18,7 @@ describe("Set Role", () => {
 
         expect(
             await setRole("guild-1", "admin", roleId),
-        ).toBe(`Role <@<${roleId}> has been set as the admin role.`);
+        ).toBe(`Role <@&${roleId}> has been set as the admin role.`);
 
         await guild.reload();
         expect(guild.adminRoleId).toBe(roleId);
@@ -29,7 +29,7 @@ describe("Set Role", () => {
 
         expect(
             await setRole("guild-1", "mod", roleId),
-        ).toBe(`Role <@<${roleId}> has been set as the mod role.`);
+        ).toBe(`Role <@&${roleId}> has been set as the mod role.`);
 
         await guild.reload();
         expect(guild.modRoleId).toBe(roleId);
@@ -40,7 +40,7 @@ describe("Set Role", () => {
 
         expect(
             await setRole("guild-1", "promotion", roleId),
-        ).toBe(`Role <@<${roleId}> has been set as the promotion role.`);
+        ).toBe(`Role <@&${roleId}> has been set as the promotion role.`);
 
         await guild.reload();
         expect(guild.promotionRoleId).toBe(roleId);

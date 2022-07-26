@@ -10,7 +10,6 @@ import {Pool} from "./entities/pools/Pool";
 import {PoolMap} from "./entities/pools/PoolMap";
 import {Leaderboard} from "./entities/queues/Leaderboard";
 import {Queue} from "./entities/queues/Queue";
-import {User} from "./entities/User";
 import {startLogger} from "./logger";
 import {ensure} from "./utils/general";
 import {recursiveReaddir} from "./utils/node";
