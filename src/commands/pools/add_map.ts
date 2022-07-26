@@ -25,7 +25,7 @@ export default {
         },
         {
             name: "multiplier",
-            description: "The number of players for this map",
+            description: "The number of players on this map, if unspecified will be set to 1",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: false,
         },
@@ -38,10 +38,10 @@ export default {
             return "This command can only be run in a text channel in a server";
         }
         // get the command parameters
-        const map_name = ensure(options.getInteger("map_uuid"));
-        const pool_uuid = ensure(options.getInteger("pool_uuid"));
+        const mapName = ensure(options.getInteger("map_uuid"));
+        const poolUuid = ensure(options.getInteger("pool_uuid"));
         const multiplier = options.getInteger("multiplier") ?? 1;
 
-        return await addMap(map_name, pool_uuid, multiplier, guildId);
+        return await addMap(mapName, poolUuid, multiplier, guildId);
     },
 } as ICommand;

@@ -22,26 +22,23 @@ export async function addMap(mapUuid: number, poolUuid: number, multiplier: numb
         guild: {id: guildId}
     });
 
+    if (!pool) {
+        return `Pool with ID \`${poolUuid}\` was not found.`;
+    }
+
     let map = await GameMap.findOneBy({
         uuid: mapUuid,
         guild: {id: guildId}
     });
 
-    if (!pool) {
-        return `Pool with ID \`${poolUuid}\` was not found.`;
-    } else if (!map) {
+    if (!map) {
         return `Map with ID \`${mapUuid}\` was not found.`;
     }
 
     // else: check if map is already in the pool
-    let poolMap = await PoolMap.find({
-        where: {pool: {uuid: pool.uuid}},
-    });
-
-    for (let i = 0; i < poolMap.length; i++) {
-        if (poolMap[i].map.uuid == mapUuid) {
-            return `Invalid Operation: Map ${mapUuid} has already been in pool ${poolUuid}!`;
-        }
+    let poolMap = await PoolMap.findOneBy({map: {uuid: mapUuid}, pool: {uuid: poolUuid}});
+    if (poolMap) {
+        return `Error: Map "${poolMap.map.name}" is already in the pool with ID ${poolUuid}`;
     }
 
     // else: add the map into the pool

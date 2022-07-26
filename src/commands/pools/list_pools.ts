@@ -3,7 +3,7 @@ import {listPools} from "../../abstract_commands/pools/list_pools";
 
 export default {
     category: "General",
-    description: "List all the pools in the channel",
+    description: "List all the pools in the server",
     slash: true,
     testOnly: true,
     guildOnly: true,

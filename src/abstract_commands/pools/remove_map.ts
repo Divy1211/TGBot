@@ -9,7 +9,7 @@ import {PoolMap} from "../../entities/pools/PoolMap";
  * @param gameMapUuid The uuid of the map
  * @param guildId The ID of the server in which the Pool is created
  */
-export async function removeMap(gameMapUuid: number, poolUuid: number, guildId: string) {
+export async function removeMap(gameMapUuid: number, guildId: string, poolUuid?: number) {
     let guild = await Guild.findOneBy({id: guildId});
     if (!guild) {
         guild = new Guild(guildId);
@@ -21,10 +21,10 @@ export async function removeMap(gameMapUuid: number, poolUuid: number, guildId: 
         guild: {id: guildId}
     });
     if (!gameMap) {
-        return `Map with ID ${gameMapUuid} was not found`;
+        return `Map with ID ${gameMapUuid} was not found.`;
     }
 
-    if (poolUuid != 0){
+    if (poolUuid !== undefined){
         // poolUuid is specified
         let poolMap = await PoolMap.findOneBy({
             map: {uuid: gameMap.uuid, guild: {id: guildId}}, 
@@ -32,23 +32,17 @@ export async function removeMap(gameMapUuid: number, poolUuid: number, guildId: 
         });
         if (!poolMap) {
             // poolMap not found
-            return `Map with ID ${gameMapUuid} was not found in pool with ID ${poolUuid}`;
-        }
+            return `Map with ID ${gameMapUuid} was not found in pool with ID ${poolUuid}.`;        }
         // poolMap was found
         // remove the map from the pool
         await poolMap.remove();
-        return `Map ${gameMap.name} removed from pool with ID ${poolUuid}.`;
+        return `Map ${gameMap.name} has been removed from the pool with ID ${poolUuid} successfully!`;
     }
     else {
-        // poolUuid is not specified
-        let poolMaps = await PoolMap.find({
+        // poolUuid is not specified -> remove the map from all pools
+        await PoolMap.remove(await PoolMap.find({
             where: {map: {uuid: gameMap.uuid, guild: {id: guildId}}}
-        });
-
-        // remove the map from all pools
-        for (let pool of poolMaps){
-            await pool.remove();
-            return `Map ${gameMap.name} removed from all pools.`
-        }
+        }));
+        return `Map ${gameMap.name} removed from all pools.`;
     }
 }

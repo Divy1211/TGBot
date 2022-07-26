@@ -13,7 +13,7 @@ export default {
     options: [
         {
             name: "uuid",
-            description: "the uuid of the pool",
+            description: "The uuid of the pool to remove",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
         },
@@ -26,8 +26,8 @@ export default {
             return "This command can only be run in a text channel in a server";
         }
         // get the command parameters
-        const pool_uuid = ensure(options.getInteger("uuid"));
+        const poolUuid = ensure(options.getInteger("uuid"));
 
-        return await deletePool(pool_uuid, guildId);
+        return await deletePool(poolUuid, guildId);
     },
 } as ICommand;

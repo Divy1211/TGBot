@@ -5,16 +5,16 @@ import {ensure} from "../../utils/general";
 
 export default {
     category: "General",
-    description: "Show statics of a map",
+    description: "Show stats of a map",
     slash: true,
     testOnly: true,
     guildOnly: true,
 
     options: [
         {
-            name: "name",
-            description: "The name of the map",
-            type: ApplicationCommandOptionTypes.STRING,
+            name: "map_uuid",
+            description: "The uuid of the map to show",
+            type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
         },
     ],
@@ -26,8 +26,8 @@ export default {
             return "This command can only be run in a text channel in a server";
         }
         // get the command parameters
-        const name = ensure(options.getString("name"));
+        const mapUuid = ensure(options.getInteger("map_uuid"));
 
-        return await showMap(name, guildId);
+        return await showMap(mapUuid, guildId);
     },
 } as ICommand;

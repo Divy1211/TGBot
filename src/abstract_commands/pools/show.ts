@@ -1,28 +1,27 @@
 import {EmbedFieldData, MessageEmbed} from "discord.js";
-
 import {Guild} from "../../entities/Guild";
 import {GameMap} from "../../entities/pools/GameMap";
 
 /**
  * Show map statics
  *
- * @param mapName The name of the map
+ * @param gameMapUuid The uuid of the map
  * @param guildId The ID of the server in which the Pool is created
  */
-export async function showMap(mapName: string, guildId: string) {
+export async function showMap(gameMapUuid: number, guildId: string) {
     let guild = await Guild.findOneBy({id: guildId});
     if (!guild) {
         guild = new Guild(guildId);
     }
 
     // find the corresponding map
-    var map = await GameMap.findOne({where: {name: mapName}});
+    var map = await GameMap.findOne({where: {uuid: gameMapUuid}});
     if (!map) {
-        return `Map ${mapName} not found in the channel`;
+        return `Map with ID ${gameMapUuid} was not found.`;
     }
 
-    let embed = new MessageEmbed().setDescription(`Statics of Map: ${mapName}`).setColor("#0095F7")
-        .setTitle(`Map Statics - ${mapName}`);
+    let embed = new MessageEmbed().setDescription(`Statics of Map with ID ${gameMapUuid}`).setColor("#0095F7")
+        .setTitle(`Map Statics - ${map.name}`);
     let fields: EmbedFieldData[] = [];
 
     // todo: design embed

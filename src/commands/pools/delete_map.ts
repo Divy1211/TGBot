@@ -5,7 +5,7 @@ import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Remove a map from the channel",
+    description: "Remove a map from the server",
     slash: true,
     testOnly: true,
     guildOnly: true,
@@ -13,7 +13,7 @@ export default {
     options: [
         {
             name: "uuid",
-            description: "the uuid of the map",
+            description: "The uuid of the map to remove",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
         },
@@ -26,8 +26,8 @@ export default {
             return "This command can only be run in a text channel in a server";
         }
         // get the command parameters
-        const map_uuid = ensure(options.getInteger("uuid"));
+        const mapUuid = ensure(options.getInteger("uuid"));
 
-        return await deleteGameMap(map_uuid, guildId);
+        return await deleteGameMap(mapUuid, guildId);
     },
 } as ICommand;

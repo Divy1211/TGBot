@@ -19,7 +19,7 @@ export default {
         },
         {
             name: "show_pool_ids",
-            description: "show the IDs of all the pools that use this map",
+            description: "If true, show the IDs of all the pools that use this map",
             type: ApplicationCommandOptionTypes.BOOLEAN,
             required: false,
         }

@@ -13,13 +13,13 @@ export default {
     options: [
         {
             name: "map_uuid",
-            description: "the uuid of the map",
+            description: "The uuid of the map to remove",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
         },
         {
             name: "pool_uuid",
-            description: "the uuid of the pool, if unspecified will remove it from all pools",
+            description: "The uuid of the pool, if unspecified will remove it from all pools",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: false,
         }
@@ -32,9 +32,9 @@ export default {
             return "This command can only be run in a text channel in a server";
         }
         // get the command parameters
-        const pool_uuid = options.getInteger("pool_uuid") ?? 0;
-        const map_uuid = ensure(options.getInteger("map_uuid"));
+        const poolUuid = options.getInteger("pool_uuid") ?? undefined;
+        const mapUuid = ensure(options.getInteger("map_uuid"));
 
-        return await removeMap(map_uuid, pool_uuid, guildId);
+        return await removeMap(mapUuid, guildId, poolUuid);
     },
 } as ICommand;

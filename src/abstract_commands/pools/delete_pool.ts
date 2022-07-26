@@ -8,13 +8,8 @@ import {Pool} from "../../entities/pools/Pool";
  * @param guildId The ID of the server in which the Pool is created
  */
 export async function deletePool(poolUuid: number, guildId: string) {
-    let guild = await Guild.findOneBy({id: guildId});
-    if (!guild) {
-        guild = new Guild(guildId);
-    }
-
     // find the corresponding Pool
-    let pool = await Pool.findOneBy({uuid: poolUuid});
+    let pool = await Pool.findOneBy({uuid: poolUuid, guild: {id: guildId}});
     if (!pool) {
         return `Pool with ID ${poolUuid} was not found`;
     }
@@ -22,5 +17,5 @@ export async function deletePool(poolUuid: number, guildId: string) {
     // remove the pool from the sever
     await pool.remove();
 
-    return `Pool ${pool.name} has been deleted.`;
+    return `Pool "${pool.name}" with ID \`${poolUuid}\` has been deleted successfully!`;
 }

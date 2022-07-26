@@ -8,13 +8,8 @@ import {GameMap} from "../../entities/pools/GameMap";
  * @param guildId The ID of the server in which the Pool is created
  */
 export async function deleteGameMap(gameMapUuid: number, guildId: string) {
-    let guild = await Guild.findOneBy({id: guildId});
-    if (!guild) {
-        guild = new Guild(guildId);
-    }
-
     // find the corresponding GameMap
-    let gameMap = await GameMap.findOneBy({uuid: gameMapUuid});
+    let gameMap = await GameMap.findOneBy({uuid: gameMapUuid, guild: {id: guildId}});
     if (!gameMap) {
         return `Map with ID ${gameMapUuid} was not found`;
     }
@@ -24,5 +19,5 @@ export async function deleteGameMap(gameMapUuid: number, guildId: string) {
     // remove the map from the channel
     await gameMap.remove();
 
-    return `Map ${gameMap.name} has been deleted.`;
+    return `Map "${gameMap.name}" with ID \`${gameMapUuid}\` has been deleted successfully!`;
 }
