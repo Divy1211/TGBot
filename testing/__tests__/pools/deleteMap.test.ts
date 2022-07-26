@@ -28,7 +28,7 @@ describe("Valid Delete", () => {
 
         expect(
             await deleteGameMap(map.uuid, guildId)
-        ).toBe(`Map ${mapName} has been deleted.`);
+        ).toBe(`Map "${mapName}" with ID ${map.uuid} has been deleted successfully!`);
 
         await deleteGameMap(map.uuid, guildId);
         expect(

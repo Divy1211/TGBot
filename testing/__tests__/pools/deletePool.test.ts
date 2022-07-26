@@ -27,7 +27,7 @@ describe("Valid Delete", () => {
 
         expect(
             await deletePool(pool.uuid, guildId)
-        ).toBe(`Pool ${poolName} has been deleted.`);
+        ).toBe(`Pool "${pool.name}" with ID ${pool.uuid} has been deleted successfully!`);
 
         expect(
             await Pool.findOneBy({name: poolName})

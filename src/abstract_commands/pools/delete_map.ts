@@ -19,5 +19,5 @@ export async function deleteGameMap(gameMapUuid: number, guildId: string) {
     // remove the map from the channel
     await gameMap.remove();
 
-    return `Map "${gameMap.name}" with ID \`${gameMapUuid}\` has been deleted successfully!`;
+    return `Map "${gameMap.name}" with ID ${gameMapUuid} has been deleted successfully!`;
 }

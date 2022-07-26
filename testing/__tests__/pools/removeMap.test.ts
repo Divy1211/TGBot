@@ -37,8 +37,8 @@ describe("Valid Remove", () => {
         await poolMap.save();
 
         expect(
-            await removeMap(map.uuid, pool.uuid, guildId)
-        ).toBe(`Map ${map.name} removed from pool with ID ${pool.uuid}.`);
+            await removeMap(map.uuid, guildId, pool.uuid)
+        ).toBe(`Map ${map.name} has been removed from the pool with ID ${pool.uuid} successfully!`);
 
         expect(
             await PoolMap.findOneBy({map: {name: mapName}})
@@ -60,10 +60,10 @@ describe("Valid Remove", () => {
         await poolMap2.save();
 
         expect(
-            await removeMap(map.uuid, 0, guildId)
+            await removeMap(map.uuid, guildId)
         ).toBe(`Map ${map.name} removed from all pools.`);
 
-        await removeMap(map.uuid, 0, guildId);
+        await removeMap(map.uuid, guildId, 0);
         expect(
             await PoolMap.findOneBy({map: {name: mapName}})
         ).toBeNull();
@@ -86,8 +86,8 @@ describe("Invalid Remove", () => {
         await map.save();
 
         expect(
-            await removeMap(map.uuid, pool.uuid, guildId)
-        ).toBe(`Map with ID ${map.uuid} was not found in pool with ID ${pool.uuid}`);
+            await removeMap(map.uuid, guildId, pool.uuid)
+        ).toBe(`Map with ID ${map.uuid} was not found in pool with ID ${pool.uuid}.`);
     })
 
     test("Remove a non-existing map (in the sever) from a pool", async () => {
@@ -96,8 +96,8 @@ describe("Invalid Remove", () => {
         await pool.save();
 
         expect(
-            await removeMap(1, pool.uuid, guildId)
-        ).toBe(`Map with ID 1 was not found`);
+            await removeMap(1, guildId, pool.uuid)
+        ).toBe(`Map with ID 1 was not found.`);
     })
 
     test("Remove a map from a non-existing pool", async () => {
@@ -107,7 +107,7 @@ describe("Invalid Remove", () => {
         await map.save();
 
         expect(
-            await removeMap(map.uuid, 1, guildId)
-        ).toBe(`Map with ID ${map.uuid} was not found in pool with ID 1`);
+            await removeMap(map.uuid, guildId, 1)
+        ).toBe(`Map with ID ${map.uuid} was not found in pool with ID 1.`);
     })
 })

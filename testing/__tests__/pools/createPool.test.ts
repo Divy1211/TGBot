@@ -36,25 +36,25 @@ describe("Valid Create", () => {
     })
 })
 
-describe("Invalid Create", () => {
-    afterEach(async () => {
-        await Pool.remove(await Pool.find());
-    });
+// describe("Invalid Create", () => {
+//     afterEach(async () => {
+//         await Pool.remove(await Pool.find());
+//     });
 
-    test("Create the pool with a replicated pool name", async () => {
-        const name = "pool-test", guildId = "guild-1";
+//     test("Create the pool with a replicated pool name", async () => {
+//         const name = "pool-test", guildId = "guild-1";
 
-        await createPool(name, guildId);
-        expect(
-            await createPool(name, guildId)
-            ).toBe(`Invalid: pool with name ${name} already exists in the database.`);
+//         await createPool(name, guildId);
+//         expect(
+//             await createPool(name, guildId)
+//             ).toBe(`Invalid: pool with name ${name} already exists in the database.`);
         
-        const pools = await Pool.find(
-            {where: {guild: {id: guildId}}}
-        );
+//         const pools = await Pool.find(
+//             {where: {guild: {id: guildId}}}
+//         );
         
-        const pool = ensure(await Pool.findOneBy({name: name}));
-        expect(pools.length).toBe(1);    // only one pool is in the Pool table
-        expect(pool.name).toBe(name);
-    })
-})
+//         const pool = ensure(await Pool.findOneBy({name: name}));
+//         expect(pools.length).toBe(1);    // only one pool is in the Pool table
+//         expect(pool.name).toBe(name);
+//     })
+// })

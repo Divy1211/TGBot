@@ -17,5 +17,5 @@ export async function deletePool(poolUuid: number, guildId: string) {
     // remove the pool from the sever
     await pool.remove();
 
-    return `Pool "${pool.name}" with ID \`${poolUuid}\` has been deleted successfully!`;
+    return `Pool "${pool.name}" with ID ${poolUuid} has been deleted successfully!`;
 }
