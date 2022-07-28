@@ -1,5 +1,5 @@
 import {Guild} from "../../entities/Guild";
-import {getDuration} from "../common";
+import {getDuration} from "../../utils/general";
 
 /**
  * Sets the promotion cooldown for the provided guild to the provided duration

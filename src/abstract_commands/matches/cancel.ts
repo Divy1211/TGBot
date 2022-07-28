@@ -4,7 +4,6 @@ import {PlayerStats} from "../../entities/queues/PlayerStats";
 import {User} from "../../entities/User";
 import {client} from "../../main";
 import {ensure} from "../../utils/general";
-import {getPlayerEmbed} from "../common";
 import {startMatch} from "./start";
 
 /**
@@ -54,7 +53,7 @@ export async function cancelMatch(uuid: number, userIdsToRemove?: string[]): Pro
 
         const channel = await client.channels.fetch(queue.channelId);
         if (channel?.isText()) {
-            channel.send({embeds: [getPlayerEmbed(queue)]}).then();
+            channel.send({embeds: [queue.getPlayerEmbed()]}).then();
         }
     }
 

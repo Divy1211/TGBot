@@ -1,7 +1,6 @@
 import {MessageEmbed} from "discord.js";
 
 import {Queue} from "../../entities/queues/Queue";
-import {getPlayerEmbed} from "../common";
 
 /**
  * Shows the players who are in a queue in the given channel or the specified queue
@@ -38,5 +37,5 @@ export async function listPlayers(
         }
     }
 
-    return getPlayerEmbed(queue);
+    return queue.getPlayerEmbed();
 }

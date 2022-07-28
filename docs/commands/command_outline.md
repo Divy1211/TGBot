@@ -63,7 +63,7 @@
 | `show_match`    | show all information (map, players, civilians, ratings, winners and lobby id) of a match | `match_uuid`                                                               |              |
 | `last_match`    | show the last match of the user                                                          | `[user]`,, `[queue_uuid]` `[leaderboard_uuid]`                             |              |
 | `promote`       | pings the promotion role as set by the `promotionRoleId` to beckon users to play a game  |                                                                            | Done         |
-| `promo_sub`     | allow a user to add themselves to the promotion role                                     | `enable`                                                                   |              |
+| `promo_sub`     | allow a user to add themselves to the promotion role                                     | `enable`                                                                   | Done         |
 | `list_bans`     | allow a user to see the names of all the banned users and the reasons                    |                                                                            |              |
 | `link`          |                                                                                          |                                                                            |              |
 | `unlink`        |                                                                                          |                                                                            |              |
