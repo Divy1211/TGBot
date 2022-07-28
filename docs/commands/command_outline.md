@@ -46,30 +46,30 @@
 
 ### Player/User Commands
 
-| Command             | Functionality                                                | paras                                                        | Status       |
-| ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------ |
-| `list_q`            | shows all the queues in a server                             | `all=True`, `show_leaderboard_id`, `show_pool_ids`           | Done         |
-| `join`              | allows a user to join a queue in the channel                 | `[queue_uuid]` `[user]`                                      | Done         |
-| `leave`             | allows a user to leave a queue in the channel                | `[queue_uuid]` `[user]`                                      | Done         |
-| `leave_all`         | allows a user to leave all queues in a server                |                                                              | WIP by Ishan |
-| `set_default_q`     | allow a user to set a queue as their default join queue in the channel | `queue_uuid`                                                 |              |
-| `list_players` DONE | allow a user to see all the players in a queue               | `[queue_uuid]`                                               | Done         |
-| `profile`           | allow a user to see the profile of a user                    | `[user]`, `[queue_uuid]`, `[leaderboard_uuid]`               |              |
-| `leaderboard`       | allow a user to see the players in leaderboard ranked by rating | `[queue_uuid]`, `[leaderboard_uuid]`                         |              |
-| `win_rate`          | allow a user to see their (or someone else's) win rate statistics |                                                              |              |
-| `civ_win_rate`      | see the win rates of a particular civ                        |                                                              |              |
-| `list_maps`         | list all the maps on the server, or all the maps of a specific pool | `[queue_uuid]`, `[show_pool_ids]`                            | Done         |
-| `list_pools`        | list all the pools in the server                             |                                                              | Done         |
-| `show_map`          | show stats of a map                                          | `map_uuid`                                                   | Done         |
-| `top`               | show top players of this month / all time                    | `[queue_uuid]`, `[leaderboard_uuid]`, `all_time=False`, `by_win_rate=True` |              |
-| `list_matches`      | show a list of matches and map of that match                 | `[queue_uuid]`, `[leaderboard_uuid]`                         |              |
-| `show_match`        | show all information (map, players, civilians, ratings, winners and lobby id) of a match | `match_uuid`                                                 |              |
-| `last_game`         | show the last match of the user                              | `[user]`,, `[queue_uuid]` `[leaderboard_uuid]`               |              |
-| `promote`           | pings the promotion role as set by the `promotionRoleId` to beckon users to play a game |                                                              |              |
-| `promo_sub`         | allow a user to add themselves to the promotion role         | `enable`                                                     |              |
-| `list_bans`         | allow a user to see the names of all the banned users and the reasons |                                                              |              |
-| `link`              |                                                              |                                                              |              |
-| `unlink`            |                                                              |                                                              |              |
-| `elo_graph`         |                                                              |                                                              |              |
-| `phrase`            |                                                              |                                                              |              |
-| `toss`              |                                                              |                                                              |              |
+| Command         | Functionality                                                | paras                                                        | Status       |
+| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------ |
+| `list_q`        | shows all the queues in a server                             | `all=True`, `show_leaderboard_id`, `show_pool_ids`           | Done         |
+| `join`          | allows a user to join a queue in the channel                 | `[queue_uuid]` `[user]`                                      | Done         |
+| `leave`         | allows a user to leave a queue in the channel                | `[queue_uuid]` `[user]`                                      | Done         |
+| `leave_all`     | allows a user to leave all queues in a server                |                                                              | WIP by Ishan |
+| `set_default_q` | allow a user to set a queue as their default join queue in the channel | `queue_uuid`                                                 |              |
+| `list_players`  | allow a user to see all the players in a queue               | `[queue_uuid]`                                               | Done         |
+| `profile`       | allow a user to see the profile of a user                    | `[user]`, `[queue_uuid]`, `[leaderboard_uuid]`               |              |
+| `leaderboard`   | allow a user to see the players in leaderboard ranked by rating | `[queue_uuid]`, `[leaderboard_uuid]`                         |              |
+| `win_rate`      | allow a user to see their (or someone else's) win rate statistics |                                                              |              |
+| `civ_win_rate`  | see the win rates of a particular civ                        |                                                              |              |
+| `list_maps`     | list all the maps on the server, or all the maps of a specific pool | `[queue_uuid]`, `[show_pool_ids]`                            | Done         |
+| `list_pools`    | list all the pools in the server                             |                                                              | Done         |
+| `show_map`      | show stats of a map                                          | `map_uuid`                                                   | Done         |
+| `top`           | show top players of this month / all time                    | `[queue_uuid]`, `[leaderboard_uuid]`, `all_time=False`, `by_win_rate=True` |              |
+| `list_matches`  | show a list of matches and map of that match                 | `[queue_uuid]`, `[leaderboard_uuid]`                         |              |
+| `show_match`    | show all information (map, players, civilians, ratings, winners and lobby id) of a match | `match_uuid`                                                 |              |
+| `last_game`     | show the last match of the user                              | `[user]`,, `[queue_uuid]` `[leaderboard_uuid]`               |              |
+| `promote`       | pings the promotion role as set by the `promotionRoleId` to beckon users to play a game |                                                              |              |
+| `promo_sub`     | allow a user to add themselves to the promotion role         | `enable`                                                     |              |
+| `list_bans`     | allow a user to see the names of all the banned users and the reasons |                                                              |              |
+| `link`          |                                                              |                                                              |              |
+| `unlink`        |                                                              |                                                              |              |
+| `elo_graph`     |                                                              |                                                              |              |
+| `phrase`        |                                                              |                                                              |              |
+| `toss`          |                                                              |                                                              |              |
