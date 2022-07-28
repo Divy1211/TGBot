@@ -28,14 +28,18 @@ export default {
             return "No promotion role set.";
         }
 
-        if (member.roles instanceof GuildMemberRoleManager) {
-            if (member.roles.cache.some(role => role.id === guild.promotionRoleId)) {
-                member.roles.remove(guild.promotionRoleId);
-                return "You have been removed from the promotion role.";
-            }
+        try {
+            if (member.roles instanceof GuildMemberRoleManager) {
+                if (member.roles.cache.some(role => role.id === guild.promotionRoleId)) {
+                    await member.roles.remove(guild.promotionRoleId);
+                    return "You have been removed from the promotion role.";
+                }
 
-            member.roles.add(guild.promotionRoleId);
-            return "You have been added to the promotion role.";
+                await member.roles.add(guild.promotionRoleId);
+                return "You have been added to the promotion role.";
+            }
+        } catch (e) {
+            return "Please ask an admin to give me the necessary permissions to assign this role!";
         }
 
         // by right, this code should never run because the type string[] is no longer used by discord.js
