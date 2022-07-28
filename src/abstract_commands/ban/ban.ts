@@ -33,16 +33,16 @@ export async function banUser(
         if (ban.until > 0 && ban.until < Date.now() / 1000) {
             await ban.remove();
         } else if (ban.until > 0) {
-            return `Error: <@${discordId}> is already banned${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
+            return `Error: <@${discordId}> is already banned ${ban.str}`;
         } else {
-            return `Error: <@${discordId}> is already banned permanently${ban.reason ? ` for "${ban.reason}"` : ``}`;
+            return `Error: <@${discordId}> is already banned ${ban.str}`;
         }
     }
 
     if (!duration) {
         ban = new Ban(user, reason, -1, guild);
         await ban.save();
-        return `<@${discordId}> has been banned permanently${reason ? ` for "${reason}"` : ``}`;
+        return `<@${discordId}> has been banned ${ban.str}`;
     }
 
     // ss will be undefined if not specified
@@ -54,5 +54,5 @@ export async function banUser(
     ban = new Ban(user, reason, hh * 3600 + mm * 60 + ss + Math.floor(Date.now() / 1000), guild);
     await ban.save();
 
-    return `<@${discordId}> has been banned${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
+    return `<@${discordId}> has been banned ${ban.str}`;
 }
