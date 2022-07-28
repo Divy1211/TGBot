@@ -1,11 +1,12 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {setRole} from "../../abstract_commands/roles/set_role";
+import {setPromoCooldown} from "../../abstract_commands/roles/set_promo_cd";
+import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Set a role which is pinged for queue promotions on the server",
+    description: "Set the cooldown for pinging the promotion role on the server. 10 minutes by default",
 
     slash: true,
     testOnly: true,
@@ -13,10 +14,10 @@ export default {
 
     options: [
         {
-            name: "role",
-            description: "The role to ping when a promotion happens. If unspecified, the role will be unset",
-            type: ApplicationCommandOptionTypes.ROLE,
-            required: false,
+            name: "cooldown",
+            description: "The duration for the cooldown in hh:mm[:ss] format",
+            type: ApplicationCommandOptionTypes.STRING,
+            required: true,
         },
     ],
 
@@ -29,8 +30,8 @@ export default {
         }
 
         // get the command parameters
-        const roleId = options.getRole("role")?.id;
+        const cooldown = ensure(options.getString("cooldown"));
 
-        return await setRole(guildId, "promotion", roleId);
+        return await setPromoCooldown(guildId, cooldown);
     },
 } as ICommand;
