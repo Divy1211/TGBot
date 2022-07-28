@@ -1,4 +1,7 @@
+import {Message, MessageActionRow, MessageButton, MessageEmbed, TextBasedChannel} from "discord.js";
 import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {cancelMatch} from "../../abstract_commands/matches/cancel";
+import {client} from "../../main";
 
 import {choose, ensure} from "../../utils/general";
 import {Guild} from "../Guild";
@@ -182,5 +185,207 @@ export class Match extends BaseEntity {
 
     getMapOptionByName(name: string): MapOption {
         return ensure(this.mapOptions).filter((mapOption: MapOption) => mapOption.map.name === name)[0];
+    }
+
+    getEmbed(): MessageEmbed {
+
+        return new MessageEmbed()
+            .setTitle(`Match ${this.uuid}`)
+            .setColor("#ED2939")
+            .addFields(
+                {
+                    name: `Team 1`,
+                    value: `${this.team1.map((player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
+                        .join("\n")}`,
+                    inline: true,
+                },
+                {
+                    name: `Team 2`,
+                    value: `${this.team2.map((player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
+                        .join("\n")}`,
+                    inline: true,
+                },
+                {
+                    name: `Map`,
+                    value: `${ensure(this.map).name}`,
+                },
+            )
+            .setImage(ensure(this.map).imgLink)
+            .setThumbnail("https://upload.wikimedia.org/wikipedia/fr/5/55/AoE_Definitive_Edition.png");
+    }
+
+    async setupVotingOptions() {
+        const channel = await client.channels.fetch(ensure(this.queue).channelId);
+        if (!channel?.isText()) {
+            return;
+        }
+
+        let msg = await this.sendOptions(channel);
+
+        // create a vote listener with a time limit of 5 minutes and filter events by the users in the game only.
+        const playerDiscordIds = ensure(this.players).map((player: Player) => ensure(player.user).discordId);
+        const votes = channel.createMessageComponentCollector({
+            filter: (buttonInteraction) => playerDiscordIds.includes(buttonInteraction.user.id),
+            time: 1000 * 60 * 5, // time in ms, 5 minute time out
+        });
+
+        // the actual vote listener
+        votes.on("collect", async (vote) => {
+            const player = await this.setReady(vote.user.id);
+
+            // update the list of players that need to vote in the original message
+            await msg.edit([
+                `Match \`${this.uuid}\` started! The following players need to vote:`,
+                `<@${this.unreadyPlayers.join(">\n<@")}>`,
+                `If someone does not vote, this this will cancel <t:${this.startTime + 5 * 60}:R>!`,
+            ].join("\n"));
+
+
+            if (vote.customId === "reroll") {
+                try {
+                    vote.reply({
+                        ephemeral: true,
+                        content: this.voteReroll(player),
+                    }).then();
+                } catch (e) {
+                }
+
+                // if the vote count for rerolls reaches a majority, actually reroll
+                if (this.numVotesReroll >= ensure(this.players).length / 2) {
+                    this.numVotesReroll = 0;
+                    this.regenMapOptions();
+
+                    await this.unreadyAll();
+
+                    await msg.delete();
+                    msg = await this.sendOptions(channel, false);
+                }
+                await this.save();
+
+            } else if (vote.customId === "cancel") {
+                try {
+                    await vote.deferUpdate();
+                } catch (e) {
+                }
+
+                await msg.edit({
+                    content: `<@${vote.user.id}> cancelled the match, reverting to the queue stage...`,
+                    components: [],
+                });
+
+                cancelMatch(this.uuid, [vote.user.id]).then();
+
+            } else {
+                const mapOption = this.getMapOptionByName(vote.customId);
+                try {
+                    vote.reply({
+                        ephemeral: true,
+                        content: mapOption.updateVote(player),
+                    }).then();
+                } catch (e) {
+                }
+
+                await mapOption.save();
+
+                if (this.unreadyPlayers.length === 0) {
+                    this.determineMap();
+
+                    await msg.edit({
+                        content: null,
+                        embeds: [this.getEmbed()],
+                        components: [
+                            new MessageActionRow().addComponents(
+                                new MessageButton()
+                                    .setLabel("Join")
+                                    .setURL("https://aoe2.net/j/123456789")
+                                    .setStyle("LINK")
+                                    .setEmoji("🎮"),
+
+                                new MessageButton()
+                                    .setLabel("Spectate")
+                                    .setURL("https://aoe2.net/s/123456789")
+                                    .setStyle("LINK")
+                                    .setEmoji("👓"),
+                            ),
+                        ],
+                    });
+
+                    await this.save();
+                }
+            }
+        });
+
+        // this callback is run when the 5-minute timer runs out
+        votes.on("end", async () => {
+            const unreadyPlayers = ensure(this.players)
+                .filter((player: Player) => !player.isReady)
+                .map((player: Player) => ensure(player.user).discordId);
+
+            if (unreadyPlayers.length > 0) {
+                await msg.edit({
+                    content: `<@${unreadyPlayers.join(">, <@")}> did not vote in time, aborting match...`,
+                    components: [],
+                });
+                cancelMatch(this.uuid, unreadyPlayers).then();
+            }
+        });
+    }
+
+    /**
+     * Sends and returns a message with the map options voting button interface
+     *
+     * @param channel The channel to send the options in
+     * @param reroll If set to false, the option to reroll won't be generated
+     */
+    async sendOptions(
+        channel: TextBasedChannel,
+        reroll: boolean = true,
+    ): Promise<Message> {
+        let mapRow1: MessageActionRow = new MessageActionRow();
+        let linkRow1: MessageActionRow = new MessageActionRow();
+        let mapRow2: MessageActionRow = new MessageActionRow();
+        let linkRow2: MessageActionRow = new MessageActionRow();
+
+        ensure(this.mapOptions).forEach((option: MapOption, i: number) => {
+            let mapRow = i <= 2 ? mapRow1 : mapRow2;
+            let linkRow = i <= 2 ? linkRow1 : linkRow2;
+            mapRow.addComponents(
+                new MessageButton()
+                    .setCustomId(option.map.name)
+                    .setLabel(`${option.map.name}\_\_\_\_`)
+                    .setStyle("PRIMARY"),
+            );
+            linkRow.addComponents(
+                new MessageButton()
+                    .setLabel(option.map.name)
+                    // we are not removing this default link. period.
+                    .setURL(option.map.imgLink ?? "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+                    .setStyle("LINK"),
+            );
+        });
+
+        linkRow2.addComponents(
+            new MessageButton()
+                .setCustomId("cancel")
+                .setLabel("Cancel")
+                .setStyle("DANGER"),
+        );
+        if (reroll) {
+            mapRow2.addComponents(
+                new MessageButton()
+                    .setCustomId("reroll")
+                    .setLabel("Re-Roll")
+                    .setStyle("SUCCESS"),
+            );
+        }
+
+        return await channel.send({
+            content: [
+                `Match \`${this.uuid}\` started! The following players need to vote:`,
+                `<@${this.unreadyPlayers.join(">\n<@")}>`,
+                `If someone does not vote, this match will cancel <t:${this.startTime + 5 * 60}:R>!`,
+            ].join("\n"),
+            components: [mapRow1, linkRow1, mapRow2, linkRow2],
+        });
     }
 }

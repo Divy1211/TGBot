@@ -2,7 +2,7 @@ import {Guild} from "../../entities/Guild";
 import {User} from "../../entities/User";
 import {Ban} from "../../entities/user_data/Ban";
 import {ensure} from "../../utils/general";
-import {getDuration} from "../common";
+import {getDuration} from "../../utils/general";
 
 /**
  * Bans a user from joining queues in a specific server
