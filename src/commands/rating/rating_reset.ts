@@ -42,6 +42,6 @@ export default {
             discordId = user.id;
         }
 
-        return await ratingReset(discordId, leaderboardUUID, guildId);
+        return await ratingReset(discordId, leaderboardUUID);
     },
 } as ICommand;

@@ -11,31 +11,26 @@ import list_players from "../../commands/queues/list_players";
  * @param leaderboard_uuid The uuid of a leaderboard
  * @param guildId The ID of the server in which this command is used
  */
-export async function ratingReset(discordId:string, leaderboard_uuid:string, guildId: string): Promise<string> {
-    let guild = await Guild.findOneBy({id: guildId});
-    if (!guild) {
-        guild = new Guild(guildId);
-    }
-
+export async function ratingReset(discordId:string, leaderboard_uuid:string): Promise<string> {
     if (discordId){
         let playerStat = await PlayerStats.findOneBy({user:{discordId}});
         if (!playerStat){
-            return "The user has not played any game";
+            return `The user <@${discordId}>'s rating has been reset`;
         }
         if (leaderboard_uuid){
             playerStat = await PlayerStats.findOne({
                 where:{user:{discordId}, leaderboard:{uuid:parseInt(leaderboard_uuid)}},
                 relations:{leaderboard:true},
             });
-            if (!playerStat){
-                return "The player is not in this leaderboard";
-            }
-            else {
+            if (playerStat){
                 playerStat.rating = 1000;
-                await ensure(playerStat.leaderboard).save();
-                return `The user <@${discordId}>'s rating has been reset`
+                await playerStat.save();
             }
+            return `The user <@${discordId}>'s rating has been reset`
         }
+        playerStat.rating = 1000;
+        await playerStat.save();
+        return `The user <@${discordId}>'s rating has been reset`
     }
 
     if (leaderboard_uuid){
@@ -50,7 +45,6 @@ export async function ratingReset(discordId:string, leaderboard_uuid:string, gui
         for (let playerStat of playerStats){
             playerStat.rating = 1000;
             await playerStat.save();
-            await playerStat.leaderboard?.save();
         }
         return `The players' ratings of leaderboard ${leaderboard_uuid} have been reset`;
 
@@ -60,7 +54,6 @@ export async function ratingReset(discordId:string, leaderboard_uuid:string, gui
     for (let playerStat of playerStats){
         playerStat.rating = 1000;
         await playerStat.save();
-        await playerStat.leaderboard?.save();
     }
 
     return "All the players' ratings have been reset";
