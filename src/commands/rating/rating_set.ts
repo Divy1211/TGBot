@@ -1,6 +1,8 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import {ratingReset} from "../../abstract_commands/ratings/rating_reset";
+import {ratingSet} from "../../abstract_commands/ratings/rating_set";
+import {ensure} from "../../utils/general";
+
 
 export default {
     category: "Admin",
@@ -12,14 +14,20 @@ export default {
 
     options: [
         {
+            name: "rating",
+            description: "The new rating of the user.",
+            type: ApplicationCommandOptionTypes.STRING,
+            required: true,
+        },
+        {
             name: "user",
-            description: "The user to reset rating for",
+            description: "The user to set rating for",
             type: ApplicationCommandOptionTypes.USER,
-            required: false,
+            required: true,
         },
         {
             name: "queue_uuid",
-            description: "The queue whose leaderboard to reset the rating for",
+            description: "The leaderboard to reset the rating for",
             type: ApplicationCommandOptionTypes.STRING,
             required: false,
         },
@@ -34,6 +42,7 @@ export default {
         }
 
         // get the command parameters
+        const rating = ensure(options.getString("rating"));
         const user = options.getUser("user");
         const queueUUID = options.getString("queue_uuid") ?? "";
 
@@ -42,6 +51,6 @@ export default {
             discordId = user.id;
         }
 
-        return await ratingReset(discordId, queueUUID);
+        return await ratingSet(discordId, queueUUID, parseInt(rating));
     },
 } as ICommand;

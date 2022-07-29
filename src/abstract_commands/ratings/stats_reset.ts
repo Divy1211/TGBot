@@ -1,7 +1,6 @@
 import {PlayerStats} from "../../entities/queues/PlayerStats";
 import {Queue} from "../../entities/queues/Queue";
 import {ensure} from "../../utils/general";
-import {User} from "../../entities/User";
 
 
 /**
@@ -10,12 +9,12 @@ import {User} from "../../entities/User";
  * @param discordId The id of the user
  * @param queue_uuid The uuid of a leaderboard
  */
-export async function ratingReset(discordId:string, queue_uuid:string): Promise<string> {
+export async function statsReset(discordId:string, queue_uuid:string): Promise<string> {
 
     // if the user is specified, only reset for this user
     if (discordId){
         let playersStats = await PlayerStats.findBy({user:{discordId}});
-        if (playersStats.length === 0){
+        if (!playersStats){
             return `The user <@${discordId}>'s rating has been reset`;
         }
 
@@ -30,28 +29,34 @@ export async function ratingReset(discordId:string, queue_uuid:string): Promise<
             }
             const leaderboard = ensure(queue.leaderboard);
             const leaderboard_uuid = leaderboard.uuid;
-
-            let playerStat = await PlayerStats.findOne({
+            let playerStats = await PlayerStats.findOne({
                 where:{user:{discordId}, leaderboard:{uuid:leaderboard_uuid}},
                 relations:{leaderboard:true},
             });
-            if (playerStat){
-                playerStat.rating = 1000;
-                await playerStat.save();
+            if (playerStats){
+                playerStats.numWins = 0;
+                playerStats.numLosses = 0;
+                playerStats.numGames = 0;
+                playerStats.sigma = 200;
+                playerStats.streak = 0;
+                await playerStats.save();
             }
-            return `The user <@${discordId}>'s rating has been reset`
+            return `The user <@${discordId}>'s statistics has been reset`
         }
 
-        // if no queue is specified, reset the user's rating in all leaderboards
+        // if no queue is specified, reset the user's stats in all leaderboards
         for (let playerStats of playersStats){
-            playerStats.rating = 1000;
+            playerStats.numWins = 0;
+            playerStats.numLosses = 0;
+            playerStats.numGames = 0;
+            playerStats.sigma = 200;
+            playerStats.streak = 0;
             await playerStats.save();
         }
-        return `The user <@${discordId}>'s rating has been reset`
+        return `The user <@${discordId}>'s statistics has been reset`
     }
 
-
-    // if queue is specified, find the leaderboard and reset all user's rating of that leaderboard
+    // if queue is specified, find the leaderboard and reset all user's stats of that leaderboard
     if (queue_uuid){
         const queue = await Queue.findOne({
             where:{uuid:parseInt(queue_uuid)},
@@ -68,18 +73,27 @@ export async function ratingReset(discordId:string, queue_uuid:string): Promise<
             }
         )
         for (let playerStats of playersStats){
-            playerStats.rating = 1000;
+            playerStats.numWins = 0;
+            playerStats.numLosses = 0;
+            playerStats.numGames = 0;
+            playerStats.sigma = 200;
+            playerStats.streak = 0;
             await playerStats.save();
         }
-        return `The players' ratings of leaderboard ${leaderboard_uuid} have been reset`;
+        return `The players' statistics of leaderboard ${leaderboard_uuid} have been reset`;
 
     }
 
     // if neither queue and user is specified, reset all users in all leaderboard
     let playersStats = await PlayerStats.find();
     for (let playerStats of playersStats){
-        playerStats.rating = 1000;
+        playerStats.numWins = 0;
+        playerStats.numLosses = 0;
+        playerStats.numGames = 0;
+        playerStats.sigma = 200;
+        playerStats.streak = 0;
         await playerStats.save();
     }
-    return "All the players' ratings have been reset";
+
+    return "All the players' statistics have been reset";
 }

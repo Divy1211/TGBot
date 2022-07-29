@@ -1,6 +1,6 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import {ratingReset} from "../../abstract_commands/ratings/rating_reset";
+import {statsReset} from "../../abstract_commands/ratings/stats_reset";
 
 export default {
     category: "Admin",
@@ -19,7 +19,7 @@ export default {
         },
         {
             name: "queue_uuid",
-            description: "The queue whose leaderboard to reset the rating for",
+            description: "The leaderboard to reset the rating for",
             type: ApplicationCommandOptionTypes.STRING,
             required: false,
         },
@@ -42,6 +42,6 @@ export default {
             discordId = user.id;
         }
 
-        return await ratingReset(discordId, queueUUID);
+        return await statsReset(discordId, queueUUID);
     },
 } as ICommand;
