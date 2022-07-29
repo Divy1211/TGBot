@@ -5,10 +5,10 @@ import {PlayerStats} from "../../entities/queues/PlayerStats";
 import list_players from "../../commands/queues/list_players";
 
 /**
- * Sets the promotion cooldown for the provided guild to the provided duration
+ * Reset ratings for playerStats
  *
- * @param discordId
- * @param leaderboard_uuid
+ * @param discordId The id of the user
+ * @param leaderboard_uuid The uuid of a leaderboard
  * @param guildId The ID of the server in which this command is used
  */
 export async function ratingReset(discordId:string, leaderboard_uuid:string, guildId: string): Promise<string> {
