@@ -54,14 +54,15 @@ export async function listMaps(showPoolIds: boolean, guildId: string, poolUuid?:
         });
         
         let poolText;
-        if (PoolMap.length===0){
-            poolText = "No pools"
+        if (poolMap.length==0){
+            poolText = "no pools";
         }
         else {
             poolText = poolMap.map((x)=>`${x.pool?.uuid}`).join(", ");
         }
         mapPools.push(poolText);
     }
+    console.log(mapPools)
 
     // construct messageEmbed
     let messageEmbed = new MessageEmbed()

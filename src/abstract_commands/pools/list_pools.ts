@@ -32,7 +32,7 @@ import {PoolMap} from "../../entities/pools/PoolMap";
         
         let mapsText;
         if (maps.length===0) {
-            mapsText = "no map";
+            mapsText = "no maps";
         }
         else {
             mapsText = maps.map(({map}) => `${map.uuid}`).join(", ");
