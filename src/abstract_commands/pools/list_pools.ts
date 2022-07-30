@@ -1,4 +1,4 @@
-import { MessageEmbed } from "discord.js";
+import {MessageEmbed} from "discord.js";
 import {Guild} from "../../entities/Guild";
 import {Pool} from "../../entities/pools/Pool";
 import {PoolMap} from "../../entities/pools/PoolMap";
@@ -32,7 +32,7 @@ import {PoolMap} from "../../entities/pools/PoolMap";
         
         let mapsText;
         if (maps.length===0) {
-            mapsText = "no maps";
+            mapsText = "no map";
         }
         else {
             mapsText = maps.map(({map}) => `${map.uuid}`).join(", ");

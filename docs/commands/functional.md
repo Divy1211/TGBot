@@ -366,28 +366,28 @@ A captain is a player/user
 
 10. `civ_win_rate`
     1. <span style="color:pink">Purpose</span>: see the win rates of a particular civ.
-        1. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show the statistics from a leaderboard that belongs to the server in which the command is run.
-        2. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-        3. <span style="color:pink">Parameters</span>:
-            1. <span style="color:blue">against1</span>: (optional) against this civilization.
-            2. <span style="color:blue">against2</span>: (optional) against this second civilization.
-            3. <span style="color:blue">against3</span>: (optional) against this third civilization.
-            4. <span style="color:blue">against4</span>: (optional) against this fourth civilization.
-            5. <span style="color:blue">on_map_uuid</span>: (optional) show the win rates on this map.
-            6. <span style="color:blue">queue_uuid</span>: (optional) show the win rates from the leaderboard of this queue.
-            7. <span style="color:blue">leaderboard_uuid</span>: (optional) show win rates from this leaderboard.
-        4. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, display the win rates from the `Leaderboard` of that queue. Calculating this will require looping through all the `Match`s and filtering them as specified by the arguments.
-        5. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the win rates from.
-
-11. `list_maps`
-    1. <span style="color:pink">Purpose</span>: list all the maps used by a queue or a pool.
-    2. <span style="color:pink">Constraints</span>: This command must be used in a guild. This command should only show maps from queues or pools that belong to the server in which this command is run.
+    2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show the statistics from a leaderboard that belongs to the server in which the command is run.
     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
     4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">queue_uuid</span>: (optional) see the maps of the pool of this queue.
-        2. <span style="color:blue">pool_uuid</span>: (optional) see the maps of this pool.
-    5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the sever that this command is used. If there is just one queue, display the maps from the `Pool` of this queue.
-    6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the maps from.
+        1. <span style="color:blue">against1</span>: (optional) against this civilization.
+        2. <span style="color:blue">against2</span>: (optional) against this second civilization.
+        3. <span style="color:blue">against3</span>: (optional) against this third civilization.
+        4. <span style="color:blue">against4</span>: (optional) against this fourth civilization.
+        5. <span style="color:blue">on_map_uuid</span>: (optional) show the win rates on this map.
+        6. <span style="color:blue">queue_uuid</span>: (optional) show the win rates from the leaderboard of this queue.
+        7. <span style="color:blue">leaderboard_uuid</span>: (optional) show win rates from this leaderboard.
+    5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, display the win rates from the `Leaderboard` of that queue. Calculating this will require looping through all the `Match`s and filtering them as specified by the arguments.
+    6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the win rates from.
+
+11. `list_maps`
+    1. <span style="color:pink">Purpose</span>: list all the maps in the server or in a specified pool.
+    2. <span style="color:pink">Constraints</span>: This command must be used in a guild. This command should only show maps that belong to the server in which this command is running in.
+    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+    4. <span style="color:pink">Parameters</span>:
+        1. <span style="color:blue">pool_uuid</span>: (optional) list the maps of the pool with this uuid, if unspecified, list all maps in the server.
+        2. <span style="color:blue">show_pool_ids</span>: (optional) show the pool ids that map belong to. If `pool_uuid` is specified, will **not** show `pool_ids` regardless.
+    5. <span style="color:red">Normal Flow</span>: Fetch all the `GameMap`s in the server that this command is used. If `pool_uuid` is specified, list the maps in the pool, otherwise list all maps in the server.
+    6. <span style="color:red">Alternate Flow</span>: If specified pool_uuid was not found, return an appropriate message.
 
 12. `list_pools`
     1. <span style="color:pink">Purpose</span>: list all the pools in a server. Displays an embed

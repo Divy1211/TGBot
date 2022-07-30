@@ -1,4 +1,4 @@
-import { MessageEmbed } from "discord.js";
+import {MessageEmbed} from "discord.js";
 import {Guild} from "../../entities/Guild";
 import {GameMap} from "../../entities/pools/GameMap";
 import {Pool} from "../../entities/pools/Pool";
@@ -17,6 +17,7 @@ export async function listMaps(showPoolIds: boolean, guildId: string, poolUuid?:
         guild = new Guild(guildId);
     }
 
+    let poolMaps = "";
     let gameMaps: GameMap[] = [];
     let description = "";
 
@@ -28,20 +29,19 @@ export async function listMaps(showPoolIds: boolean, guildId: string, poolUuid?:
             return `The pool with ID ${poolUuid} was not found.`;
         }
         // pool was found
-        // poolMaps = pool.poolMaps;
+        poolMaps = pool.poolMaps.map((poolMap) => `${poolMap.multiplier}`).join(", ");
         gameMaps = pool.poolMaps.map((poolMap: PoolMap) => poolMap.map);
-        description = `Maps in pool ${pool.name}`
+        description = `Maps in pool with ID ${poolUuid}}`
     }
     else {
         //  pool_uuid was not given
-        // poolMaps = await PoolMap.find();
         gameMaps = await GameMap.find();
-        description = "Maps in the sever"
+        description = "All maps in this sever"
     }
 
     // if no map was found
     if (gameMaps.length===0) {
-        return "No map was found."
+        return `No map was found in pool with ID ${poolUuid}.`
     }
 
     // find map's corresponding pools
@@ -54,14 +54,13 @@ export async function listMaps(showPoolIds: boolean, guildId: string, poolUuid?:
         
         let poolText;
         if (poolMap.length==0){
-            poolText = "no pools";
+            poolText = "no pool";
         }
         else {
             poolText = poolMap.map((x)=>`${x.pool?.uuid}`).join(", ");
         }
         mapPools.push(poolText);
     }
-    console.log(mapPools)
 
     // construct messageEmbed
     let messageEmbed = new MessageEmbed()
@@ -80,7 +79,14 @@ export async function listMaps(showPoolIds: boolean, guildId: string, poolUuid?:
             inline: true,
         }
     );
-    if (showPoolIds) {
+
+    if (poolUuid != undefined) {
+        // list maps in a pool with their multiplier values
+        
+        messageEmbed.addField("multiplier", poolMaps, true);
+    }
+    else if (showPoolIds) {
+        // list all maps in the server with their pool uuids
         messageEmbed.addField("pool_uuids", mapPools.join("\n"), true);
     }
 
