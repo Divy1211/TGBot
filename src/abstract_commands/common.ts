@@ -54,7 +54,7 @@ export function getMapEmbed(description: string, showPoolIds: boolean, gameMaps:
     );
 
     if (showPoolIds) {
-        messageEmbed.addField("pool_id", mapPools.join("\n"), true);
+        messageEmbed.addField("pool_uuids", mapPools.join("\n"), true);
     }
 
     return messageEmbed;
@@ -85,7 +85,7 @@ export function getPoolEmbed(pools: Pool[], allMaps: String[]){
             inline: true,
         },
         {
-            name: "maps",
+            name: "map_uuids",
             value: allMaps.join("\n"),
             inline: true,
         }

@@ -18,14 +18,26 @@ import {getPoolEmbed} from "../common";
         where: {guild: {id: guildId}}
     });
 
+    if (pools.length===0) {
+        // no pool was found
+        return "No pool was found in this server."
+    }
+
     // find all maps in the pool
-    let allMaps = [];
+    let allMapsText = [];
     for (let i = 0; i < pools.length; i++) {
-        let map = await PoolMap.find({
+        let maps = await PoolMap.find({
             where: {pool: {uuid: pools[i].uuid}},
         });
-        var maps = map.map(({map}) => `${map.name}`).join(", ");
-        allMaps.push(maps);
+        
+        let mapsText;
+        if (maps.length===0) {
+            mapsText = "no map";
+        }
+        else {
+            mapsText = maps.map(({map}) => `${map.uuid}`).join(", ");
+        }
+        allMapsText.push(mapsText);
     }
-    return getPoolEmbed(pools, allMaps);
+    return getPoolEmbed(pools, allMapsText);
  }

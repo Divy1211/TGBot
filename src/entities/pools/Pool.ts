@@ -12,7 +12,7 @@ export class Pool extends BaseEntity {
     @Column()
     name: string;
 
-    @ManyToOne(() => Guild, (guild: Guild) => guild.leaderboards, {onDelete: "CASCADE"})
+    @ManyToOne(() => Guild, (guild: Guild) => guild.pools, {cascade: true, onDelete: "CASCADE"})
     guild?: Guild;
 
     @ManyToMany(() => Queue, (queue: Queue) => queue.pools)

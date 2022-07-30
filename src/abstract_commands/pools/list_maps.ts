@@ -1,3 +1,4 @@
+import { ok } from "assert";
 import {Guild} from "../../entities/Guild";
 import {GameMap} from "../../entities/pools/GameMap";
 import {Pool} from "../../entities/pools/Pool";
@@ -11,7 +12,7 @@ import {getMapEmbed} from "../common";
  * @param showPoolIds Showing pool_id if set to true
  * @param guildId The ID of the server in which the Pool is created
  */
-export async function listMaps(poolUuid: number, showPoolIds: boolean, guildId: string) {
+export async function listMaps(showPoolIds: boolean, guildId: string, poolUuid?: number) {
     let guild = await Guild.findOneBy({id: guildId});
     if (!guild) {
         guild = new Guild(guildId);
@@ -21,8 +22,8 @@ export async function listMaps(poolUuid: number, showPoolIds: boolean, guildId: 
     let gameMaps: GameMap[] = [];
     let description = "";
 
-    if (poolUuid != 0){
-        // given pool_uuid
+    if (poolUuid !== undefined){
+        // pool_uuid wa given
         const pool = await Pool.findOneBy({uuid: poolUuid, guild: {id: guildId}});
         // pool was not found
         if (!pool) {
@@ -34,20 +35,33 @@ export async function listMaps(poolUuid: number, showPoolIds: boolean, guildId: 
         description = `Maps in pool ${pool.name}`
     }
     else {
-        // not given a pool_uuid
+        //  pool_uuid was not given
         poolMaps = await PoolMap.find();
         gameMaps = await GameMap.find();
         description = "Maps in the sever"
     }
 
+    // if no map was found
+    if (gameMaps.length===0) {
+        return "No map was found."
+    }
+
     // find map's corresponding pools
-    let mapPools = [];
-    for (let game_map of gameMaps){
+    let mapPools:any = [];
+    for (let gameMap of gameMaps){
         let poolMap = await PoolMap.find({
-            where: {map: {uuid: game_map.uuid}},
+            where: {map: {uuid: gameMap.uuid}},
             relations: {pool: true}
         });
-        mapPools.push(poolMap.map((x)=>`${x.pool?.uuid}`).join(", "));
+        
+        let poolText;
+        if (PoolMap.length===0){
+            poolText = "No pools"
+        }
+        else {
+            poolText = poolMap.map((x)=>`${x.pool?.uuid}`).join(", ");
+        }
+        mapPools.push(poolText);
     }
 
     return getMapEmbed(description, showPoolIds, gameMaps, poolMaps, mapPools);

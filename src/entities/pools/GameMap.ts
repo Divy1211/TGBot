@@ -25,7 +25,7 @@ export class GameMap extends BaseEntity {
     @Column()
     numChosen: number;
 
-    @ManyToOne(() => Guild, (guild: Guild) => guild.maps, {onDelete: "CASCADE"})
+    @ManyToOne(() => Guild, (guild: Guild) => guild.maps, {cascade: true, onDelete: "CASCADE"})
     guild?: Guild;
 
     constructor();

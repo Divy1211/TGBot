@@ -1,8 +1,7 @@
-import {Guild} from "../../entities/Guild";
 import {Pool} from "../../entities/pools/Pool";
 
 /**
- * Deletes a given game map from the server
+ * Delete a given game map from the server
  *
  * @param poolUuid The uuid of the pool
  * @param guildId The ID of the server in which the Pool is created

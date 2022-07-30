@@ -4,7 +4,7 @@ import {Pool} from "../../entities/pools/Pool";
 import {PoolMap} from "../../entities/pools/PoolMap";
 
 /**
- * Adds a given map with the specified multiplier to the provided pool in the stated server
+ * Add a given map with the specified multiplier to the provided pool in the stated server
  *
  * @param mapUuid The uuid of the map
  * @param poolUuid The uuid of the pool

@@ -2,7 +2,7 @@ import {Guild} from "../../entities/Guild";
 import {Pool} from "../../entities/pools/Pool";
 
 /**
- * Creates a pool with the given name in the specified server
+ * Create a pool with the given name in the specified server
  *
  * @param name The name of the pool
  * @param guildId The ID of the server in which the pool is created

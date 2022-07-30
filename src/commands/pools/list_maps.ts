@@ -32,9 +32,9 @@ export default {
             return "This command can only be run in a text channel in a server";
         }
         // get the command parameters
-        const poolUuid = options.getInteger("pool_uuid") ?? 0;
+        const poolUuid = options.getInteger("pool_uuid") ?? undefined;
         const showPoolIds = options.getBoolean("show_pool_ids") ?? false;
 
-        return listMaps(poolUuid, showPoolIds, guildId);
+        return listMaps(showPoolIds, guildId, poolUuid);
     }
 } as ICommand;
