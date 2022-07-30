@@ -2,22 +2,24 @@
 
 ### Admin Commands
 
-| Command               | Functionality                     | paras                                   | Status |
-| --------------------- | --------------------------------- | --------------------------------------- | ------ |
-| `create_q`            | creates a new queue               | `name`, `num_players`                   | Done   |
-| `delete_q`            | delete a queue                    | `uuid`                                  | Done   |
-| `edit_q`              | edit the setting of a queue       | `queue_uuid`, `[name]`, `[num_players]` | Done   |
-| `set_logging_channel` | sets a logging channel in a serer |                                         | Done   |
-| `set_admin_role`      | sets a role as the admin          | `role`                                  | Done   |
-| `set_mod_role`        | sets a role as the mod role       | `role`                                  | Done   |
-| `set_promote_role`    | sets a role as the promotion role | `role`                                  | Done   |
-| `set_promote_cd`      | sets the promotion cool down      | `role`                                  |        |
-| `add_maps`            | add a map to a pool               | `map_uuid`, `pool_uuid`, `[multiplier]` | Done   |
-| `create_map`          | create a map                      | `name`, `img_link`                      | Done   |
-| `remove_map`          | remove a map from a pool          | `map_uuid`, `[pool_uuid]`               | Done   |
-| `delete_map`          | remove a map from the server      | `uuid`                                  | Done   |
-| `create_pool`         | create a pool                     | `name`                                  | Done   |
-| `delete_pool`         | delete a pool from the server     | `uuid`                                  | Done   |
+| Command               | Functionality                        | paras                                   | Status |
+| --------------------- | ------------------------------------ | --------------------------------------- | ------ |
+| `create_q`            | creates a new queue                  | `name`, `num_players`                   | Done   |
+| `delete_q`            | delete a queue                       | `uuid`                                  | Done   |
+| `edit_q`              | edit the setting of a queue          | `queue_uuid`, `[name]`, `[num_players]` | Done   |
+| `set_logging_channel` | sets a logging channel in a serer    |                                         | Done   |
+| `set_admin_role`      | sets a role as the admin             | `role`                                  | Done   |
+| `set_mod_role`        | sets a role as the mod role          | `role`                                  | Done   |
+| `set_promote_role`    | sets a role as the promotion role    | `role`                                  | Done   |
+| `set_promote_cd`      | sets the promotion cool down         | `role`                                  |        |
+| `add_maps`            | add a map to a pool                  | `map_uuid`, `pool_uuid`, `[multiplier]` | Done   |
+| `create_map`          | create a map                         | `name`, `img_link`                      | Done   |
+| `remove_map`          | remove a map from a pool             | `map_uuid`, `[pool_uuid]`               | Done   |
+| `delete_map`          | remove a map from the server         | `uuid`                                  | Done   |
+| `create_pool`         | create a pool                        | `name`                                  | Done   |
+| `delete_pool`         | delete a pool from the server        | `uuid`                                  | Done   |
+| `edit_map`            | Edit the name of a map in the sever  | `uuid`, `name`                          | Done   |
+| `edit_pool`           | Edit the name of a pool in the sever | `uuid`, `name`                          | Done   |
 
 
 

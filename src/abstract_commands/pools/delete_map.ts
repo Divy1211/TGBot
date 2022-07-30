@@ -13,7 +13,6 @@ export async function deleteGameMap(gameMapUuid: number, guildId: string) {
         return `Map with ID ${gameMapUuid} was not found`;
     }
 
-    // map is automatically removed from all pools by TypeORM
     // remove the map from the channel
     await gameMap.remove();
 

@@ -17,7 +17,7 @@ export async function editPool(poolUuid: number, newName: string, guildId: strin
     let pool = await Pool.findOneBy({uuid: poolUuid, guild: {id: guildId}});
     
     if (!pool){
-        // pool is not found
+        // pool was not found
         return `Pool with ID ${poolUuid} was not found`;
     }
 
@@ -26,7 +26,7 @@ export async function editPool(poolUuid: number, newName: string, guildId: strin
         return `Edition Unsuccessful: the new name is the same as the pool's current name.`
     }
 
-    // change pool name
+    // change the pool name
     pool.name = newName;
     await pool.save();
     return `The name of the pool with ID "${poolUuid}" has been changed to "${newName}"!`;

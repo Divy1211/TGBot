@@ -5,7 +5,7 @@ import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Edit the name a pool in the sever",
+    description: "Edit the name of a pool in the sever",
     slash: true,
     testOnly: true,
     guildOnly: true,
@@ -13,13 +13,13 @@ export default {
     options: [
         {
             name: "uuid",
-            description: "The uuid of the pool to edit",
+            description: "The uuid of the pool to modify",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
         },
         {
-            name: "new_name",
-            description: "The new name giving to the pool",
+            name: "name",
+            description: "The new name of the pool",
             type: ApplicationCommandOptionTypes.STRING,
             required: true,
         }
@@ -33,7 +33,7 @@ export default {
         }
         // get the command parameters
         const poolUuid = ensure(options.getInteger("uuid"));
-        const newName = ensure(options.getString("new_name"));
+        const newName = ensure(options.getString("name"));
 
         return await editPool(poolUuid, newName, guildId);
     },

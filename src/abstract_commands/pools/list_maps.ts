@@ -17,7 +17,6 @@ export async function listMaps(showPoolIds: boolean, guildId: string, poolUuid?:
         guild = new Guild(guildId);
     }
 
-    let poolMaps: PoolMap[] = [];
     let gameMaps: GameMap[] = [];
     let description = "";
 

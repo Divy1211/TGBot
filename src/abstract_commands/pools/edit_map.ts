@@ -17,7 +17,7 @@ import {GameMap} from "../../entities/pools/GameMap";
     let gameMap = await GameMap.findOneBy({uuid: mapUuid, guild: {id: guildId}});
     
     if (!gameMap){
-        // map is not found
+        // map was not found
         return `Map with ID ${mapUuid} was not found`;
     }
     
@@ -26,7 +26,7 @@ import {GameMap} from "../../entities/pools/GameMap";
         return `Edition Unsuccessful: the new name is the same as the map's current name.`
     }
 
-    // change map name
+    // change the map name
     gameMap.name = newName;
     await gameMap.save();
     return `The name of the map with ID "${gameMap}" has been changed to "${newName}"!`;

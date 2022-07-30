@@ -16,12 +16,11 @@ export async function addMap(mapUuid: number, poolUuid: number, multiplier: numb
     if (!guild) {
         guild = new Guild(guildId);
     }
-
+    
     let pool = await Pool.findOneBy({
         uuid: poolUuid,
         guild: {id: guildId}
     });
-
     if (!pool) {
         return `Pool with ID \`${poolUuid}\` was not found.`;
     }
@@ -42,7 +41,7 @@ export async function addMap(mapUuid: number, poolUuid: number, multiplier: numb
     }
 
     // else: add the map into the pool
-    const targetMap = new PoolMap(map, pool, multiplier);
-    await targetMap.save();
+    const targetedMap = new PoolMap(map, pool, multiplier);
+    await targetedMap.save();
     return `Map "${map.name}" added to Pool "${pool.name}"`;
 }
