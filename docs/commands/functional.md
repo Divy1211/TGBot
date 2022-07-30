@@ -381,12 +381,12 @@ A captain is a player/user
 
 11. `list_maps`
     1. <span style="color:pink">Purpose</span>: list all the maps in the server or in a specified pool.
-    2. <span style="color:pink">Constraints</span>: This command must be used in a guild. This command should only show maps that belong to the server in which this command is running in.
+    2. <span style="color:pink">Constraints</span>: This command must be used in a guild. This command should only show maps that belong to the server in which this command is running.
     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
     4. <span style="color:pink">Parameters</span>:
         1. <span style="color:blue">pool_uuid</span>: (optional) list the maps of the pool with this uuid, if unspecified, list all maps in the server.
-        2. <span style="color:blue">show_pool_ids</span>: (optional) show the pool ids that map belong to. If `pool_uuid` is specified, will **not** show `pool_ids` regardless.
-    5. <span style="color:red">Normal Flow</span>: Fetch all the `GameMap`s in the server that this command is used. If `pool_uuid` is specified, list the maps in the pool, otherwise list all maps in the server.
+        2. <span style="color:blue">show_pool_ids</span>: (optional) show pool_ids that maps belong to. If `pool_uuid` is specified, will **not** show `pool_ids` regardless.
+    5. <span style="color:red">Normal Flow</span>: Fetch all the `GameMap`s in the server where this command is used. If `pool_uuid` is specified, list the maps in the pool, otherwise, list all maps in the server.
     6. <span style="color:red">Alternate Flow</span>: If specified pool_uuid was not found, return an appropriate message.
 
 12. `list_pools`
