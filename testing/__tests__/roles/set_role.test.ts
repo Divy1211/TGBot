@@ -35,7 +35,7 @@ describe("Set Role", () => {
         expect(guild.modRoleId).toBe(roleId);
     });
 
-    test("Admin", async () => {
+    test("Promo", async () => {
         const roleId = "role-promo";
 
         expect(
@@ -44,5 +44,43 @@ describe("Set Role", () => {
 
         await guild.reload();
         expect(guild.promotionRoleId).toBe(roleId);
+    });
+});
+
+describe("Unset Role", () => {
+    test("Admin", async () => {
+        guild.adminRoleId = "admin-role-id";
+        await guild.save();
+
+        expect(
+            await setRole("guild-1", "admin"),
+        ).toBe(`The admin role for the server has been unset.`);
+
+        await guild.reload();
+        expect(guild.adminRoleId).toBe(null);
+    });
+
+    test("Mod", async () => {
+        guild.modRoleId = "mod-role-id";
+        await guild.save();
+
+        expect(
+            await setRole("guild-1", "mod"),
+        ).toBe(`The mod role for the server has been unset.`);
+
+        await guild.reload();
+        expect(guild.modRoleId).toBe(null);
+    });
+
+    test("Promo", async () => {
+        guild.promotionRoleId = "promotion-role-id";
+        await guild.save();
+
+        expect(
+            await setRole("guild-1", "promotion"),
+        ).toBe(`The promotion role for the server has been unset.`);
+
+        await guild.reload();
+        expect(guild.promotionRoleId).toBe(null);
     });
 });

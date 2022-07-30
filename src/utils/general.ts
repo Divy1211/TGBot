@@ -87,3 +87,33 @@ export function combinations<T>(array: T[], r: number): T[][] {
     }
     return combos;
 }
+
+/**
+ * Extract the hh, mm and ss values as numbers from a provided time in hh:mm[:ss] (string) format.
+ * If an invalid format is given, an error is returned.
+ *
+ * @param hhmmss The string to extract the hh, mm and ss values from
+ */
+export function getDuration(hhmmss: string): {error?: string, hh: number, mm: number, ss: number} {
+    // ss will be undefined if not specified
+    let [_, hh, mm, ss]: (string | number)[] = hhmmss.match(/^(\d+):(\d{2})(?::(\d{2}))?$/) ?? ["-1", "-1", "-1", "-1"];
+    if (hh === "-1") {
+        return {error: "Error: The format of the specified duration is invalid, please try again", hh: 0, mm: 0, ss: 0};
+    }
+
+    hh = parseInt(hh);
+    mm = parseInt(mm);
+    ss = ss ? parseInt(ss) : 0;
+
+    if (ss > 59 && mm > 59) {
+        return {error: "Error: Minutes & Seconds cannot be greater than 59", hh, mm, ss};
+    }
+    if (mm > 59) {
+        return {error: "Error: Minutes cannot be greater than 59", hh, mm, ss};
+    }
+    if (ss > 59) {
+        return {error: "Error: Seconds cannot be greater than 59", hh, mm, ss};
+    }
+
+    return {hh, mm, ss};
+}

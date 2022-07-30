@@ -4,8 +4,6 @@ import {Queue} from "../../entities/queues/Queue";
 import {User} from "../../entities/User";
 import {client} from "../../main";
 import {ensure} from "../../utils/general";
-import {getPlayerEmbed} from "../common";
-import {setupVotingOptions} from "./setup_voting";
 
 /**
  * Puts the given user into a queue in the given channel or the specified queue
@@ -55,7 +53,7 @@ export async function startMatch(uuid: number, users: User[]): Promise<void> {
     const match = new Match(statslist, queue);
     await match.save();
 
-    setupVotingOptions(match).then();
+    match.setupVotingOptions().then();
 
     // set the inGame and currentMatch property for all the users
     // also remove them from all the other queues that they are in
@@ -77,7 +75,7 @@ export async function startMatch(uuid: number, users: User[]): Promise<void> {
             if (channel?.isText()) {
                 await channel.send({
                     content: `Removed <@${discordId}> from "${queue.name}" since their game started on another queue.`,
-                    embeds: [getPlayerEmbed(queue)],
+                    embeds: [queue.getPlayerEmbed()],
                 });
             }
         }

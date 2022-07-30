@@ -23,16 +23,16 @@
 
 ### Mod Commands
 
-| Command        | Functionality                                                                | paras                                 | Status        |
-|----------------|------------------------------------------------------------------------------|---------------------------------------|---------------|
-| `rating_set`   | sets the rating of a user for the leaderboard of a particular queue          | `rating`, `user`, `[queue_uuid]`      |               |
-| `rating_reset` | resets the ratings of all the users in the server back to the default `1000` | `[user]`, `[leaderboard_uuid]`        |               |
-| `stats_reset`  | resets all the statistics of all the users in the server                     | `[user]`, `leaderboard_uuid`          |               |
-| `ban`          | bans a user from joining queues                                              | `user`, `[duration]`, `for`           | WIP by Yanbao |
-| `unban`        | removes the ban from a user to join a queue                                  | `user`                                | WIP by Yanbao |
-| `report_win`   | report the winning team for a game                                           | `match_uuid`, `team`, `overwite=True` |               |
-| `cancel_match` | void the result of a match or cancel an ongoing match                        | `match_uuid`                          |               |
-| `reset`        | removes all players from all the queues in the server                        |                                       |               |
+| Command        | Functionality                                                                | paras                                 | Status |
+|----------------|------------------------------------------------------------------------------|---------------------------------------|--------|
+| `rating_set`   | sets the rating of a user for the leaderboard of a particular queue          | `rating`, `user`, `[queue_uuid]`      |        |
+| `rating_reset` | resets the ratings of all the users in the server back to the default `1000` | `[user]`, `[leaderboard_uuid]`        |        |
+| `stats_reset`  | resets all the statistics of all the users in the server                     | `[user]`, `leaderboard_uuid`          |        |
+| `ban`          | bans a user from joining queues                                              | `user`, `[duration]`, `for`           | Done   |
+| `unban`        | removes the ban from a user to join a queue                                  | `user`                                | Done   |
+| `report_win`   | report the winning team for a game                                           | `match_uuid`, `team`, `overwite=True` |        |
+| `cancel_match` | void the result of a match or cancel an ongoing match                        | `match_uuid`                          | Done   |
+| `reset`        | removes all players from all the queues in the server                        |                                       |        |
 
 
 

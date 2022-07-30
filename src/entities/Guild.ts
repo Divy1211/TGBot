@@ -12,17 +12,17 @@ export class Guild extends BaseEntity {
     @PrimaryColumn()
     id!: string;
 
-    @Column({nullable: true})
-    modRoleId?: string;
+    @Column({type: String, nullable: true})
+    modRoleId?: string | null;
 
-    @Column({nullable: true})
-    adminRoleId?: string;
+    @Column({type: String, nullable: true})
+    adminRoleId?: string | null;
 
-    @Column({nullable: true})
-    promotionRoleId?: string;
+    @Column({type: String, nullable: true})
+    promotionRoleId?: string | null;
 
-    @Column({nullable: true})
-    loggingChannelId?: string;
+    @Column({type: String, nullable: true})
+    loggingChannelId?: string | null;
 
     @Column()
     promotionCooldown: number;

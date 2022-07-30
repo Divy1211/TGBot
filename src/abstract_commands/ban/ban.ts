@@ -2,6 +2,7 @@ import {Guild} from "../../entities/Guild";
 import {User} from "../../entities/User";
 import {Ban} from "../../entities/user_data/Ban";
 import {ensure} from "../../utils/general";
+import {getDuration} from "../../utils/general";
 
 /**
  * Bans a user from joining queues in a specific server
@@ -32,41 +33,26 @@ export async function banUser(
         if (ban.until > 0 && ban.until < Date.now() / 1000) {
             await ban.remove();
         } else if (ban.until > 0) {
-            return `Error: <@${discordId}> is already banned${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
+            return `Error: <@${discordId}> is already banned ${ban.str}`;
         } else {
-            return `Error: <@${discordId}> is already banned permanently${ban.reason ? ` for "${ban.reason}"` : ``}`;
+            return `Error: <@${discordId}> is already banned ${ban.str}`;
         }
     }
 
     if (!duration) {
         ban = new Ban(user, reason, -1, guild);
         await ban.save();
-        return `<@${discordId}> has been banned permanently${reason ? ` for "${reason}"` : ``}`;
+        return `<@${discordId}> has been banned ${ban.str}`;
     }
 
     // ss will be undefined if not specified
-    // todo: do not push this change lol
-    let [_, hh, mm, ss]: (string | number)[] = duration.match(/^(\d+):(\d{2})(?::(\d{2}))?$/) ?? ["-1", "-1", "-1", "-1"];
-    if (hh === "-1") {
-        return "Error: The format of the specified duration is invalid, please try again";
-    }
-
-    hh = parseInt(hh);
-    mm = parseInt(mm);
-    ss = ss ? parseInt(ss) : 0;
-
-    if (ss > 59 && mm > 59) {
-        return "Error: Minutes & Seconds cannot be greater than 59";
-    }
-    if (mm > 59) {
-        return "Error: Minutes cannot be greater than 59";
-    }
-    if (ss > 59) {
-        return "Error: Seconds cannot be greater than 59";
+    const {error, hh, mm, ss} = getDuration(duration);
+    if (error) {
+        return error;
     }
 
     ban = new Ban(user, reason, hh * 3600 + mm * 60 + ss + Math.floor(Date.now() / 1000), guild);
     await ban.save();
 
-    return `<@${discordId}> has been banned${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
+    return `<@${discordId}> has been banned ${ban.str}`;
 }

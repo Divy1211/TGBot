@@ -5,7 +5,6 @@ import {Queue} from "../../entities/queues/Queue";
 import {QueueDefault} from "../../entities/queues/QueueDefault";
 import {User} from "../../entities/User";
 import {Ban} from "../../entities/user_data/Ban";
-import {getPlayerEmbed} from "../common";
 import {startMatch} from "../matches/start";
 
 export async function joinQueue(discordId: string, channelId: string, guildId: string): Promise<string | MessageEmbed>
@@ -125,5 +124,5 @@ export async function joinQueue(
 
     await queue.save();
 
-    return getPlayerEmbed(queue);
+    return queue.getPlayerEmbed();
 }

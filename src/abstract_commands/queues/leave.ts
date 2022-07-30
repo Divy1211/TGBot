@@ -2,7 +2,6 @@ import {MessageEmbed} from "discord.js";
 
 import {Queue} from "../../entities/queues/Queue";
 import {User} from "../../entities/User";
-import {getPlayerEmbed} from "../common";
 
 /**
  * Removes the given user from a queue in the given channel or the specified queue
@@ -70,5 +69,5 @@ export async function leaveQueue(
     queue.users = queue.users.filter((user) => user.discordId != discordId);
     await queue.save();
 
-    return getPlayerEmbed(queue);
+    return queue.getPlayerEmbed();
 }

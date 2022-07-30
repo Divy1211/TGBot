@@ -418,7 +418,7 @@ A captain is a player/user
     5. <span style="color:red">Normal Flow</span>: fetch the map with the given `uuid` and show the embed.
     6. <span style="color:red">Alternate Flow</span>: If the given `uuid` is invalid, return an appropriate error message.
 
-17. `last_game`
+17. `last_match`
     1. <span style="color:pink">Purpose</span>: show the last match of the user
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
