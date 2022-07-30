@@ -33,7 +33,7 @@ export default {
         }
         // get the command parameters
         const poolUuid = options.getInteger("pool_uuid") ?? undefined;
-        const showPoolIds = options.getBoolean("show_pool_ids") ?? false;
+        const showPoolIds = options.getBoolean("show_pool_ids") ?? true;
 
         return listMaps(showPoolIds, guildId, poolUuid);
     }

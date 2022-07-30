@@ -1,9 +1,8 @@
-import { ok } from "assert";
+import { MessageEmbed } from "discord.js";
 import {Guild} from "../../entities/Guild";
 import {GameMap} from "../../entities/pools/GameMap";
 import {Pool} from "../../entities/pools/Pool";
 import {PoolMap} from "../../entities/pools/PoolMap";
-import {getMapEmbed} from "../common";
 
 /**
  * List all maps
@@ -30,13 +29,13 @@ export async function listMaps(showPoolIds: boolean, guildId: string, poolUuid?:
             return `The pool with ID ${poolUuid} was not found.`;
         }
         // pool was found
-        poolMaps = pool.poolMaps;
-        gameMaps = poolMaps.map((poolMap: PoolMap) => poolMap.map);
+        // poolMaps = pool.poolMaps;
+        gameMaps = pool.poolMaps.map((poolMap: PoolMap) => poolMap.map);
         description = `Maps in pool ${pool.name}`
     }
     else {
         //  pool_uuid was not given
-        poolMaps = await PoolMap.find();
+        // poolMaps = await PoolMap.find();
         gameMaps = await GameMap.find();
         description = "Maps in the sever"
     }
@@ -64,5 +63,26 @@ export async function listMaps(showPoolIds: boolean, guildId: string, poolUuid?:
         mapPools.push(poolText);
     }
 
-    return getMapEmbed(description, showPoolIds, gameMaps, poolMaps, mapPools);
+    // construct messageEmbed
+    let messageEmbed = new MessageEmbed()
+    .setTitle("Maps")
+    .setColor("#0095F7")
+    .setDescription(description)
+    .addFields(
+        {
+            name: "uuid",
+            value: gameMaps.map(({uuid}) => `${uuid}`).join("\n"),
+            inline: true,
+        },
+        {
+            name: "name",
+            value: gameMaps.map(({name}) => `${name}`).join("\n"),
+            inline: true,
+        }
+    );
+    if (showPoolIds) {
+        messageEmbed.addField("pool_uuids", mapPools.join("\n"), true);
+    }
+
+    return messageEmbed;
 }

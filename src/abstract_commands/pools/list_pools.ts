@@ -1,7 +1,7 @@
+import { MessageEmbed } from "discord.js";
 import {Guild} from "../../entities/Guild";
 import {Pool} from "../../entities/pools/Pool";
 import {PoolMap} from "../../entities/pools/PoolMap";
-import {getPoolEmbed} from "../common";
 
 /**
  * List all pools
@@ -39,5 +39,28 @@ import {getPoolEmbed} from "../common";
         }
         allMapsText.push(mapsText);
     }
-    return getPoolEmbed(pools, allMapsText);
- }
+
+    // construct messageEmbed
+    let messageEmbed = new MessageEmbed()
+    .setTitle("Pools")
+    .setColor("#0095F7")
+    .setDescription("The list of pools in the server")
+    .addFields(
+        {
+            name: "uuid",
+            value: pools.map(({uuid}) => `${uuid}`).join("\n"),
+            inline: true,
+        },
+        {
+            name: "name",
+            value: pools.map(({name}) => `${name}`).join("\n"),
+            inline: true,
+        },
+        {
+            name: "map_uuids",
+            value: allMapsText.join("\n"),
+            inline: true,
+        }
+    )
+    return messageEmbed;
+}
