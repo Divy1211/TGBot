@@ -8,9 +8,7 @@ import {Queue} from "../../entities/queues/Queue";
 export async function removeAll(guildId: string): Promise<string> {
     const queues = await Queue.find({
         where: {
-            guild: {
-                id: guildId,
-            },
+            guild: {id: guildId},
         },
     });
 

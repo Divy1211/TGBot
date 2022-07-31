@@ -4,7 +4,7 @@ import {ratingReset} from "../../abstract_commands/ratings/rating_reset";
 
 export default {
     category: "Admin",
-    description: "Reset rating for a specific user/leaderboard",
+    description: "Reset ratings and stats for a specific user/leaderboard",
 
     slash: true,
     testOnly: true,
@@ -13,14 +13,14 @@ export default {
     options: [
         {
             name: "user",
-            description: "The user to reset rating for",
+            description: "The user to reset ratings and stats for. If unspecified, resets the ratings of all users",
             type: ApplicationCommandOptionTypes.USER,
             required: false,
         },
         {
             name: "queue_uuid",
-            description: "The queue whose leaderboard to reset the rating for",
-            type: ApplicationCommandOptionTypes.STRING,
+            description: "The queue to reset the ratings and stats for. If unspecified, resets the ratings in all queues",
+            type: ApplicationCommandOptionTypes.INTEGER,
             required: false,
         },
     ],
@@ -34,14 +34,9 @@ export default {
         }
 
         // get the command parameters
-        const user = options.getUser("user");
-        const queueUUID = options.getString("queue_uuid") ?? "";
+        const discordId = options.getUser("user")?.id;
+        const queueUuid = options.getInteger("queue_uuid") ?? undefined;
 
-        let discordId = "";
-        if (user){
-            discordId = user.id;
-        }
-
-        return await ratingReset(discordId, queueUUID);
+        return await ratingReset(guildId, discordId, queueUuid);
     },
 } as ICommand;
