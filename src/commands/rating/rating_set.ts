@@ -6,7 +6,7 @@ import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Reset rating for a specific user/leaderboard",
+    description: "Set the rating for a user for a specific queue",
 
     slash: true,
     testOnly: true,
@@ -15,8 +15,8 @@ export default {
     options: [
         {
             name: "rating",
-            description: "The new rating of the user.",
-            type: ApplicationCommandOptionTypes.STRING,
+            description: "The new rating of the user",
+            type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
         },
         {
@@ -27,8 +27,8 @@ export default {
         },
         {
             name: "queue_uuid",
-            description: "The leaderboard to reset the rating for",
-            type: ApplicationCommandOptionTypes.STRING,
+            description: "The queue to set the rating for",
+            type: ApplicationCommandOptionTypes.INTEGER,
             required: false,
         },
     ],
@@ -42,15 +42,10 @@ export default {
         }
 
         // get the command parameters
-        const rating = ensure(options.getString("rating"));
-        const user = options.getUser("user");
-        const queueUUID = options.getString("queue_uuid") ?? "";
+        const rating = ensure(options.getInteger("rating"));
+        const discordId = ensure(options.getUser("user")?.id);
+        const queueUuid = options.getInteger("queue_uuid") ?? undefined;
 
-        let discordId = "";
-        if (user){
-            discordId = user.id;
-        }
-
-        return await ratingSet(discordId, queueUUID, parseInt(rating));
+        return await ratingSet(discordId, rating, channelId, queueUuid);
     },
 } as ICommand;

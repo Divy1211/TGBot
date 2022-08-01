@@ -1,10 +1,10 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import {statsReset} from "../../abstract_commands/ratings/stats_reset";
+import {reset} from "../../abstract_commands/ratings/reset";
 
 export default {
     category: "Admin",
-    description: "Reset rating for a specific user/leaderboard",
+    description: "Reset statistics for a user/queue",
 
     slash: true,
     testOnly: true,
@@ -13,14 +13,14 @@ export default {
     options: [
         {
             name: "user",
-            description: "The user to reset rating for",
+            description: "The user to reset statistics for. If unspecified, resets the statistics of all users",
             type: ApplicationCommandOptionTypes.USER,
             required: false,
         },
         {
             name: "queue_uuid",
-            description: "The leaderboard to reset the rating for",
-            type: ApplicationCommandOptionTypes.STRING,
+            description: "The queue to reset the statistics for. If unspecified, resets the statistics in all queues",
+            type: ApplicationCommandOptionTypes.INTEGER,
             required: false,
         },
     ],
@@ -34,14 +34,9 @@ export default {
         }
 
         // get the command parameters
-        const user = options.getUser("user");
-        const queueUUID = options.getString("queue_uuid") ?? "";
+        const discordId = options.getUser("user")?.id;
+        const queueUuid = options.getInteger("queue_uuid") ?? undefined;
 
-        let discordId = "";
-        if (user){
-            discordId = user.id;
-        }
-
-        return await statsReset(discordId, queueUUID);
+        return await reset(guildId, discordId, queueUuid, {stats: true});
     },
 } as ICommand;
