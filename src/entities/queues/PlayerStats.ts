@@ -49,8 +49,7 @@ export class PlayerStats extends BaseEntity {
 
     constructor();
     constructor(user: User, leaderboard: Leaderboard);
-    constructor(
-        user: User, leaderboard: Leaderboard, {numGames, numLosses, numWins, rating, sigma, streak}: OptionalArgs);
+    constructor(user: User, leaderboard: Leaderboard, {numGames, numLosses, numWins, rating, sigma, streak}: OptionalArgs);
 
     constructor(
         user?: User, leaderboard?: Leaderboard,
