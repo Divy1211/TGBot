@@ -96,6 +96,7 @@ export async function report(
 
         // todo: using trueskill here
         stats.rating += player.ratingDelta;
+        stats.lastMatch = match;
         // todo: stats.sigma
 
         await stats.save();
