@@ -39,9 +39,14 @@ export async function startMatch(uuid: number, users: User[]): Promise<void> {
     for (const user of users) {
         let stats: PlayerStats | null;
 
-        stats = await PlayerStats.findOneBy({
-            user: {discordId: user.discordId},
-            leaderboard: {uuid: ensure(queue.leaderboard).uuid},
+        stats = await PlayerStats.findOne({
+            where: {
+                user: {discordId: user.discordId},
+                leaderboard: {uuid: ensure(queue.leaderboard).uuid},
+            },
+            relations: {
+                leaderboard: true,
+            },
         });
         if (!stats) {
             stats = new PlayerStats(user, ensure(queue.leaderboard));

@@ -72,7 +72,8 @@ export class Match extends BaseEntity {
 
         this.guild = ensure(queue.guild);
         this.queue = queue;
-        this.leaderboard = playerStats[0].leaderboard;
+        console.log(playerStats);
+        this.leaderboard = ensure(playerStats[0].leaderboard);
 
         this.assignTeams(playerStats);
         this.regenMapOptions();
@@ -96,6 +97,38 @@ export class Match extends BaseEntity {
 
     get team2(): Player[] {
         return this.team(2);
+    }
+
+    get duration(): number {
+        return this.endTime - this.startTime;
+    }
+
+    get resultEmbed(): MessageEmbed {
+        const dur = ensure(new Date(this.duration * 1000).toISOString().match(/\d{2}:\d{2}:\d{2}/))[0];
+
+        return new MessageEmbed()
+            .setTitle(`Match ${this.uuid}`)
+            .setDescription(`Map: ${ensure(this.map).name}, Duration: ${dur}`)
+            .setColor("#ED2939")
+            .addFields(
+                {
+                    name: `Team 1`,
+                    value: `${this.team1.map(({user, rating, ratingDelta}) => {
+                        return `<@${ensure(user).discordId}> \`${rating} => ` +
+                               `${rating + ratingDelta} (${ratingDelta < 0 ? "" : "+"}${ratingDelta})\``;
+                    }).join("\n")}`,
+                    inline: true,
+                },
+                {
+                    name: `Team 2`,
+                    value: `${this.team2.map(({user, rating, ratingDelta}) => {
+                        return `<@${ensure(user).discordId}> \`${rating} => ` +
+                               `${rating + ratingDelta} (${ratingDelta < 0 ? "" : "+"}${ratingDelta})\``;
+                    }).join("\n")}`,
+                    inline: true,
+                },
+            )
+            .setThumbnail("https://upload.wikimedia.org/wikipedia/fr/5/55/AoE_Definitive_Edition.png");
     }
 
     assignTeams(playerStats: PlayerStats[]): void {
@@ -187,7 +220,7 @@ export class Match extends BaseEntity {
         return ensure(this.mapOptions).filter((mapOption: MapOption) => mapOption.map.name === name)[0];
     }
 
-    getEmbed(): MessageEmbed {
+    get embed(): MessageEmbed {
 
         return new MessageEmbed()
             .setTitle(`Match ${this.uuid}`)
@@ -195,13 +228,15 @@ export class Match extends BaseEntity {
             .addFields(
                 {
                     name: `Team 1`,
-                    value: `${this.team1.map((player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
+                    value: `${this.team1.map(
+                        (player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
                         .join("\n")}`,
                     inline: true,
                 },
                 {
                     name: `Team 2`,
-                    value: `${this.team2.map((player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
+                    value: `${this.team2.map(
+                        (player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
                         .join("\n")}`,
                     inline: true,
                 },
@@ -274,7 +309,7 @@ export class Match extends BaseEntity {
                 });
 
                 cancelMatch(this.uuid, [vote.user.id]).then();
-
+                votes.stop();
             } else {
                 const mapOption = this.getMapOptionByName(vote.customId);
                 try {
@@ -290,9 +325,10 @@ export class Match extends BaseEntity {
                 if (this.unreadyPlayers.length === 0) {
                     this.determineMap();
 
+                    // todo: send new
                     await msg.edit({
                         content: null,
-                        embeds: [this.getEmbed()],
+                        embeds: [this.embed],
                         components: [
                             new MessageActionRow().addComponents(
                                 new MessageButton()
@@ -311,6 +347,7 @@ export class Match extends BaseEntity {
                     });
 
                     await this.save();
+                    votes.stop();
                 }
             }
         });
