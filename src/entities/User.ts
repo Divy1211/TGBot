@@ -22,7 +22,7 @@ export class User extends BaseEntity {
 
     @ManyToOne(() => Match, {onDelete: "SET NULL"})
     @JoinColumn()
-    currentMatch?: Match;
+    currentMatch?: Match | null;
 
     constructor();
     constructor(discordId: string);
