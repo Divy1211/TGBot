@@ -46,14 +46,14 @@ describe("Invalid List Players", () => {
         const uuid = 1000;
         expect(
             await listPlayers("channel-1", uuid),
-        ).toBe(`Queue with ID ${uuid} does not exist in this channel`);
+        ).toBe(`Error: Queue with ID ${uuid} does not exist in this channel`);
     });
 
     // uuid of queue in another channel
     test("Foreign UUID", async () => {
         expect(
             await listPlayers("channel-1", queue2.uuid),
-        ).toBe(`Queue with ID ${queue2.uuid} does not exist in this channel`);
+        ).toBe(`Error: Queue with ID ${queue2.uuid} does not exist in this channel`);
     });
 
     // no queues

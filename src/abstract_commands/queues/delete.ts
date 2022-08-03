@@ -10,7 +10,7 @@ import {Queue} from "../../entities/queues/Queue";
 export async function deleteQueue(uuid: number, channelId: string): Promise<string> {
     let queue = await Queue.findOneBy({uuid, channelId});
     if (!queue) {
-        return `Error: Queue with ID \`${uuid}\` does not exist in this channel.`;
+        return `Error: Queue with ID \`${uuid}\` does not exist in this channel`;
     }
 
     // do not allow deletion if a game is unfinished

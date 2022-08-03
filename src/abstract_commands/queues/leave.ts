@@ -37,7 +37,7 @@ export async function leaveQueue(
     if (uuid) {
         queue = await Queue.findOneBy({uuid, channelId});
         if (!queue) {
-            return `Queue with ID ${uuid} does not exist in this channel`;
+            return `Error: Queue with ID ${uuid} does not exist in this channel`;
         }
     } else {
         const queues = await Queue.findBy({channelId});
