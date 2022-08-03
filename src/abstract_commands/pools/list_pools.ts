@@ -1,66 +1,51 @@
 import {MessageEmbed} from "discord.js";
 
-import {Guild} from "../../entities/Guild";
 import {Pool} from "../../entities/pools/Pool";
-import {PoolMap} from "../../entities/pools/PoolMap";
 
 /**
  * List all pools
  *
- * @param guildId The ID of the server in which the Pool is created
+ * @param guildId The ID of the server in which the command is run
+ * @param showPoolIds If true, shows the IDs of the pools
  */
-export async function listPools(guildId: string) {
-    let guild = await Guild.findOneBy({id: guildId});
-    if (!guild) {
-        guild = new Guild(guildId);
-    }
-
+export async function listPools(guildId: string, showPoolIds?: boolean): Promise<MessageEmbed> {
     let pools = await Pool.find({
-        where: {guild: {id: guildId}},
+        where: {
+            guild: {id: guildId},
+        },
     });
-
     if (pools.length === 0) {
-        // no pool was found
-        return "No pool was found in this server.";
+        return new MessageEmbed()
+            .setTitle("Server Pools")
+            .setColor("#ED2939")
+            .setDescription("No pools found");
     }
 
-    // find all maps in the pool
-    let allMapsText = [];
-    for (let i = 0; i < pools.length; i++) {
-        let maps = await PoolMap.find({
-            where: {pool: {uuid: pools[i].uuid}},
-        });
+    let embed = new MessageEmbed()
+        .setTitle("Server Pools")
+        .setColor("#ED2939");
 
-        let mapsText;
-        if (maps.length === 0) {
-            mapsText = "no map";
-        } else {
-            mapsText = maps.map(({map}) => `${map.uuid}`).join(", ");
-        }
-        allMapsText.push(mapsText);
+    if (showPoolIds) {
+        embed.addFields([
+            {
+                name: "ID",
+                value: pools.map((pool: Pool) => `\`${pool.uuid}\``).join("\n"),
+                inline: true,
+            },
+        ]);
     }
 
-    // construct messageEmbed
-    let messageEmbed = new MessageEmbed()
-        .setTitle("Pools")
-        .setColor("#0095F7")
-        .setDescription("The list of pools in the server")
-        .addFields(
-            {
-                name: "uuid",
-                value: pools.map(({uuid}) => `${uuid}`).join("\n"),
-                inline: true,
-            },
-            {
-                name: "name",
-                value: pools.map(({name}) => `${name}`).join("\n"),
-                inline: true,
-            },
-            {
-                name: "map_uuids",
-                value: allMapsText.join("\n"),
-                inline: true,
-            },
-        );
-    return messageEmbed;
+    embed.addFields([
+        {
+            name: "Name",
+            value: pools.map((pool: Pool) => pool.name).join("\n"),
+            inline: true,
+        },
+        {
+            name: "Number of Maps",
+            value: pools.map((pool: Pool) => `\`${pool.poolMaps.length}\``).join("\n"),
+            inline: true,
+        },
+    ]);
+    return embed;
 }

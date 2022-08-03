@@ -36,6 +36,6 @@ export default {
         const poolUuid = options.getInteger("pool_uuid") ?? undefined;
         const mapUuid = ensure(options.getInteger("map_uuid"));
 
-        return await removeMap(mapUuid, guildId, poolUuid);
+        return await removeMap(guildId, mapUuid, poolUuid);
     },
 } as ICommand;

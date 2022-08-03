@@ -38,7 +38,7 @@ describe("Valid List Map", () => {
         await poolMap.save();
 
         expect(
-            await listMaps(pool.uuid, true, guildId)
+            await listMaps(guildId, true, false, pool.uuid)
         ).toBeInstanceOf(MessageEmbed);
     })
 
@@ -57,7 +57,7 @@ describe("Valid List Map", () => {
         await poolMap2.save();
 
         expect(
-            await listMaps(0, true, guildId)
+            await listMaps(guildId, true, false)
         ).toBeInstanceOf(MessageEmbed);
     })
 })
@@ -76,7 +76,7 @@ describe("Invalid List Map", () => {
         await map.save();
 
         expect(
-            await listMaps(1, true, guildId)
+            await listMaps(guildId, true, false, 1)
         ).toBe(`The pool with ID 1 was not found.`)
     })
 })

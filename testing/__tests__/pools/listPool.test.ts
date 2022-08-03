@@ -38,7 +38,7 @@ describe("Valid List Pools", () => {
         await poolMap.save();
 
         expect(
-            await listPools(guildId)
+            await listPools(guildId, false)
         ).toBeInstanceOf(MessageEmbed);
     })
 })

@@ -273,7 +273,7 @@ export class Match extends BaseEntity {
                     components: [],
                 });
 
-                cancelMatch(this.uuid, [vote.user.id]).then();
+                cancelMatch(ensure(this.guild).id, this.uuid, [vote.user.id]).then();
 
             } else {
                 const mapOption = this.getMapOptionByName(vote.customId);
@@ -326,7 +326,7 @@ export class Match extends BaseEntity {
                     content: `<@${unreadyPlayers.join(">, <@")}> did not vote in time, aborting match...`,
                     components: [],
                 });
-                cancelMatch(this.uuid, unreadyPlayers).then();
+                cancelMatch(ensure(this.guild).id, this.uuid, unreadyPlayers).then();
             }
         });
     }

@@ -33,8 +33,8 @@ describe("Valid Add", () => {
         await pool.save();
 
         expect(
-            await addMap(map.uuid, pool.uuid, 5, guildId)
-            ).toBe(`Map "${mapName}" added to Pool "${poolName}"`);
+            await addMap(guildId, map.uuid, pool.uuid, 5)
+        ).toBe(`Map "${mapName}" added to pool "${poolName}"`);
     });
 })
 
@@ -50,8 +50,8 @@ describe("Invalid Add", () => {
         await pool.save();
 
         expect(
-            await addMap(1, pool.uuid, 5, guildId)
-            ).toBe("Map with ID `1` was not found.");
+            await addMap(guildId, 1, pool.uuid, 5)
+        ).toBe("Map with ID `1` was not found.");
     });
 
     test("Add a map to a non-existing pool", async () => {
@@ -62,7 +62,7 @@ describe("Invalid Add", () => {
         await map.save();
 
         expect(
-            await addMap(map.uuid, 1, 5, guildId)
-            ).toBe("Pool with ID `1` was not found.");
+            await addMap(guildId, map.uuid, 1, 5)
+        ).toBe("Pool with ID `1` was not found.");
     });
 })

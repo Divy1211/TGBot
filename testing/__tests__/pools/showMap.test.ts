@@ -1,5 +1,5 @@
 import { MessageEmbed } from "discord.js";
-import { showMap } from "../../../src/abstract_commands/pools/show";
+import { showMap } from "../../../src/abstract_commands/pools/show_map";
 import { Guild } from "../../../src/entities/Guild";
 import { GameMap } from "../../../src/entities/pools/GameMap";
 

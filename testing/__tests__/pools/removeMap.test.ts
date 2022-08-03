@@ -37,7 +37,7 @@ describe("Valid Remove", () => {
         await poolMap.save();
 
         expect(
-            await removeMap(map.uuid, guildId, pool.uuid)
+            await removeMap(guildId, map.uuid, pool.uuid)
         ).toBe(`Map ${map.name} has been removed from the pool with ID ${pool.uuid} successfully!`);
 
         expect(
@@ -60,10 +60,10 @@ describe("Valid Remove", () => {
         await poolMap2.save();
 
         expect(
-            await removeMap(map.uuid, guildId)
+            await removeMap(guildId, map.uuid)
         ).toBe(`Map ${map.name} removed from all pools.`);
 
-        await removeMap(map.uuid, guildId, 0);
+        await removeMap(guildId, map.uuid, 0);
         expect(
             await PoolMap.findOneBy({map: {name: mapName}})
         ).toBeNull();
@@ -86,7 +86,7 @@ describe("Invalid Remove", () => {
         await map.save();
 
         expect(
-            await removeMap(map.uuid, guildId, pool.uuid)
+            await removeMap(guildId, map.uuid, pool.uuid)
         ).toBe(`Map with ID ${map.uuid} was not found in pool with ID ${pool.uuid}.`);
     })
 
@@ -96,7 +96,7 @@ describe("Invalid Remove", () => {
         await pool.save();
 
         expect(
-            await removeMap(1, guildId, pool.uuid)
+            await removeMap(guildId, 1, pool.uuid)
         ).toBe(`Map with ID 1 was not found.`);
     })
 
@@ -107,7 +107,7 @@ describe("Invalid Remove", () => {
         await map.save();
 
         expect(
-            await removeMap(map.uuid, guildId, 1)
+            await removeMap(guildId, map.uuid, 1)
         ).toBe(`Map with ID ${map.uuid} was not found in pool with ID 1.`);
     })
 })

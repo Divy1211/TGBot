@@ -1,4 +1,5 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
+import fetch from "node-fetch";
 import {ICommand} from "wokcommands";
 
 import {createMap} from "../../abstract_commands/pools/create_map";
@@ -28,14 +29,16 @@ export default {
 
     callback: async ({interaction}) => {
         const {options, channelId, guildId} = interaction;
+
         // ensure that the command is being run in a server
         if (!channelId || !guildId) {
             return "This command can only be run in a text channel in a server";
         }
+
         // get the command parameters
         const name = ensure(options.getString("name"));
-        const imgLink = options.getString("img_link") ?? "";
+        const imgLink = options.getString("img_link") ?? undefined;
 
-        return await createMap(name, imgLink, guildId);
+        return await createMap(guildId, name, imgLink);
     },
 } as ICommand;

@@ -34,15 +34,17 @@ export default {
 
     callback: async ({interaction}) => {
         const {options, channelId, guildId} = interaction;
+
         // ensure that the command is being run in a server
         if (!channelId || !guildId) {
             return "This command can only be run in a text channel in a server";
         }
+
         // get the command parameters
         const mapName = ensure(options.getInteger("map_uuid"));
         const poolUuid = ensure(options.getInteger("pool_uuid"));
         const multiplier = options.getInteger("multiplier") ?? 1;
 
-        return await addMap(mapName, poolUuid, multiplier, guildId);
+        return await addMap(guildId, mapName, poolUuid, multiplier);
     },
 } as ICommand;

@@ -13,7 +13,7 @@ export default {
 
     options: [
         {
-            name: "uuid",
+            name: "map_uuid",
             description: "The uuid of the map to remove",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
@@ -22,12 +22,14 @@ export default {
 
     callback: async ({interaction}) => {
         const {options, channelId, guildId} = interaction;
+
         // ensure that the command is being run in a server
         if (!channelId || !guildId) {
             return "This command can only be run in a text channel in a server";
         }
+
         // get the command parameters
-        const mapUuid = ensure(options.getInteger("uuid"));
+        const mapUuid = ensure(options.getInteger("map_uuid"));
 
         return await deleteGameMap(mapUuid, guildId);
     },

@@ -40,9 +40,9 @@ export default {
         const user = options.getUser("user");
 
         if (user) {
-            return await cancelMatch(uuid, [user.id]);
+            return await cancelMatch(guildId, uuid, [user.id]);
         }
 
-        return await cancelMatch(uuid);
+        return await cancelMatch(guildId, uuid);
     },
 } as ICommand;

@@ -1,92 +1,89 @@
 import {MessageEmbed} from "discord.js";
 
-import {Guild} from "../../entities/Guild";
 import {GameMap} from "../../entities/pools/GameMap";
 import {Pool} from "../../entities/pools/Pool";
-import {PoolMap} from "../../entities/pools/PoolMap";
+import {ensure} from "../../utils/general";
 
 /**
  * List all maps
  *
- * @param poolUuid The uuid of the pool
- * @param showPoolIds Showing pool_id if set to true
- * @param guildId The ID of the server in which the Pool is created
+ * @param guildId The ID of the server in which the command is run
+ * @param showPoolIds If true, show the IDs of the pools where the map is used
+ * @param showMapIds If true, show the maps' IDs
+ * @param poolUuid The uuid of the pool to show the maps for
  */
-export async function listMaps(showPoolIds: boolean, guildId: string, poolUuid?: number) {
-    let guild = await Guild.findOneBy({id: guildId});
-    if (!guild) {
-        guild = new Guild(guildId);
-    }
+export async function listMaps(
+    guildId: string,
+    showPoolIds: boolean,
+    showMapIds: boolean,
+    poolUuid?: number,
+): Promise<string | MessageEmbed> {
+    const pool = await Pool.findOne({
+        where: {
+            uuid: poolUuid,
+        },
+        relations: {
+            poolMaps: {
+                map: true,
+            },
+        },
+    });
 
-    let poolMaps = "";
-    let gameMaps: GameMap[] = [];
-    let description = "";
-
-    if (poolUuid !== undefined) {
-        // pool_uuid wa given
-        const pool = await Pool.findOneBy({uuid: poolUuid, guild: {id: guildId}});
-        // pool was not found
+    if (poolUuid) {
         if (!pool) {
-            return `The pool with ID ${poolUuid} was not found.`;
-        }
-        // pool was found
-        poolMaps = pool.poolMaps.map((poolMap) => `${poolMap.multiplier}`).join(", ");
-        gameMaps = pool.poolMaps.map((poolMap: PoolMap) => poolMap.map);
-        description = `Maps in pool with ID ${poolUuid}}`;
-    } else {
-        //  pool_uuid was not given
-        gameMaps = await GameMap.find();
-        description = "All maps in this sever";
-    }
-
-    // if no map was found
-    if (gameMaps.length === 0) {
-        return `No map was found in pool with ID ${poolUuid}.`;
-    }
-
-    // find map's corresponding pools
-    let mapPools: any = [];
-    for (let gameMap of gameMaps) {
-        let poolMap = await PoolMap.find({
-            where: {map: {uuid: gameMap.uuid}},
-            relations: {pool: true},
-        });
-
-        let poolText;
-        if (poolMap.length == 0) {
-            poolText = "no pool";
+            return `Pool with ID \`${poolUuid}\` does not exist in this server`;
         } else {
-            poolText = poolMap.map((x) => `${x.pool?.uuid}`).join(", ");
+            return pool.getMapEmbed(showMapIds);
         }
-        mapPools.push(poolText);
     }
 
-    // construct messageEmbed
-    let messageEmbed = new MessageEmbed()
-        .setTitle("Maps")
-        .setColor("#0095F7")
-        .setDescription(description)
-        .addFields(
-            {
-                name: "uuid",
-                value: gameMaps.map(({uuid}) => `${uuid}`).join("\n"),
-                inline: true,
-            },
-            {
-                name: "name",
-                value: gameMaps.map(({name}) => `${name}`).join("\n"),
-                inline: true,
-            },
-        );
+    const gameMaps = await GameMap.find({
+        where: {
+            guild: {id: guildId},
+        },
+        relations: {
+            poolMaps: {pool: showPoolIds},
+        },
+    });
 
-    if (poolUuid != undefined) {
-        // list maps in a pool with their multiplier values
-
-        messageEmbed.addField("multiplier", poolMaps, true);
-    } else if (showPoolIds) {
-        // list all maps in the server with their pool uuids
-        messageEmbed.addField("pool_uuids", mapPools.join("\n"), true);
+    if (gameMaps.length === 0) {
+        return new MessageEmbed()
+            .setTitle("Server Maps")
+            .setColor("#ED2939")
+            .setDescription("No maps found");
     }
 
-    return messageEmbed;
+    let embed = new MessageEmbed()
+        .setTitle(poolUuid !== undefined ? ensure(pool).name : "Server Maps")
+        .setColor("#ED2939");
+
+    if (showMapIds) {
+        embed.addFields([
+            {
+                name: "ID",
+                value: gameMaps.map((gameMap: GameMap) => `\`${gameMap.uuid}\``).join("\n"),
+                inline: true,
+            },
+        ]);
+    }
+
+    embed.addFields([
+        {
+            name: "Name",
+            value: gameMaps.map((gameMap: GameMap) => gameMap.hyperlinkedName).join("\n"),
+            inline: true,
+        },
+    ]);
+
+    if (showPoolIds) {
+        embed.addFields([
+            {
+                name: "Pool IDs",
+                value: gameMaps.map((gameMap: GameMap) => gameMap.poolIds).join("\n"),
+                inline: true,
+            },
+        ]);
+    }
+
+    return embed;
 }

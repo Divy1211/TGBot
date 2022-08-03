@@ -23,8 +23,8 @@ describe("Valid Create", () => {
     test("Create map", async () => {
         const name = "map-test-1", imgLink = "https://upload.wikimedia.org/wikipedia/en/9/9b/Aoeiii-cover.jpg", guildId = "guild-1";
         expect(
-            await createMap(name, imgLink, guildId)
-            ).toBe(`Map "${name}" has been created successfully!`);
+            await createMap(guildId, name, imgLink)
+        ).toBe(`Map "${name}" has been created successfully!`);
 
         const map = ensure(await GameMap.findOneBy({name: name}));
         expect(map.name).toBe(name);

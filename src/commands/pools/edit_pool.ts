@@ -34,8 +34,8 @@ export default {
         }
         // get the command parameters
         const poolUuid = ensure(options.getInteger("uuid"));
-        const newName = ensure(options.getString("name"));
+        const name = options.getString("name") ?? undefined;
 
-        return await editPool(poolUuid, newName, guildId);
+        return await editPool(guildId, poolUuid, name);
     },
 } as ICommand;

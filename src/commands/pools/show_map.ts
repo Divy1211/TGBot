@@ -1,7 +1,7 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {showMap} from "../../abstract_commands/pools/show";
+import {showMap} from "../../abstract_commands/pools/show_map";
 import {ensure} from "../../utils/general";
 
 export default {
