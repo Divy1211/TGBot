@@ -307,8 +307,6 @@ export class Match extends BaseEntity {
                     content: `<@${vote.user.id}> cancelled the match, reverting to the queue stage...`,
                     components: [],
                 });
-
-                cancelMatch(this.uuid, [vote.user.id]).then();
                 votes.stop();
             } else {
                 const mapOption = this.getMapOptionByName(vote.customId);
@@ -363,7 +361,7 @@ export class Match extends BaseEntity {
                     content: `<@${unreadyPlayers.join(">, <@")}> did not vote in time, aborting match...`,
                     components: [],
                 });
-                cancelMatch(this.uuid, unreadyPlayers).then();
+                cancelMatch(ensure(this.guild).id, this.uuid, unreadyPlayers).then();
             }
         });
     }

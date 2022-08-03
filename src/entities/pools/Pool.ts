@@ -1,3 +1,4 @@
+import {MessageEmbed} from "discord.js";
 import {BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 
 import {Guild} from "../Guild";
@@ -12,7 +13,7 @@ export class Pool extends BaseEntity {
     @Column()
     name: string;
 
-    @ManyToOne(() => Guild, (guild: Guild) => guild.leaderboards, {onDelete: "CASCADE"})
+    @ManyToOne(() => Guild, (guild: Guild) => guild.pools, {cascade: true, onDelete: "CASCADE"})
     guild?: Guild;
 
     @ManyToMany(() => Queue, (queue: Queue) => queue.pools)
@@ -29,5 +30,43 @@ export class Pool extends BaseEntity {
 
         this.name = name ?? "";
         this.guild = guild;
+    }
+
+    getMapEmbed(showMapIds: boolean = false): MessageEmbed {
+        const embed = new MessageEmbed()
+            .setTitle(this.name)
+            .setColor("#ED2939");
+
+        if(this.poolMaps.length === 0) {
+            return new MessageEmbed()
+                .setTitle(this.name)
+                .setColor("#ED2939")
+                .setDescription("No maps in pool");
+        }
+
+        if (showMapIds) {
+            embed.addFields([
+                {
+                    name: "ID",
+                    value: this.poolMaps.map((poolMap: PoolMap) => `\`${poolMap.map.uuid}\``).join("\n"),
+                    inline: true,
+                },
+            ]);
+        }
+
+        embed.addFields([
+            {
+                name: "Name",
+                value: this.poolMaps.map((poolMap: PoolMap) => poolMap.map.hyperlinkedName).join("\n"),
+                inline: true,
+            },
+            {
+                name: "Repeat",
+                value: this.poolMaps.map((poolMap: PoolMap) => `\`${poolMap.multiplier}\``).join("\n"),
+                inline: true,
+            },
+        ]);
+
+        return embed;
     }
 }

@@ -1,29 +1,22 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {cancelMatch} from "../../abstract_commands/matches/cancel";
+import {deletePool} from "../../abstract_commands/pools/delete_pool";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Cancel the result of a match",
-
+    description: "Delete a pool from the sever",
     slash: true,
     testOnly: true,
     guildOnly: true,
 
     options: [
         {
-            name: "match_uuid",
-            description: "The id of the match to cancel",
+            name: "pool_uuid",
+            description: "The uuid of the pool to remove",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
-        },
-        {
-            name: "user",
-            description: "If specified, only this user will be removed from the queue",
-            type: ApplicationCommandOptionTypes.USER,
-            required: false,
         },
     ],
 
@@ -36,13 +29,8 @@ export default {
         }
 
         // get the command parameters
-        const uuid = ensure(options.getInteger("match_uuid"));
-        const user = options.getUser("user");
+        const poolUuid = ensure(options.getInteger("pool_uuid"));
 
-        if (user) {
-            return await cancelMatch(guildId, uuid, [user.id]);
-        }
-
-        return await cancelMatch(guildId, uuid);
+        return await deletePool(poolUuid, guildId);
     },
 } as ICommand;

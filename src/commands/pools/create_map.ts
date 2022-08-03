@@ -1,28 +1,28 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
+import fetch from "node-fetch";
 import {ICommand} from "wokcommands";
 
-import {cancelMatch} from "../../abstract_commands/matches/cancel";
+import {createMap} from "../../abstract_commands/pools/create_map";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Cancel the result of a match",
-
+    description: "Create a map",
     slash: true,
     testOnly: true,
     guildOnly: true,
 
     options: [
         {
-            name: "match_uuid",
-            description: "The id of the match to cancel",
-            type: ApplicationCommandOptionTypes.INTEGER,
+            name: "name",
+            description: "The name of the map",
+            type: ApplicationCommandOptionTypes.STRING,
             required: true,
         },
         {
-            name: "user",
-            description: "If specified, only this user will be removed from the queue",
-            type: ApplicationCommandOptionTypes.USER,
+            name: "img_link",
+            description: "The link to an external image preview of the map",
+            type: ApplicationCommandOptionTypes.STRING,
             required: false,
         },
     ],
@@ -36,13 +36,9 @@ export default {
         }
 
         // get the command parameters
-        const uuid = ensure(options.getInteger("match_uuid"));
-        const user = options.getUser("user");
+        const name = ensure(options.getString("name"));
+        const imgLink = options.getString("img_link") ?? undefined;
 
-        if (user) {
-            return await cancelMatch(guildId, uuid, [user.id]);
-        }
-
-        return await cancelMatch(guildId, uuid);
+        return await createMap(guildId, name, imgLink);
     },
 } as ICommand;
