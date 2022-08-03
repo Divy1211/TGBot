@@ -1,5 +1,6 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
+
 import {listMaps} from "../../abstract_commands/pools/list_maps";
 
 export default {
@@ -15,14 +16,14 @@ export default {
             description: "If specified, only list the maps of this pool",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: false,
-            minValue: 1
+            minValue: 1,
         },
         {
             name: "show_pool_ids",
             description: "If true, show the IDs of all the pools that use this map",
             type: ApplicationCommandOptionTypes.BOOLEAN,
             required: false,
-        }
+        },
     ],
 
     callback: async ({interaction}) => {
@@ -36,5 +37,5 @@ export default {
         const showPoolIds = options.getBoolean("show_pool_ids") ?? true;
 
         return listMaps(showPoolIds, guildId, poolUuid);
-    }
+    },
 } as ICommand;

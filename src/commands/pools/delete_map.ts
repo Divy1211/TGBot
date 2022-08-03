@@ -1,5 +1,6 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
+
 import {deleteGameMap} from "../../abstract_commands/pools/delete_map";
 import {ensure} from "../../utils/general";
 

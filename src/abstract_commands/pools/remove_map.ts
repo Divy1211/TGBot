@@ -18,30 +18,30 @@ export async function removeMap(gameMapUuid: number, guildId: string, poolUuid?:
     // find the corresponding map
     let gameMap = await GameMap.findOneBy({
         uuid: gameMapUuid,
-        guild: {id: guildId}
+        guild: {id: guildId},
     });
     if (!gameMap) {
         return `Map with ID ${gameMapUuid} was not found.`;
     }
 
-    if (poolUuid !== undefined){
+    if (poolUuid !== undefined) {
         // poolUuid is specified
         let poolMap = await PoolMap.findOneBy({
-            map: {uuid: gameMap.uuid, guild: {id: guildId}}, 
-            pool: {uuid: poolUuid, guild: {id: guildId}}
+            map: {uuid: gameMap.uuid, guild: {id: guildId}},
+            pool: {uuid: poolUuid, guild: {id: guildId}},
         });
         if (!poolMap) {
             // poolMap not found
-            return `Map with ID ${gameMapUuid} was not found in pool with ID ${poolUuid}.`;        }
+            return `Map with ID ${gameMapUuid} was not found in pool with ID ${poolUuid}.`;
+        }
         // poolMap was found
         // remove the map from the pool
         await poolMap.remove();
         return `Map ${gameMap.name} has been removed from the pool with ID ${poolUuid} successfully!`;
-    }
-    else {
+    } else {
         // poolUuid is not specified -> remove the map from all pools
         await PoolMap.remove(await PoolMap.find({
-            where: {map: {uuid: gameMap.uuid, guild: {id: guildId}}}
+            where: {map: {uuid: gameMap.uuid, guild: {id: guildId}}},
         }));
         return `Map ${gameMap.name} removed from all pools.`;
     }

@@ -1,4 +1,5 @@
 import {MessageEmbed} from "discord.js";
+
 import {Guild} from "../../entities/Guild";
 import {Pool} from "../../entities/pools/Pool";
 import {PoolMap} from "../../entities/pools/PoolMap";
@@ -8,19 +9,19 @@ import {PoolMap} from "../../entities/pools/PoolMap";
  *
  * @param guildId The ID of the server in which the Pool is created
  */
- export async function listPools(guildId: string) {
+export async function listPools(guildId: string) {
     let guild = await Guild.findOneBy({id: guildId});
     if (!guild) {
         guild = new Guild(guildId);
     }
 
     let pools = await Pool.find({
-        where: {guild: {id: guildId}}
+        where: {guild: {id: guildId}},
     });
 
-    if (pools.length===0) {
+    if (pools.length === 0) {
         // no pool was found
-        return "No pool was found in this server."
+        return "No pool was found in this server.";
     }
 
     // find all maps in the pool
@@ -29,12 +30,11 @@ import {PoolMap} from "../../entities/pools/PoolMap";
         let maps = await PoolMap.find({
             where: {pool: {uuid: pools[i].uuid}},
         });
-        
+
         let mapsText;
-        if (maps.length===0) {
+        if (maps.length === 0) {
             mapsText = "no map";
-        }
-        else {
+        } else {
             mapsText = maps.map(({map}) => `${map.uuid}`).join(", ");
         }
         allMapsText.push(mapsText);
@@ -42,25 +42,25 @@ import {PoolMap} from "../../entities/pools/PoolMap";
 
     // construct messageEmbed
     let messageEmbed = new MessageEmbed()
-    .setTitle("Pools")
-    .setColor("#0095F7")
-    .setDescription("The list of pools in the server")
-    .addFields(
-        {
-            name: "uuid",
-            value: pools.map(({uuid}) => `${uuid}`).join("\n"),
-            inline: true,
-        },
-        {
-            name: "name",
-            value: pools.map(({name}) => `${name}`).join("\n"),
-            inline: true,
-        },
-        {
-            name: "map_uuids",
-            value: allMapsText.join("\n"),
-            inline: true,
-        }
-    )
+        .setTitle("Pools")
+        .setColor("#0095F7")
+        .setDescription("The list of pools in the server")
+        .addFields(
+            {
+                name: "uuid",
+                value: pools.map(({uuid}) => `${uuid}`).join("\n"),
+                inline: true,
+            },
+            {
+                name: "name",
+                value: pools.map(({name}) => `${name}`).join("\n"),
+                inline: true,
+            },
+            {
+                name: "map_uuids",
+                value: allMapsText.join("\n"),
+                inline: true,
+            },
+        );
     return messageEmbed;
 }

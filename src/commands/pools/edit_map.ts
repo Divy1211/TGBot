@@ -1,5 +1,6 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
+
 import {editMap} from "../../abstract_commands/pools/edit_map";
 import {ensure} from "../../utils/general";
 
@@ -22,7 +23,7 @@ export default {
             description: "The new name of the map",
             type: ApplicationCommandOptionTypes.STRING,
             required: true,
-        }
+        },
     ],
 
     callback: async ({interaction}) => {

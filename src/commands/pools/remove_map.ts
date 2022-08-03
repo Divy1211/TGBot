@@ -1,5 +1,6 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
+
 import {removeMap} from "../../abstract_commands/pools/remove_map";
 import {ensure} from "../../utils/general";
 
@@ -22,7 +23,7 @@ export default {
             description: "The uuid of the pool, if unspecified will remove it from all pools",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: false,
-        }
+        },
     ],
 
     callback: async ({interaction}) => {

@@ -16,10 +16,10 @@ export async function addMap(mapUuid: number, poolUuid: number, multiplier: numb
     if (!guild) {
         guild = new Guild(guildId);
     }
-    
+
     let pool = await Pool.findOneBy({
         uuid: poolUuid,
-        guild: {id: guildId}
+        guild: {id: guildId},
     });
     if (!pool) {
         return `Pool with ID \`${poolUuid}\` was not found.`;
@@ -27,7 +27,7 @@ export async function addMap(mapUuid: number, poolUuid: number, multiplier: numb
 
     let map = await GameMap.findOneBy({
         uuid: mapUuid,
-        guild: {id: guildId}
+        guild: {id: guildId},
     });
 
     if (!map) {

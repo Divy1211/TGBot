@@ -15,15 +15,15 @@ export async function editPool(poolUuid: number, newName: string, guildId: strin
     }
 
     let pool = await Pool.findOneBy({uuid: poolUuid, guild: {id: guildId}});
-    
-    if (!pool){
+
+    if (!pool) {
         // pool was not found
         return `Pool with ID ${poolUuid} was not found`;
     }
 
     if (pool.name == newName) {
         // new name is the same as the previous name
-        return `Edition Unsuccessful: the new name is the same as the pool's current name.`
+        return `Edition Unsuccessful: the new name is the same as the pool's current name.`;
     }
 
     // change the pool name

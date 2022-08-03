@@ -1,4 +1,5 @@
 import {ICommand} from "wokcommands";
+
 import {listPools} from "../../abstract_commands/pools/list_pools";
 
 export default {
@@ -18,5 +19,5 @@ export default {
             return "This command can only be run in a text channel in a server";
         }
         return listPools(guildId);
-    }
+    },
 } as ICommand;
