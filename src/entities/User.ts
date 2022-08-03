@@ -1,16 +1,9 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryColumn} from "typeorm";
 
 import {Guild} from "./Guild";
 import {Match} from "./matches/Match";
 import {Queue} from "./queues/Queue";
-import {Account} from "./user_data/Account";
-import {Profile} from "./user_data/Profile";
 
-interface OptionalArgs {
-    guilds?: Guild[];
-    accounts?: Account[];
-    profiles?: Profile[];
-}
 
 @Entity()
 export class User extends BaseEntity {
@@ -24,30 +17,22 @@ export class User extends BaseEntity {
     @ManyToMany(() => Guild, (guild: Guild) => guild.users, {cascade: true})
     guilds?: Guild[];
 
-    @OneToMany(() => Account, (account: Account) => account.user, {cascade: true})
-    accounts?: Account[];
-
-    @OneToMany(() => Profile, (profile: Profile) => profile.user, {cascade: true})
-    profiles?: Profile[];
-
     @ManyToMany(() => Queue, (queue: Queue) => queue.users)
     queues?: Queue[];
 
     @ManyToOne(() => Match, {onDelete: "SET NULL"})
     @JoinColumn()
-    currentMatch?: Match;
+    currentMatch?: Match | null;
 
     constructor();
     constructor(discordId: string);
-    constructor(discordId: string, {guilds, accounts, profiles}: OptionalArgs);
+    constructor(discordId: string, {guilds}: {guilds?: Guild[]});
 
-    constructor(discordId?: string, {guilds, accounts, profiles}: OptionalArgs = {}) {
+    constructor(discordId?: string, {guilds}: {guilds?: Guild[]} = {}) {
         super();
 
         this.discordId = discordId ?? "";
         this.guilds = guilds;
-        this.accounts = accounts;
-        this.profiles = profiles;
         this.inGame = false;
     }
 }

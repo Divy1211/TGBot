@@ -1,3 +1,4 @@
+import {MessageEmbed} from "discord.js";
 import {BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 
 import {Guild} from "../Guild";
@@ -26,7 +27,7 @@ export class Queue extends BaseEntity {
     @JoinTable()
     pools?: Pool[];
 
-    @ManyToMany(() => User, (user: User) => user.queues, {cascade: true, eager: true})
+    @ManyToMany(() => User, (user: User) => user.queues, {cascade: true, eager: true, onDelete: "CASCADE"})
     @JoinTable()
     users!: User[];
 
@@ -44,5 +45,22 @@ export class Queue extends BaseEntity {
         this.leaderboard = leaderboard;
         this.numPlayers = numPlayers ?? -1;
         this.channelId = channelId ?? "";
+    }
+
+    /**
+     * Get an embed to show the players in the given queue
+     */
+    getPlayerEmbed() {
+        return new MessageEmbed()
+            .setTitle(this.name)
+            .setColor("#ED2939")
+            .addFields(
+                {
+                    name: `Players ${this.users.length}/${this.numPlayers}`,
+                    value: this.users.map((user, i) => {
+                        return `${i + 1}. <@${user.discordId}>`;
+                    }).join("\n") || "No players in queue",
+                },
+            );
     }
 }

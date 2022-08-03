@@ -1,6 +1,17 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
-import {PoolMap} from "../pools/PoolMap";
+import {
+    BaseEntity,
+    Column,
+    Entity,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from "typeorm";
+
+import {GameMap} from "../pools/GameMap";
 import {Match} from "./Match";
+import {Player} from "./Player";
 
 @Entity()
 export class MapOption extends BaseEntity {
@@ -10,21 +21,43 @@ export class MapOption extends BaseEntity {
     @Column()
     numVotes: number;
 
-    @OneToOne(() => PoolMap, {eager: true, onDelete: "SET NULL"})
-    @JoinColumn()
-    map?: PoolMap;
-
     @ManyToOne(() => Match, (match: Match) => match.mapOptions, {onDelete: "CASCADE"})
     match: Match;
 
-    constructor();
-    constructor(map: PoolMap, match: Match);
+    @ManyToOne(() => GameMap, {eager: true, onDelete: "SET NULL"})
+    @JoinColumn()
+    map: GameMap;
 
-    constructor(map?: PoolMap, match?: Match) {
+    @ManyToMany(() => Player, {eager: true})
+    @JoinTable()
+    players!: Player[];
+
+    constructor();
+    constructor(map: GameMap, match: Match);
+
+    constructor(map?: GameMap, match?: Match) {
         super();
 
         this.numVotes = 0;
-        this.map = map;
+        this.map = map ?? new GameMap();
         this.match = match ?? new Match();
+        if (map) {
+            this.players = [];
+        }
+    }
+
+    updateVote(player: Player): string {
+        const length = this.players.length;
+        this.players = this.players.filter((voter: Player) => voter.uuid !== player.uuid);
+
+        // if this player previously voted for a map, they were in the this.players and have just been
+        // filtered out, so its length will be lesser, decrement the vote count, else increment it
+        if (this.players.length < length) {
+            --this.numVotes;
+            return `You revoked your vote for ${this.map.name}`;
+        }
+        ++this.numVotes;
+        this.players.push(player);
+        return `You voted for ${this.map.name}`;
     }
 }

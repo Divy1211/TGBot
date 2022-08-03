@@ -38,14 +38,15 @@ export default {
         const {options, channelId, guildId} = interaction;
 
         // ensure that the command is being run in a server
-        if (!channelId || !guildId)
+        if (!channelId || !guildId) {
             return "This command can only be run in a text channel in a server";
+        }
 
         // get the command parameters
         const uuid = ensure(options.getInteger("queue_uuid"));
-        const name = options.getString("name") ?? "";
-        const numPlayers = options.getInteger("num_players") ?? 0;
+        const name = options.getString("name");
+        const numPlayers = options.getInteger("num_players");
 
-        return await editQueue(uuid, name, numPlayers, channelId);
+        return await editQueue(uuid, channelId, name, numPlayers);
     },
 } as ICommand;

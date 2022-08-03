@@ -1,7 +1,6 @@
 import {MessageEmbed} from "discord.js";
 
 import {Queue} from "../../entities/queues/Queue";
-import {getPlayerEmbed} from "../common";
 
 /**
  * Shows the players who are in a queue in the given channel or the specified queue
@@ -24,7 +23,7 @@ export async function listPlayers(
     if (uuid) {
         queue = await Queue.findOneBy({uuid, channelId});
         if (!queue) {
-            return `Queue with ID ${uuid} does not exist in this channel`;
+            return `Error: Queue with ID ${uuid} does not exist in this channel`;
         }
     } else {
         const queues = await Queue.findBy({channelId});
@@ -38,5 +37,5 @@ export async function listPlayers(
         }
     }
 
-    return getPlayerEmbed(queue);
+    return queue.getPlayerEmbed();
 }

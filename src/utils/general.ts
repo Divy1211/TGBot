@@ -1,8 +1,10 @@
 /**
- * Ensure that the parameter exists. Mostly useful in combination with 'Array.find()' which can return undefined.
+ * Ensure that the parameter is not null or undefined. Returns the given argument
  *
  * @param argument The argument which is ensured to not be undefined or null
  * @param message The message to use in the error throw when the argument is undefined or null
+ *
+ * @throws TypeError if the parameter is null or undefined
  *
  * @author Karol Majewski @ https://stackoverflow.com/a/54738437/7230293
  */
@@ -15,10 +17,10 @@ export function ensure<T>(argument: T | undefined | null, message = "This value 
 }
 
 /**
- * Assert the parameter given to not be undefined or null. Works in the same way `ensure` does except no
- * value is returned. This is useful for already existing values that might also be 'null' or 'undefined'.
+ * Assert the parameter given to not be undefined or null. Does not return the given argument
  *
  * @param value The value which is asserted to not be undefined or null
+ * @throws TypeError if the parameter is null or undefined
  *
  * @author Aleksey L. @ https://stackoverflow.com/a/59017341/7230293
  */
@@ -28,26 +30,50 @@ export function assert(value: unknown): asserts value {
     }
 }
 
+/**
+ * Choose one element randomly from the given array
+ *
+ * @param array The array to chose elements from
+ */
+export function choose<T>(array: T[]): T {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+/**
+ * Choose k elements randomly from the given array
+ *
+ * @param array The array to chose elements from
+ * @param k The number of elements to choose
+ * @param replacement choose with replacement
+ */
 export function choices<T>(array: T[], k: number, replacement = false): T[] {
-    let choices: T[] = [];
+    let choicesLs: T[] = [];
 
     for (let i = 0; i < k; ++i) {
         const choice = array[Math.floor(Math.random() * array.length)];
-        if (!replacement && choices.includes(choice)) {
+        if (!replacement && choicesLs.includes(choice)) {
             --i;
             continue;
         }
-        choices.push(choice);
+        choicesLs.push(choice);
     }
-    return choices;
+    return choicesLs;
 }
 
+/**
+ * Generates a combination of r things and their complement
+ *
+ * @param array The array to generate the combinations from
+ * @param r The group size
+ */
 export function combinations<T>(array: T[], r: number): T[][] {
-    if (r > array.length)
+    if (r > array.length) {
         throw Error("the number of elements to choose from must be larger than the amount to choose");
+    }
 
-    if (r === 1)
+    if (r === 1) {
         return array.map((element: T) => [element]);
+    }
 
     let combos: T[][] = [];
 
@@ -55,8 +81,39 @@ export function combinations<T>(array: T[], r: number): T[][] {
     while (r - 1 < copy.length) {
         const first = copy.splice(0, 1);
 
-        for (const combo of combinations(copy, r - 1))
+        for (const combo of combinations(copy, r - 1)) {
             combos.push(first.concat(combo));
+        }
     }
     return combos;
+}
+
+/**
+ * Extract the hh, mm and ss values as numbers from a provided time in hh:mm[:ss] (string) format.
+ * If an invalid format is given, an error is returned.
+ *
+ * @param hhmmss The string to extract the hh, mm and ss values from
+ */
+export function getDuration(hhmmss: string): {error?: string, hh: number, mm: number, ss: number} {
+    // ss will be undefined if not specified
+    let [_, hh, mm, ss]: (string | number)[] = hhmmss.match(/^(\d+):(\d{2})(?::(\d{2}))?$/) ?? ["-1", "-1", "-1", "-1"];
+    if (hh === "-1") {
+        return {error: "Error: The format of the specified duration is invalid, please try again", hh: 0, mm: 0, ss: 0};
+    }
+
+    hh = parseInt(hh);
+    mm = parseInt(mm);
+    ss = ss ? parseInt(ss) : 0;
+
+    if (ss > 59 && mm > 59) {
+        return {error: "Error: Minutes & Seconds cannot be greater than 59", hh, mm, ss};
+    }
+    if (mm > 59) {
+        return {error: "Error: Minutes cannot be greater than 59", hh, mm, ss};
+    }
+    if (ss > 59) {
+        return {error: "Error: Seconds cannot be greater than 59", hh, mm, ss};
+    }
+
+    return {hh, mm, ss};
 }

@@ -1,6 +1,5 @@
 import Djs, {Intents} from "discord.js";
 import dotenv from "dotenv";
-import fs from "fs";
 import path from "path";
 import WOKC from "wokcommands";
 
@@ -11,40 +10,20 @@ import {Pool} from "./entities/pools/Pool";
 import {PoolMap} from "./entities/pools/PoolMap";
 import {Leaderboard} from "./entities/queues/Leaderboard";
 import {Queue} from "./entities/queues/Queue";
-import {User} from "./entities/User";
 import {startLogger} from "./logger";
 import {ensure} from "./utils/general";
+import {recursiveReaddir} from "./utils/node";
 
 dotenv.config();
 
 export const client = new Djs.Client({
     intents: [
         Intents.FLAGS.GUILDS,
+        // Intents.FLAGS.GUILD_MEMBERS,
         Intents.FLAGS.GUILD_MESSAGES,
         Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
     ],
 });
-
-/**
- *
- * Finds the names of all the files inside a given directory and its sub directories.
- *
- * @param dir The directory to scan for files.
- * @param full_paths if true, the full relative path of the file is included instead of just filename.
- *
- * @returns A list of file names inside the directory and subdirectories in that directory.
- */
-export function recursiveReaddir(dir: string, full_paths: boolean = false): string[] {
-    let fileNames: string[] = [];
-    let names = fs.readdirSync(dir);
-    names.forEach((name) => {
-        if (name.match(/^\w*?\.\w+$/)) // if name is a file
-            fileNames.push(full_paths ? dir + "\\" + name : name);
-        else
-            fileNames.push(...recursiveReaddir(path.join(dir, name), full_paths));
-    });
-    return fileNames;
-}
 
 /**
  *
@@ -62,10 +41,11 @@ async function unregisterRenamedCommands(commandsDir: string, testServers: strin
         const guild = client.guilds.cache.get(guildId);
         let commands = await guild?.commands.fetch();
 
-        if (!commands)
+        if (!commands) {
             return;
+        }
 
-        commands.forEach((command, id) => {
+        commands.forEach((command) => {
             if (!commandNames.includes(command.name)) {
                 console.log(`    - '${command.name}'`, "color: #ffda55");
                 command.delete();
@@ -75,27 +55,25 @@ async function unregisterRenamedCommands(commandsDir: string, testServers: strin
 }
 
 async function createTestingDatabase() {
-    const guild = new Guild("testId");
-    const queue = new Queue("testName", guild, new Leaderboard(guild), 8, "testChannelId");
+    const guild = new Guild("979245239116136448");
+    const queue = new Queue("test", guild, new Leaderboard(guild), 2, "979245239384539187");
     await queue.save();
 
-    const pool = new Pool("testQ", guild);
-    pool.queues = [queue];
-    pool.maps = [
-        new PoolMap(new GameMap("Arabia"), pool, 2),
-        new PoolMap(new GameMap("Arena"), pool, 1),
-        new PoolMap(new GameMap("Hideout"), pool, 1),
-        new PoolMap(new GameMap("Fortress"), pool, 1),
-        new PoolMap(new GameMap("Nomad"), pool, 1),
-        new PoolMap(new GameMap("BF"), pool, 1),
-        new PoolMap(new GameMap("MR"), pool, 1),
-    ];
+    const pool = new Pool("test", ensure((queue).guild));
     await pool.save();
 
-    for (let i = 0; i < 16; ++i) {
-        const user = new User(`testId${i}`);
-        await user.save();
+    pool.poolMaps = [];
+    for (let i = 0; i < 10; ++i) {
+        const map = new GameMap(
+            `map #${i}`, "https://static.toiimg.com/thumb/53110049.cms?width=1200&height=900", ensure(queue.guild));
+        await map.save();
+
+        const poolMap = new PoolMap(map, pool, 1);
+        await poolMap.save();
     }
+
+    queue.pools = [pool];
+    await queue.save();
 }
 
 async function main() {
@@ -105,48 +83,6 @@ async function main() {
 
     // testing code start
     // await createTestingDatabase();
-
-    // const queue = (await Queue.find({
-    //     where: {
-    //         channelId: "testChannelId"
-    //     },
-    //     relations: {
-    //         leaderboard: true,
-    //         pools: true
-    //     }
-    // }))[0];
-    //
-    // const users = (await User.find()).splice(0, 8);
-    //
-    // const statlist = [];
-    //
-    // for(const user of users) {
-    //     let stats: PlayerStats | null;
-    //
-    //     stats = await PlayerStats.findOneBy({
-    //         user: {
-    //             discordId: user.discordId
-    //         },
-    //         leaderboard: {
-    //             uuid: ensure(queue.leaderboard).uuid
-    //         }
-    //     });
-    //     if(!stats) {
-    //         stats = new PlayerStats(user, ensure(queue.leaderboard));
-    //         console.log(`saving stats for ${user.discordId}`)
-    //         await stats.save();
-    //     }
-    //     statlist.push(stats);
-    // }
-
-    // const match = new Match(statlist, ensure(queue.pools)[0]);
-
-    // const match = (await Match.find({relations: {mapOptions: true}}))[0];
-    // console.log(match.mapOptions?.length);
-    //
-    // await match.remove();
-
-    // await match.save();
 
     // return;
     // testing code end

@@ -88,11 +88,13 @@ export default {
                     value: queues.map(({leaderboard, pools}) => {
                         let strs = [];
 
-                        if (showLeaderboard)
+                        if (showLeaderboard) {
                             strs.push(`\`       ${ensure(leaderboard).uuid}       \``);
+                        }
 
-                        if (showPools)
+                        if (showPools) {
                             strs.push(`\`${ensure(pools)?.map((pool) => pool.uuid).join(", ")}\``);
+                        }
 
                         return strs.join(" ");
                     }).join("\n"),

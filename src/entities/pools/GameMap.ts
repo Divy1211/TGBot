@@ -29,10 +29,15 @@ export class GameMap extends BaseEntity {
     guild?: Guild;
 
     constructor();
-    constructor(name: string);
+    constructor(name: string, guild: Guild);
     constructor(name: string, imgLink: string, guild: Guild);
 
-    constructor(name?: string, imgLink?: string, guild?: Guild) {
+    constructor(name?: string, imgLink?: Guild | string, guild?: Guild) {
+        if (imgLink instanceof Guild) {
+            guild = imgLink;
+            imgLink = undefined;
+        }
+
         super();
         this.name = name ?? "";
         this.imgLink = imgLink ?? "";

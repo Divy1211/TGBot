@@ -19,7 +19,7 @@ export class Pool extends BaseEntity {
     queues?: Queue[];
 
     @OneToMany(() => PoolMap, (poolMap: PoolMap) => poolMap.pool, {cascade: true, eager: true})
-    maps!: PoolMap[];
+    poolMaps!: PoolMap[];
 
     constructor();
     constructor(name: string, guild: Guild);

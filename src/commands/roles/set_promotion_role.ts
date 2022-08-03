@@ -1,7 +1,7 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-import {setPromotionRole} from "../../abstract_commands/roles/set_promotion";
-import {ensure} from "../../utils/general";
+
+import {setRole} from "../../abstract_commands/roles/set_role";
 
 export default {
     category: "Admin",
@@ -14,9 +14,9 @@ export default {
     options: [
         {
             name: "role",
-            description: "The role to ping when a promotion happens",
+            description: "The role to ping when a promotion happens. If unspecified, the role will be unset",
             type: ApplicationCommandOptionTypes.ROLE,
-            required: true,
+            required: false,
         },
     ],
 
@@ -29,10 +29,8 @@ export default {
         }
 
         // get the command parameters
-        const role = ensure(options.getRole("role"));
+        const roleId = options.getRole("role")?.id;
 
-        return await setPromotionRole(guildId, role);
-
+        return await setRole(guildId, "promotion", roleId);
     },
 } as ICommand;
-
