@@ -12,13 +12,12 @@ export default {
     options: [],
 
     callback: async ({interaction}) => {
-        const {channelId, guildId} = interaction;
-        
-        let {user} = interaction;
+        const {channelId, guildId, user} = interaction;
 
         // ensure that the command is being run in a server
-        if (!channelId || !guildId)
+        if (!channelId || !guildId) {
             return "This command can only be run in a text channel in a server";
+        }
 
         return await leaveAll(user.id, guildId);
     },
