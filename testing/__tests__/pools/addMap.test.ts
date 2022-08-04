@@ -51,7 +51,7 @@ describe("Invalid Add", () => {
 
         expect(
             await addMap(guildId, 1, pool.uuid, 5)
-        ).toBe("Map with ID `1` was not found.");
+        ).toBe("Map with ID `1` does not exist in this server");
     });
 
     test("Add a map to a non-existing pool", async () => {
@@ -63,6 +63,6 @@ describe("Invalid Add", () => {
 
         expect(
             await addMap(guildId, map.uuid, 1, 5)
-        ).toBe("Pool with ID `1` was not found.");
+        ).toBe("Pool with ID `1` does not exist in this server");
     });
 })

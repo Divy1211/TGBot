@@ -73,5 +73,6 @@
 | `link`          |                                                              |                                                              |              |
 | `unlink`        |                                                              |                                                              |              |
 | `elo_graph`     |                                                              |                                                              |              |
-| `phrase`        |                                                              |                                                              |              |
-| `toss`          |                                                              |                                                              |              |
+| `set_phrase`    | sets the phrase of a user to be shown when joining a queue   | `queue_uuid`, `phrase`                                       | Done         |
+| `toss`          | flip a coin                                                  |                                                              | Done         |
+| `random`        | gain a random number                                         | `min`, `max`                                                 | Done         |

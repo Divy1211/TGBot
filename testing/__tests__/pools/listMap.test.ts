@@ -77,6 +77,6 @@ describe("Invalid List Map", () => {
 
         expect(
             await listMaps(guildId, true, false, 1)
-        ).toBe(`The pool with ID 1 was not found.`)
+        ).toBe(`Pool with ID \`1\` does not exist in this server`)
     })
 })

@@ -38,7 +38,7 @@ describe("Valid Remove", () => {
 
         expect(
             await removeMap(guildId, map.uuid, pool.uuid)
-        ).toBe(`Map ${map.name} has been removed from the pool with ID ${pool.uuid} successfully!`);
+        ).toBe(`Map \"${map.name}\" has been successfully removed from the pool with ID \`${pool.uuid}\``);
 
         expect(
             await PoolMap.findOneBy({map: {name: mapName}})
@@ -61,7 +61,7 @@ describe("Valid Remove", () => {
 
         expect(
             await removeMap(guildId, map.uuid)
-        ).toBe(`Map ${map.name} removed from all pools.`);
+        ).toBe(`Map \"${map.name}\" removed from all pools`);
 
         await removeMap(guildId, map.uuid, 0);
         expect(
@@ -87,17 +87,17 @@ describe("Invalid Remove", () => {
 
         expect(
             await removeMap(guildId, map.uuid, pool.uuid)
-        ).toBe(`Map with ID ${map.uuid} was not found in pool with ID ${pool.uuid}.`);
+        ).toBe(`Map \"${mapName}\" has been successfully removed from the pool with ID \`${pool.uuid}\``);
     })
 
     test("Remove a non-existing map (in the sever) from a pool", async () => {
-        const poolName = "poolTest", guildId =  "guild-1";
+        const poolName = "poolTest", guildId = "guild-1";
         pool = new Pool(poolName, guild);
         await pool.save();
 
         expect(
             await removeMap(guildId, 1, pool.uuid)
-        ).toBe(`Map with ID 1 was not found.`);
+        ).toBe(`Map with ID \`1\` does not exist in this server`);
     })
 
     test("Remove a map from a non-existing pool", async () => {
@@ -108,6 +108,6 @@ describe("Invalid Remove", () => {
 
         expect(
             await removeMap(guildId, map.uuid, 1)
-        ).toBe(`Map with ID ${map.uuid} was not found in pool with ID 1.`);
+        ).toBe(`Pool with ID \`1\` does not exist in this server`);
     })
 })

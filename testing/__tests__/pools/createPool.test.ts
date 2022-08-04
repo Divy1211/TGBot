@@ -31,7 +31,6 @@ describe("Valid Create", () => {
                 where: {name: name}, 
                 relations: {guild: true}
             }));
-        expect(pool.name).toBe(name);
         expect(pool.guild?.id).toBe("guild-1");
     })
 })
