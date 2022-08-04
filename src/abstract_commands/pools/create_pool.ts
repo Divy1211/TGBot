@@ -2,12 +2,12 @@ import {Guild} from "../../entities/Guild";
 import {Pool} from "../../entities/pools/Pool";
 
 /**
- * Create a pool with given name, in the specified sever
- * 
+ * Create a pool with the given name in the specified server
+ *
  * @param name The name of the pool
- * @param guildId The ID of the server in which the Pool is created
+ * @param guildId The ID of the server in which the pool is created
  */
-export async function createPool(name: string, guildId: string) {
+export async function createPool(name: string, guildId: string): Promise<string> {
     let guild = await Guild.findOneBy({id: guildId});
     if (!guild) {
         guild = new Guild(guildId);
@@ -16,5 +16,5 @@ export async function createPool(name: string, guildId: string) {
     const pool = new Pool(name, guild);
     await pool.save();
 
-    return `Pool "${name} has been created successfully!"`
+    return `Pool "${name}" has been created successfully!`;
 }

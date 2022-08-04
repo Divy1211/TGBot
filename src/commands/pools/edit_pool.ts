@@ -1,48 +1,41 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {cancelMatch} from "../../abstract_commands/matches/cancel";
+import {editPool} from "../../abstract_commands/pools/edit_pool";
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Cancel the result of a match",
-
+    description: "Edit the name of a pool in the sever",
     slash: true,
     testOnly: true,
     guildOnly: true,
 
     options: [
         {
-            name: "match_uuid",
-            description: "The id of the match to cancel",
+            name: "uuid",
+            description: "The uuid of the pool to modify",
             type: ApplicationCommandOptionTypes.INTEGER,
             required: true,
         },
         {
-            name: "user",
-            description: "If specified, only this user will be removed from the queue",
-            type: ApplicationCommandOptionTypes.USER,
-            required: false,
+            name: "name",
+            description: "The new name of the pool",
+            type: ApplicationCommandOptionTypes.STRING,
+            required: true,
         },
     ],
 
     callback: async ({interaction}) => {
         const {options, channelId, guildId} = interaction;
-
         // ensure that the command is being run in a server
         if (!channelId || !guildId) {
             return "This command can only be run in a text channel in a server";
         }
-
         // get the command parameters
-        const uuid = ensure(options.getInteger("match_uuid"));
-        const user = options.getUser("user");
+        const poolUuid = ensure(options.getInteger("uuid"));
+        const name = options.getString("name") ?? undefined;
 
-        if (user) {
-            return await cancelMatch(guildId, uuid, [user.id]);
-        }
-
-        return await cancelMatch(guildId, uuid);
+        return await editPool(guildId, poolUuid, name);
     },
 } as ICommand;
