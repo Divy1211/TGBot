@@ -262,7 +262,6 @@ A captain is a player/user
     5. <span style="color:red">Normal Flow</span>: Show an embed with all the queues in the server.
     6. <span style="color:red">Alternate Flow</span>: If no queues are found in the server, show a relevant message.
     7. Sequence Diagram: ![sd](./sequence_diagrams/list_q.png)
-
 2. `join`
     1. <span style="color:pink">Purpose</span>: This command allows a user to join a queue in the channel that this command is run in.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
@@ -275,7 +274,6 @@ A captain is a player/user
     7. <span style="color:red">Alternate Flow 2</span> If no queues are found in the channel, show a relevant message.
     8. Additional Flow: When the number of users in the queue are == `numPlayers` of the queue, then start a match in that queue. When a match is started, remove all the users from any other queues that they are in, *even queues that are on other servers*
     9. Sequence Diagram: ![sd](./sequence_diagrams/join.png)
-
 3. `leave`
     1. <span style="color:pink">Purpose</span>: This command allows a user to leave a queue in the channel that this command is run in.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
@@ -289,14 +287,12 @@ A captain is a player/user
         - The user is in multiple queues, and the `queue_id` is not specified - show a message asking the user to specify which queue they want to leave.
     7. <span style="color:red">Alternate Flow 2</span> If no queues are found in the channel, show a relevant message.
     8. Sequence Diagram: ![sd](./sequence_diagrams/leave.png)
-
 4. `leave_all`
     1. <span style="color:pink">Purpose</span>: This command allows a user to leave all queues in a server.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
     4. <span style="color:pink">Parameters</span>:
     5. <span style="color:red">Normal Flow</span>: Remove the user from all the queues in the guild that this command is run in.
-
 5. `set_default_q`
     1. <span style="color:pink">Purpose</span>: Allow a user to set a queue as their default join queue in a channel.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
@@ -304,7 +300,6 @@ A captain is a player/user
     4. <span style="color:pink">Parameters</span>:
         1. <span style="color:blue">queue_uuid</span>: Set this queue as the default join queue
     5. <span style="color:red">Normal Flow</span>: fetch (or create if not present) the `QueueDefaults` for the user and for the channel that this command is run in. set the `defaultQ` property and save the `QueueDefaults` instance back to the database.
-
 6. `list_players`
     1. <span style="color:pink">Purpose</span>: Allow a user to see all the players in a queue. This will show a possible paged embed
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild, and should only list players from the queues of the channel that this command is used in.
@@ -314,7 +309,6 @@ A captain is a player/user
     5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, display an embed with the list of all the players in the queue
     6. <span style="color:red">Alternate Flow</span>: If there are multiple queues in the channel and `queue_uuid` is not specified, return an appropriate message asking the user to specify the queue for which they want to see the players.
     7. Sequence Diagram: ![sd](./sequence_diagrams/list_players.png)
-
 7. `profile`
     1. <span style="color:pink">Purpose</span>: Allow a user to see the profile of a user. This shows the user's rank, rating, total/wins/losses/streak, win rate and the rating changes in the last (max) 5 matches. This will show an embed.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show the profiles from the leaderboards in the server that this command is run in.
@@ -325,7 +319,6 @@ A captain is a player/user
         3. <span style="color:blue">leaderboard_uuid</span>: (optional) show the profile from this leaderboard.
     5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, display the profile of the user for the `Leaderboard` of that queue.
     6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the profile from.
-
 8. `leaderboard`
     1. <span style="color:pink">Purpose</span>: Allow a user to see the players in leaderboard ranked by rating. Also shows the players `Total/Win/Loss/Streak` counts. This will show a possibly paged embed.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show the leaderboards of queues that belong to the server in which this command is run
@@ -335,7 +328,6 @@ A captain is a player/user
         2. <span style="color:blue">leaderboard_uuid</span>: (optional) show this leaderboard.
     5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, display the `Leaderboard` of that queue.
     6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the profile from.
-
 9. `win_rate`
     1. <span style="color:pink">Purpose</span>: Allow a user to see their (or someone else's) win rate statistics.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show the statistics from a leaderboard that belongs to the server where this command is run in.
@@ -363,7 +355,6 @@ A captain is a player/user
         20. <span style="color:blue">leaderboard_uuid</span>: show the statistics from this leaderboard.
     5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, display the win rates from the `Leaderboard` of that queue. Calculating this will require looping through all the `Match`s and filtering them as specified by the arguments.
     6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the win rates from.
-
 10. `civ_win_rate`
     1. <span style="color:pink">Purpose</span>: see the win rates of a particular civ.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show the statistics from a leaderboard that belongs to the server in which the command is run.
@@ -378,119 +369,126 @@ A captain is a player/user
         7. <span style="color:blue">leaderboard_uuid</span>: (optional) show win rates from this leaderboard.
     5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, display the win rates from the `Leaderboard` of that queue. Calculating this will require looping through all the `Match`s and filtering them as specified by the arguments.
     6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the win rates from.
-
 11. `list_maps`
-    1. <span style="color:pink">Purpose</span>: list all the maps in the server or in a specified pool.
-    2. <span style="color:pink">Constraints</span>: This command must be used in a guild. This command should only show maps that belong to the server in which this command is running.
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">pool_uuid</span>: (optional) list the maps of the pool with this uuid, if unspecified, list all maps in the server.
-        2. <span style="color:blue">show_pool_ids</span>: (optional) show pool_ids that maps belong to. If `pool_uuid` is specified, will **not** show `pool_ids` regardless.
-    5. <span style="color:red">Normal Flow</span>: Fetch all the `GameMap`s in the server where this command is used. If `pool_uuid` is specified, list the maps in the pool, otherwise, list all maps in the server.
-    6. <span style="color:red">Alternate Flow</span>: If specified pool_uuid was not found, return an appropriate message.
-
+     1. <span style="color:pink">Purpose</span>: list all the maps in the server or in a specified pool.
+     2. <span style="color:pink">Constraints</span>: This command must be used in a guild. This command should only show maps that belong to the server in which this command is running.
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">pool_uuid</span>: (optional) list the maps of the pool with this uuid, if unspecified, list all maps in the server.
+         2. <span style="color:blue">show_pool_ids</span>: (optional) show pool_ids that maps belong to. If `pool_uuid` is specified, will **not** show `pool_ids` regardless.
+     5. <span style="color:red">Normal Flow</span>: Fetch all the `GameMap`s in the server where this command is used. If `pool_uuid` is specified, list the maps in the pool, otherwise, list all maps in the server.
+     6. <span style="color:red">Alternate Flow</span>: If specified pool_uuid was not found, return an appropriate message.
 12. `list_pools`
-    1. <span style="color:pink">Purpose</span>: list all the pools in a server. Displays an embed
-    2. <span style="color:pink">Constraints</span>: This command must be used in a guild. This command should only show pools that belong to the server in which this command is run.
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-    5. <span style="color:red">Normal Flow</span>: fetch all the `Pool`s in the server that this command is used in, and display an embed
-
+     1. <span style="color:pink">Purpose</span>: list all the pools in a server. Displays an embed
+     2. <span style="color:pink">Constraints</span>: This command must be used in a guild. This command should only show pools that belong to the server in which this command is run.
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+     5. <span style="color:red">Normal Flow</span>: fetch all the `Pool`s in the server that this command is used in, and display an embed
 13. `show_map`
-    1. <span style="color:pink">Purpose</span>: show an embed with this map and its statistics.
-    2. <span style="color:pink">Constraints</span>: This command must be used in a guild. This command should only show maps that
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">map_uuid</span>: show the statistics and preview of this map (if available)
-    5. <span style="color:red">Normal Flow</span>: fetch the `GameMap` with this uuid and show its stats and preview.
-    6. <span style="color:red">Alternate Flow</span>: If no `GameMap` with this uuid is found, return an appropriate message.
-
+     1. <span style="color:pink">Purpose</span>: show an embed with this map and its statistics.
+     2. <span style="color:pink">Constraints</span>: This command must be used in a guild. This command should only show maps that
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">map_uuid</span>: show the statistics and preview of this map (if available)
+     5. <span style="color:red">Normal Flow</span>: fetch the `GameMap` with this uuid and show its stats and preview.
+     6. <span style="color:red">Alternate Flow</span>: If no `GameMap` with this uuid is found, return an appropriate message.
 14. `top`
-    1. <span style="color:pink">Purpose</span>: show an embed with the top players of this month (or all time).
-    2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show the top players from a leaderboard that belongs to the server that this command is run in
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">queue_uuid</span>: (optional) use the leaderboard from this queue
-        2. <span style="color:blue">leaderboard_uuid</span>: (optional) use this leaderboard
-        3. <span style="color:blue">all_time</span>: (default: `false`) if `true`, see all time top players instead of just from the 1st of the current month
-        4. <span style="color:blue">by_win_rate</span>: (default: `true`) if `false` see the top players by number of games played
-    5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, use the `Leaderboard` from this queue to display the top players.
-    6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the top players from.
-
+     1. <span style="color:pink">Purpose</span>: show an embed with the top players of this month (or all time).
+     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show the top players from a leaderboard that belongs to the server that this command is run in
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">queue_uuid</span>: (optional) use the leaderboard from this queue
+         2. <span style="color:blue">leaderboard_uuid</span>: (optional) use this leaderboard
+         3. <span style="color:blue">all_time</span>: (default: `false`) if `true`, see all time top players instead of just from the 1st of the current month
+         4. <span style="color:blue">by_win_rate</span>: (default: `true`) if `false` see the top players by number of games played
+     5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, use the `Leaderboard` from this queue to display the top players.
+     6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the top players from.
 15. `list_matches`
-    1. <span style="color:pink">Purpose</span>: show a (probably paged) embed with the matches and map of that match.
-    2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show matches from leaderboards that belong to the server that this command is run in.
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">queue_uuid</span>: (optional) use the leaderboard from this queue
-        2. <span style="color:blue">leaderboard_uuid</span>: (optional) use this leaderboard
-    5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, use the `Leaderboard` from this queue to display the matches.
-    6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the matches from.
-
+     1. <span style="color:pink">Purpose</span>: show a (probably paged) embed with the matches and map of that match.
+     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show matches from leaderboards that belong to the server that this command is run in.
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">queue_uuid</span>: (optional) use the leaderboard from this queue
+         2. <span style="color:blue">leaderboard_uuid</span>: (optional) use this leaderboard
+     5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, use the `Leaderboard` from this queue to display the matches.
+     6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the matches from.
 16. `show_match`
-    1. <span style="color:pink">Purpose</span>: show an embed with the map, players, civs, ratings, winners and lobby id (if available) of this match.
-    2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show a match which is on a leaderboard that belongs to the server that this command runs in.
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">match_uuid</span>: show the match with this `uuid`
-    5. <span style="color:red">Normal Flow</span>: fetch the map with the given `uuid` and show the embed.
-    6. <span style="color:red">Alternate Flow</span>: If the given `uuid` is invalid, return an appropriate error message.
-
+     1. <span style="color:pink">Purpose</span>: show an embed with the map, players, civs, ratings, winners and lobby id (if available) of this match.
+     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show a match which is on a leaderboard that belongs to the server that this command runs in.
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">match_uuid</span>: show the match with this `uuid`
+     5. <span style="color:red">Normal Flow</span>: fetch the map with the given `uuid` and show the embed.
+     6. <span style="color:red">Alternate Flow</span>: If the given `uuid` is invalid, return an appropriate error message.
 17. `last_match`
-    1. <span style="color:pink">Purpose</span>: show the last match of the user
-    2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">user</span>: (optional) show the last match of this user. If unspecified, show the last match of the user of this command
-        2. <span style="color:blue">queue_uuid</span>: (optional) use the leaderboard from this queue
-        3. <span style="color:blue">leaderboard_uuid</span>: (optional) use this leaderboard to find the last match of the user
-    5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, use the `Leaderboard` from this queue to display the last match.
-    6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the last match from.
-
+     1. <span style="color:pink">Purpose</span>: show the last match of the user
+     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">user</span>: (optional) show the last match of this user. If unspecified, show the last match of the user of this command
+         2. <span style="color:blue">queue_uuid</span>: (optional) use the leaderboard from this queue
+         3. <span style="color:blue">leaderboard_uuid</span>: (optional) use this leaderboard to find the last match of the user
+     5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, use the `Leaderboard` from this queue to display the last match.
+     6. <span style="color:red">Alternate Flow</span>: If there are multiple queues and `queue_uuid` or `leaderboard_uuid` is unspecified, return a message asking the user to specify the `queue_uuid` or the `leaderboard_uuid` that they want to see the last match from.
 18. `promote`
-    1. <span style="color:pink">Purpose</span>: pings the promotion role as set by the `promotionRoleId` to beckon users to play a game.
-    2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command must only be allowed to use once every `promotionCooldown` seconds specified by the `Guild` instance.
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-    5. <span style="color:red">Normal Flow</span>: Ping the promotion role.
-    6. <span style="color:red">Alternate Flow 1</span>: If the promotion role is not set, show an appropriate error message
-    7. <span style="color:red">Alternate Flow 2</span>: If the current time is not at least `promotionCooldown` seconds after the `lastPromotion` of the `Guild` instance, show a message saying that the promotion is not allowed.
-
+     1. <span style="color:pink">Purpose</span>: pings the promotion role as set by the `promotionRoleId` to beckon users to play a game.
+     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command must only be allowed to use once every `promotionCooldown` seconds specified by the `Guild` instance.
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+     5. <span style="color:red">Normal Flow</span>: Ping the promotion role.
+     6. <span style="color:red">Alternate Flow 1</span>: If the promotion role is not set, show an appropriate error message
+     7. <span style="color:red">Alternate Flow 2</span>: If the current time is not at least `promotionCooldown` seconds after the `lastPromotion` of the `Guild` instance, show a message saying that the promotion is not allowed.
 19. `promo_sub`
-    1. <span style="color:pink">Purpose</span>: allow a user to add themselves to the promotion role (if set) of the `Guild`.
-    2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">enable</span>: `true/false`.
-    5. <span style="color:red">Normal Flow</span>: Give/Take the promotion role to/from this user in the server where this command is used.
-    6. <span style="color:red">Alternate Flow</span>: If the promotion role is not set, show an appropriate error message
-
+     1. <span style="color:pink">Purpose</span>: allow a user to add themselves to the promotion role (if set) of the `Guild`.
+     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">enable</span>: `true/false`.
+     5. <span style="color:red">Normal Flow</span>: Give/Take the promotion role to/from this user in the server where this command is used.
+     6. <span style="color:red">Alternate Flow</span>: If the promotion role is not set, show an appropriate error message
 20. `list_bans`
-    1. <span style="color:pink">Purpose</span>: Allow a user to see the names of all the banned users and the reasons for their bans and the time left until the ban expires. Displays an embed.
-    2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command must only show the bans from the server where this command is run
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-    5. <span style="color:red">Normal Flow</span>: show an embed with the names of the banned players, the reasons for their bans and the timer until when the ban lasts.
-
+     1. <span style="color:pink">Purpose</span>: Allow a user to see the names of all the banned users and the reasons for their bans and the time left until the ban expires. Displays an embed.
+     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command must only show the bans from the server where this command is run
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+     5. <span style="color:red">Normal Flow</span>: show an embed with the names of the banned players, the reasons for their bans and the timer until when the ban lasts.
 21. `sub_me`
-    1. <span style="color:pink">Purpose</span>: Allow a user to substitute themselves after a game has started IF another user is available. This is only meaningful before the start of the game
-    2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command must only allow substitution when the voting procedure has started/the teams are already formed.
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">for</span>: (optional) If unspecified, the user of this command is looking to replace themselves. If specified, the user of this command wants to take the place of this user.
-    5. <span style="color:red">Normal Flow</span>: Add the name of the player to looking for sub.
-
+     1. <span style="color:pink">Purpose</span>: Allow a user to substitute themselves after a game has started IF another user is available. This is only meaningful before the start of the game
+     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command must only allow substitution when the voting procedure has started/the teams are already formed.
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">for</span>: (optional) If unspecified, the user of this command is looking to replace themselves. If specified, the user of this command wants to take the place of this user.
+     5. <span style="color:red">Normal Flow</span>: Add the name of the player to looking for sub.
 22. `link`
-    1. <span style="color:pink">Purpose</span>: link this user's steam/aoe2.net profile to their discord ID
-    2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
-    3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
-    4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">steam</span>: (optional) user's steam ID
-        2. <span style="color:blue">aoe2net</span>: (optional) user's aoe2net ID.
-    5. <span style="color:red">Normal Flow</span>: Store the.
-
+     1. <span style="color:pink">Purpose</span>: link this user's steam/aoe2.net profile to their discord ID
+     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">steam</span>: (optional) user's steam ID
+         2. <span style="color:blue">aoe2net</span>: (optional) user's aoe2net ID.
+     5. <span style="color:red">Normal Flow</span>: Store the.
 23. `unlink` command specifics yet to be decided
 24. `elo_graph` command specifics yet to be decided
-25. `phrase` command specifics yet to be decided
-26. `toss` command specifics yet to be decided
-27. `ask` command specifics yet to be decided
+25. `phrase`
+     1. <span style="color:pink">Purpose</span>: allow the user to set a phrase for a specific queue which will be shown when the user joins this queue.
+     2. <span style="color:pink">Constraints</span>: This command must be used in a guild.
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">queue_uuid</span>: set to this queue
+         2. <span style="color:blue">phrase</span>: phrase to set
+     5. <span style="color:red">Normal Flow</span>: Set the phrase to the user and the queue.
+     6. <span style="color:red">Alternate Flow</span>: Return an appropriate message if the queue with `queue_uuid` is not found.
+26. `toss`
+     1. <span style="color:pink">Purpose</span>: flip a coin.
+     2. <span style="color:pink">Constraints</span>:
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+     5. <span style="color:red">Normal Flow</span>: Flip a coin and show the result (heads/tails).
+27. `random`
+     1. <span style="color:pink">Purpose</span>: get a random number.
+     2. <span style="color:pink">Constraints</span>:
+     3. <span style="color:pink">Actors</span>: Admins, Mods, Users.
+     4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">min</span>: the minimum boundary
+         2. <span style="color:blue">max</span>: the maximum boundary
+28. `ask` command specifics yet to be decided
