@@ -46,6 +46,6 @@ describe("Invalid Delete", () => {
         const guildId =  "guild-1";
         expect(
             await deleteGameMap(1, guildId)
-        ).toBe(`Map with ID 1 was not found`);
+        ).toBe(`Map with ID 1 does not exist in this server`);
     })
 })

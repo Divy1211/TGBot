@@ -26,14 +26,14 @@ describe("Invalid Edit", () => {
         const uuid = 1000000;
         expect(
             await editQueue(uuid, "channel-1", "edited queue", 8),
-        ).toBe(`The queue id ${uuid} was not found in this channel`);
+        ).toBe(`The queue id ${uuid} does not exist in this channel`);
     });
 
     // uuid of queue in another channel
     test("Foreign UUID", async () => {
         expect(
             await editQueue(queue.uuid, "channel-id-2", "edited queue", 8),
-        ).toBe(`The queue id ${queue.uuid} was not found in this channel`);
+        ).toBe(`The queue id ${queue.uuid} does not exist in this channel`);
     });
 });
 

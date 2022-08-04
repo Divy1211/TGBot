@@ -29,7 +29,7 @@ export async function editQueue(
 
     let queue = await Queue.findOneBy({uuid, channelId});
     if (!queue) {
-        return `The queue id ${uuid} was does not exist in this channel`;
+        return `The queue id ${uuid} does not exist in this channel`;
     }
     if (name) {
         queue.name = name;
