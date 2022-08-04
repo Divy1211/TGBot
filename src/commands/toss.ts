@@ -10,7 +10,7 @@ function toss(): number {
 
 
 export default {
-    category: "Admin",
+    category: "User",
     description: "Flip a coin",
 
     slash: true,

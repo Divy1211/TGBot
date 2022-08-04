@@ -14,7 +14,7 @@ import {ensure} from "../utils/general";
 }
 
 export default {
-    category: "Admin",
+    category: "User",
     description: "Generate a random number",
 
     slash: true,
@@ -22,7 +22,7 @@ export default {
     guildOnly: true,
 
     options: [
-                {
+        {
             name: "max",
             description: "The maximum value of the random number",
             type: ApplicationCommandOptionTypes.INTEGER,
