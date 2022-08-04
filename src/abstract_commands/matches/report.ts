@@ -48,7 +48,6 @@ export async function report(
                     user: true,
                 },
                 guild: true,
-                map: true,
             },
         },
     });
@@ -102,5 +101,5 @@ export async function report(
         await stats.save();
     }
 
-    return match.resultEmbed;
+    return match.getResultEmbed();
 }

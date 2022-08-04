@@ -36,7 +36,7 @@ export class Match extends BaseEntity {
 
     @ManyToOne(() => GameMap, {eager: true, onDelete: "SET NULL"})
     @JoinColumn()
-    map?: GameMap;
+    map!: GameMap;
 
     @OneToMany(() => Player, (player: Player) => player.match, {cascade: true})
     players?: Player[];
@@ -79,6 +79,10 @@ export class Match extends BaseEntity {
         this.regenMapOptions();
     }
 
+    get status(): string {
+        return this.endTime === -1 ? "Ongoing" : `Ended <t:${this.endTime}:R>`;
+    }
+
     get unreadyPlayers(): string[] {
         return ensure(this.players)
             .filter((player: Player) => !player.isReady)
@@ -99,36 +103,55 @@ export class Match extends BaseEntity {
         return this.team(2);
     }
 
-    get duration(): number {
-        return this.endTime - this.startTime;
+    get duration(): string {
+        let dur;
+        if (this.endTime === -1) {
+            dur = Math.floor(Date.now() / 1000) - this.startTime;
+        } else {
+            dur = this.endTime - this.startTime;
+        }
+        return ensure(new Date(dur * 1000).toISOString().match(/\d{2}:\d{2}:\d{2}/))[0];
     }
 
-    get resultEmbed(): MessageEmbed {
-        const dur = ensure(new Date(this.duration * 1000).toISOString().match(/\d{2}:\d{2}:\d{2}/))[0];
-
-        return new MessageEmbed()
+    getResultEmbed(showMapImg: boolean = false): MessageEmbed {
+        let embed = new MessageEmbed()
             .setTitle(`Match ${this.uuid}`)
-            .setDescription(`Map: ${ensure(this.map).name}, Duration: ${dur}`)
+            .setDescription(`Map: ${this.map?.hyperlinkedName ?? "Undecided"}, Duration: ${this.duration}`)
             .setColor("#ED2939")
+            .setThumbnail("https://upload.wikimedia.org/wikipedia/fr/5/55/AoE_Definitive_Edition.png")
             .addFields(
                 {
                     name: `Team 1`,
                     value: `${this.team1.map(({user, rating, ratingDelta}) => {
-                        return `<@${ensure(user).discordId}> \`${rating} => ` +
-                               `${rating + ratingDelta} (${ratingDelta < 0 ? "" : "+"}${ratingDelta})\``;
+                        if (this.endTime !== -1) {
+                            return `<@${ensure(user).discordId}> \`${rating} => ` +
+                                   `${rating + ratingDelta} (${ratingDelta < 0 ? "" : "+"}${ratingDelta})\``;
+                        }
+                        return `<@${ensure(user).discordId}> \`${rating}\``;
                     }).join("\n")}`,
                     inline: true,
                 },
                 {
                     name: `Team 2`,
                     value: `${this.team2.map(({user, rating, ratingDelta}) => {
-                        return `<@${ensure(user).discordId}> \`${rating} => ` +
-                               `${rating + ratingDelta} (${ratingDelta < 0 ? "" : "+"}${ratingDelta})\``;
+                        if (this.endTime !== -1) {
+                            return `<@${ensure(user).discordId}> \`${rating} => ` +
+                                   `${rating + ratingDelta} (${ratingDelta < 0 ? "" : "+"}${ratingDelta})\``;
+                        }
+                        return `<@${ensure(user).discordId}> \`${rating}\``;
                     }).join("\n")}`,
                     inline: true,
                 },
-            )
-            .setThumbnail("https://upload.wikimedia.org/wikipedia/fr/5/55/AoE_Definitive_Edition.png");
+            );
+
+        if (showMapImg && this.map?.imgLink) {
+            // todo: update map stats
+
+
+            embed.setImage(this.map.imgLink);
+        }
+
+        return embed;
     }
 
     assignTeams(playerStats: PlayerStats[]): void {
