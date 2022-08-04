@@ -1,0 +1,30 @@
+import {ICommand} from "wokcommands";
+
+/**
+ * Return an integer between min and max (both included)
+ *
+ */
+function toss(): number {
+    return Math.round(Math.random());
+}
+
+
+export default {
+    category: "Admin",
+    description: "Flip a coin",
+
+    slash: true,
+    testOnly: true,
+    guildOnly: true,
+
+    options: [],
+
+    callback: async ({}) => {
+        let coin = toss();
+        if (coin === 1) {
+            return "heads"
+        } else {
+            return "tails"
+        }
+    },
+} as ICommand;
