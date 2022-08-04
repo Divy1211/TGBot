@@ -1,12 +1,6 @@
+import {Pool} from "../../entities/pools/Pool";
 import {Queue} from "../../entities/queues/Queue";
 
-
-export async function editQueue(uuid: number, channelId: string): Promise<string>;
-export async function editQueue(uuid: number, channelId: string, name: string | null): Promise<string>;
-export async function editQueue(uuid: number, channelId: string, numPlayers: number | null): Promise<string>;
-export async function editQueue(
-    uuid: number, channelId: string, name: string | null, numPlayers: number | null,
-): Promise<string>;
 /**
  * Edit an existing queue by changing its name and numPlayers
  *
@@ -14,30 +8,40 @@ export async function editQueue(
  * @param channelId The ID of the channel in which the queue should be edited
  * @param name
  * @param numPlayers The max number of players for the queue
+ * @param poolUuid The ID of the pool to use for this queue
  */
 export async function editQueue(
     uuid: number,
     channelId: string,
-    name?: string | number | null,
-    numPlayers?: number | null,
+    {name, numPlayers, poolUuid}: {name?: string, numPlayers?: number, poolUuid?: number} = {},
 ): Promise<string> {
-
-    if (typeof name === "number") {
-        numPlayers = name;
-        name = null;
+    let pool;
+    if (poolUuid && poolUuid !== -1) {
+        pool = await Pool.findOneBy({uuid: poolUuid});
+        if (!pool) {
+            return `Error: Pool with ID ${poolUuid} does not exist in this server`;
+        }
     }
 
     let queue = await Queue.findOneBy({uuid, channelId});
     if (!queue) {
-        return `The queue id ${uuid} was does not exist in this channel`;
+        return `The queue id ${uuid} does not exist in this channel`;
     }
+
     if (name) {
         queue.name = name;
     }
     if (numPlayers) {
         queue.numPlayers = numPlayers;
     }
-    if (name || numPlayers) {
+    if(poolUuid === -1) {
+        queue.pools = [];
+    }
+    if (pool) {
+        queue.pools = [pool];
+    }
+
+    if (name || numPlayers || pool) {
         await queue.save();
     }
 
