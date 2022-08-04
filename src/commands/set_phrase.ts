@@ -29,13 +29,15 @@ export default {
     callback: async ({interaction}) => {
         const {options, channelId, guildId, user} = interaction;
 
+        // ensure that the command is being run in a server
+        if (!channelId || !guildId) {
+            return "This command can only be run in a text channel in a server";
+        }
+
+        // get the command parameters
         const queueUuid = ensure(options.getInteger("queue_uuid"));
         const phrase = ensure(options.getString("phrase"));
 
-        if (!guildId) {
-            return "This command can only be run in a server";
-        }
-
-        return await setPhrase(user.id, queueUuid, phrase, guildId);
+        return await setPhrase(user.id, guildId, queueUuid, phrase);
     },
 } as ICommand;

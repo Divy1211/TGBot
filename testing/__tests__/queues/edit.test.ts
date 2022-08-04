@@ -25,14 +25,14 @@ describe("Invalid Edit", () => {
     test("Invalid UUID", async () => {
         const uuid = 1000000;
         expect(
-            await editQueue(uuid, "channel-1", "edited queue", 8),
+            await editQueue(uuid, "channel-1", {name: "edited queue", numPlayers: 8}),
         ).toBe(`The queue id ${uuid} does not exist in this channel`);
     });
 
     // uuid of queue in another channel
     test("Foreign UUID", async () => {
         expect(
-            await editQueue(queue.uuid, "channel-id-2", "edited queue", 8),
+            await editQueue(queue.uuid, "channel-id-2", {name: "edited queue", numPlayers: 8}),
         ).toBe(`The queue id ${queue.uuid} does not exist in this channel`);
     });
 });
@@ -58,7 +58,7 @@ describe("Valid Edit", () => {
     // only numPlayers
     test("Only NumPlayers", async () => {
         expect(
-            await editQueue(queue.uuid, "channel-1", 8),
+            await editQueue(queue.uuid, "channel-1", {numPlayers: 8}),
         ).toBe(`Queue "queue-1" has been edited successfully!`);
         await queue.reload();
         expect(queue.name).toBe("queue-1");
@@ -68,7 +68,7 @@ describe("Valid Edit", () => {
     // only name
     test("Only Name", async () => {
         expect(
-            await editQueue(queue.uuid, "channel-1", "edit queue-1"),
+            await editQueue(queue.uuid, "channel-1", {name: "edit queue-1"}),
         ).toBe(`Queue "edit queue-1" has been edited successfully!`);
         await queue.reload();
         expect(queue.name).toBe("edit queue-1");
@@ -78,7 +78,7 @@ describe("Valid Edit", () => {
     // both name and numPlayers
     test("Name & NumPlayers", async () => {
         expect(
-            await editQueue(queue.uuid, "channel-1", "edit queue-1", 6),
+            await editQueue(queue.uuid, "channel-1", {name: "edit queue-1", numPlayers: 6}),
         ).toBe(`Queue "edit queue-1" has been edited successfully!`);
         await queue.reload();
         expect(queue.name).toBe("edit queue-1");

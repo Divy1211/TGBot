@@ -38,9 +38,12 @@ export default {
 
     callback: async ({interaction}) => {
         const {options} = interaction;
+
         const min = options.getInteger("min") ?? 0;
         const max = ensure(options.getInteger("max"));
+
         let generatedNum = generateRandomNum(min, max);
+
         return `${generatedNum}`;
     },
 } as ICommand;

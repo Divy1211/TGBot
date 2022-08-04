@@ -23,8 +23,8 @@ export async function removeMap(guildId: string, gameMapUuid: number, poolUuid?:
         },
     });
 
-    if (gameMap === null) {
-        return `Map with ID ${gameMapUuid} does not exist in this server`;
+    if (!gameMap) {
+        return `Map with ID \`${gameMapUuid}\` does not exist in this server`;
     }
 
     if (!poolUuid) {
@@ -33,11 +33,11 @@ export async function removeMap(guildId: string, gameMapUuid: number, poolUuid?:
 
         return `Map "${gameMap.name}" removed from all pools`;
     } else if ((await Pool.findOneBy({uuid: poolUuid, guild: {id: guildId}})) === null) {
-        return `Pool with ID ${poolUuid} does not exist in this server`
+        return `Pool with ID \`${poolUuid}\` does not exist in this server`
     }
 
     gameMap.poolMaps = ensure(gameMap.poolMaps).filter((poolMap: PoolMap) => ensure(poolMap.pool).uuid !== poolUuid);
     await gameMap.save();
 
-    return `Map "${gameMap.name}" has been successfully removed from the pool with ID ${poolUuid}`;
+    return `Map "${gameMap.name}" has been successfully removed from the pool with ID \`${poolUuid}\``;
 }

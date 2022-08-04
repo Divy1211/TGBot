@@ -22,9 +22,8 @@ export default {
     callback: async ({}) => {
         let coin = toss();
         if (coin === 1) {
-            return "heads"
-        } else {
-            return "tails"
+            return "heads";
         }
+        return "tails";
     },
 } as ICommand;
