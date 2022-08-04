@@ -15,7 +15,6 @@ export async function editMap(
     {
         newName,
         newImgLink,
-
     }: {newName?: string, newImgLink?: string},
 ): Promise<string> {
     let gameMap = await GameMap.findOneBy({uuid: mapUuid, guild: {id: guildId}});
