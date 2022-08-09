@@ -53,11 +53,16 @@ export class MapOption extends BaseEntity {
         // if this player previously voted for a map, they were in the this.players and have just been
         // filtered out, so its length will be lesser, decrement the vote count, else increment it
         if (this.players.length < length) {
+            --this.map.numClicked;
             --this.numVotes;
             return `You revoked your vote for ${this.map.name}`;
         }
+
+        ++this.map.numClicked;
         ++this.numVotes;
         this.players.push(player);
+
+        this.map.save().then();
         return `You voted for ${this.map.name}`;
     }
 }

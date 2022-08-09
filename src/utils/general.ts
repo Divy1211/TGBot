@@ -1,4 +1,17 @@
 /**
+ * Same as the python zip function
+ *
+ * @param rows: a list of arrays
+ */
+export function zip<T extends any[][], K>(...rows: T): {[K in keyof T]: T[K][0]}[] {
+    const minLen = Math.min(...rows.map(row => row.length));
+
+    return Array.from({length: minLen}).map(
+        (_, i) => rows.map(row => row[i])
+    ) as {[K in keyof T]: T[K][0]}[];
+}
+
+/**
  * Ensure that the parameter is not null or undefined. Returns the given argument
  *
  * @param argument The argument which is ensured to not be undefined or null
@@ -15,6 +28,18 @@ export function ensure<T>(argument: T | undefined | null, message = "This value 
 
     return argument;
 }
+
+/**
+ * sets an interval but also runs the callback immediately
+ *
+ * @param callback
+ * @param ms
+ */
+export function startInterval(callback: () => void, ms: number): NodeJS.Timer {
+    callback();
+    return setInterval(callback, ms);
+}
+
 
 /**
  * Assert the parameter given to not be undefined or null. Does not return the given argument

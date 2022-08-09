@@ -95,7 +95,7 @@ describe("Invalid Leave Single Queue", () => {
 
     // leave invalid queue uuid
     test("Invalid UUID", async () => {
-        const uuid = 5;
+        const uuid = 100;
         expect(
             await leaveQueue("discord-id-1", "channel-1", "guild-1", uuid),
         ).toBe(`Error: Queue with ID ${uuid} does not exist in this channel`);

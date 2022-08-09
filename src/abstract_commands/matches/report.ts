@@ -1,8 +1,9 @@
-import {GuildMember, Permissions} from "discord.js";
+import {GuildMember} from "discord.js";
+import {rate, Rating} from "ts-trueskill";
 
 import {Player} from "../../entities/matches/Player";
 import {PlayerStats} from "../../entities/queues/PlayerStats";
-import {ensure} from "../../utils/general";
+import {ensure, zip} from "../../utils/general";
 import {isMod} from "../permissions";
 
 /**
@@ -68,7 +69,7 @@ export async function report(
     }
 
     match.winningTeam = loss ? 3 - player.team : player.team; // to get opposite team: 3-2 => 1, 3-1 => 2
-    match.endTime = Math.floor(Date.now()/1000);
+    match.endTime = Math.floor(Date.now() / 1000);
 
     if (match.lobbyId === -1) {
         // todo: fetch
@@ -78,6 +79,7 @@ export async function report(
 
     await match.save();
 
+    let teamStats: PlayerStats[][] = [[], []];
     for (const player of ensure(match.players)) {
         const user = ensure(player.user);
         user.inGame = false;
@@ -85,21 +87,41 @@ export async function report(
         await user.save();
 
         const stats = ensure(await PlayerStats.findOneBy({
-            user: {
-                discordId: user.discordId,
-            },
+            user: {discordId: user.discordId},
             leaderboard: {
                 matches: {uuid: match.uuid},
             },
         }));
 
-        // todo: using trueskill here
-        stats.rating += player.ratingDelta;
+        teamStats[player.team - 1].push(stats);
+        if (player.team === match.winningTeam) {
+            stats.streak = Math.max(0, stats.streak) + 1;
+        } else {
+            stats.streak = Math.min(0, stats.streak) - 1;
+        }
         stats.lastMatch = match;
-        // todo: stats.sigma
-
-        await stats.save();
     }
+    if (match.winningTeam === 2) {
+        teamStats = [teamStats[1], teamStats[0]];
+    }
+
+    let teamRatings = teamStats.map((team: PlayerStats[]) => team.map(
+        (stats: PlayerStats) => new Rating(stats.rating, stats.sigma + 5 * stats.streak)
+    ));
+    teamRatings = rate(teamRatings);
+
+    const newPlayerRatings = [...teamRatings[0], ...teamRatings[1]];
+    const playerStats = [...teamStats[0], ...teamStats[1]];
+
+    for (const [player2, newRating, stats] of zip(ensure(match.players), newPlayerRatings, playerStats)) {
+        player2.ratingDelta = Math.floor(newRating.mu-stats.rating);
+        stats.rating += player2.ratingDelta;
+        // sigma should never be lower than 25
+        stats.sigma = Math.max(25, Math.floor(newRating.sigma));
+    }
+
+    await Player.save(ensure(match.players));
+    await PlayerStats.save(playerStats);
 
     return match.getResultEmbed();
 }

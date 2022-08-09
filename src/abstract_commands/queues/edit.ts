@@ -41,7 +41,7 @@ export async function editQueue(
         queue.pools = [pool];
     }
 
-    if (name || numPlayers || pool) {
+    if (name || numPlayers || pool || poolUuid === -1) {
         await queue.save();
     }
 

@@ -1,15 +1,18 @@
 import {Message, MessageActionRow, MessageButton, MessageEmbed, TextBasedChannel} from "discord.js";
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import fetch from "node-fetch";
+import {quality, Rating} from "ts-trueskill";
+import {BaseEntity, Column, Entity, In, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+
 import {cancelMatch} from "../../abstract_commands/matches/cancel";
 import {client} from "../../main";
-
-import {choose, ensure} from "../../utils/general";
+import {choose, combinations, ensure} from "../../utils/general";
 import {Guild} from "../Guild";
 import {GameMap} from "../pools/GameMap";
 import {Pool} from "../pools/Pool";
 import {Leaderboard} from "../queues/Leaderboard";
 import {PlayerStats} from "../queues/PlayerStats";
 import {Queue} from "../queues/Queue";
+import {AoE2Link} from "../user_data/AoE2Link";
 import {MapOption} from "./MapOption";
 import {Player} from "./Player";
 
@@ -145,9 +148,6 @@ export class Match extends BaseEntity {
             );
 
         if (showMapImg && this.map?.imgLink) {
-            // todo: update map stats
-
-
             embed.setImage(this.map.imgLink);
         }
 
@@ -157,11 +157,35 @@ export class Match extends BaseEntity {
     assignTeams(playerStats: PlayerStats[]): void {
         this.players = [];
 
-        // ToDo: use trueskill for team
-        for (let i = 0; i < playerStats.length; ++i) {
-            const team = i < playerStats.length / 2 ? 1 : 2;
-            const captain = i % (playerStats.length / 2) === 0;
-            this.players.push(new Player(playerStats[i], this, team, captain));
+        const possibleTeams: PlayerStats[][] = combinations(playerStats, Math.floor(playerStats.length/2));
+        let bestTeams: PlayerStats[][] = [];
+        let highestQuality = -1;
+
+        for(let i = 0; i < possibleTeams.length/2; ++i) {
+            const team1 = possibleTeams[i];
+            const team2 = possibleTeams.slice(-i-1)[0];
+
+            const ratingsTeam1 = team1.map((stats: PlayerStats) => new Rating(stats.rating, stats.sigma + 5 * Math.abs(stats.streak)));
+            const ratingsTeam2 = team2.map((stats: PlayerStats) => new Rating(stats.rating, stats.sigma + 5 * Math.abs(stats.streak)));
+
+            let q = quality([ratingsTeam1, ratingsTeam2]);
+            if(q > highestQuality) {
+                highestQuality = q;
+                bestTeams = [team1, team2];
+            }
+        }
+
+        const [team1, team2] = bestTeams;
+
+        team1.sort((a: PlayerStats, b: PlayerStats) => a.rating > b.rating ? -1 : 1);
+        team2.sort((a: PlayerStats, b: PlayerStats) => a.rating > b.rating ? -1 : 1);
+
+        for(const [i, stats] of team1.entries()) {
+            this.players.push(new Player(stats, this, 1, i === 0));
+        }
+
+        for(const [i, stats] of team2.entries()) {
+            this.players.push(new Player(stats, this, 2, i === 0));
         }
     }
 
@@ -193,7 +217,11 @@ export class Match extends BaseEntity {
             do {
                 map = choose(mapsMultiplied);
             } while (mapUuids.includes(map.uuid) && pool.poolMaps.length > 5);
-            // if the length is < 5, a repeat is guaranteed
+            // if the length is < 5, a repeat is guarantee
+            // d
+            ++map.numShown;
+            map.numTotal += ensure(this.queue).numPlayers;
+            map.save().then();
 
             this.mapOptions.push(new MapOption(map, this));
         }
@@ -209,6 +237,9 @@ export class Match extends BaseEntity {
             }
             return max;
         }, ensure(this.mapOptions)[0]).map;
+
+        ++this.map.numChosen;
+        this.map.save().then();
     }
 
     async setReady(userId: string): Promise<Player> {
@@ -346,26 +377,80 @@ export class Match extends BaseEntity {
                 if (this.unreadyPlayers.length === 0) {
                     this.determineMap();
 
-                    // todo: send new
-                    await msg.edit({
+                    await msg.delete();
+                    msg = await channel.send({
                         content: null,
                         embeds: [this.embed],
-                        components: [
-                            new MessageActionRow().addComponents(
-                                new MessageButton()
-                                    .setLabel("Join")
-                                    .setURL("https://aoe2.net/j/123456789")
-                                    .setStyle("LINK")
-                                    .setEmoji("🎮"),
-
-                                new MessageButton()
-                                    .setLabel("Spectate")
-                                    .setURL("https://aoe2.net/s/123456789")
-                                    .setStyle("LINK")
-                                    .setEmoji("👓"),
-                            ),
-                        ],
                     });
+
+                    const matchUsers = ensure(this.players).map((player: Player) => player.user);
+                    const links = await AoE2Link.findBy({user: In(matchUsers)});
+                    let profileIdMap: {[profileId: string]: boolean} = {};
+                    for (const link of links) {
+                        if (!link.profileId) {
+                            continue;
+                        }
+                        profileIdMap[link.profileId] = true;
+                    }
+
+                    const setGameButtons = async () => {
+                        let lobbies;
+                        try {
+                            const res = await fetch("https://aoe2.net/api/lobbies?game=aoe2de");
+                            lobbies = await res.json();
+                        } catch (e) {
+                            // aoe2.net unavailable
+                        }
+                        if (!lobbies) {
+                            return;
+                        }
+
+                        for (const lobby of lobbies) {
+                            for (const player of lobby[`players`]) {
+                                if (!profileIdMap[player[`profile_id`]]) {
+                                    continue;
+                                }
+
+                                if(this.lobbyId != lobby[`match_id`]) {
+                                    this.lobbyId = lobby[`match_id`];
+                                    await this.save();
+                                }
+
+                                if(!lobby[`started`]) {
+                                    setTimeout(setGameButtons, 5 * 1000);
+                                } else if(!lobby[`finished`]) {
+                                    setTimeout(setGameButtons, 60 * 1000);
+                                } else {
+                                    // todo: detect drop
+                                }
+
+                                await msg.edit({
+                                    content: null,
+                                    embeds: [this.embed],
+                                    components: [
+                                        new MessageActionRow().addComponents(
+                                            new MessageButton()
+                                                .setLabel("Join")
+                                                .setURL(`https://aoe2.net/j/${lobby[`match_id`]}`)
+                                                .setStyle("LINK")
+                                                .setEmoji("🎮"),
+
+                                            new MessageButton()
+                                                .setLabel("Spectate")
+                                                .setURL(`https://aoe2.net/s/${lobby[`match_id`]}`)
+                                                .setStyle("LINK")
+                                                .setEmoji("👓"),
+                                        ),
+                                    ],
+                                });
+                            }
+                        }
+                    }
+
+                    if (links.length > 0) {
+                        setGameButtons().then();
+                        setTimeout(setGameButtons, 5 * 1000);
+                    }
 
                     await this.save();
                     votes.stop();
