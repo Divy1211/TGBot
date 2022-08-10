@@ -443,8 +443,15 @@ export class Match extends BaseEntity {
                                         ),
                                     ],
                                 });
+                                return;
                             }
                         }
+
+                        setTimeout(setGameButtons, 5 * 1000);
+                        await msg.edit({
+                            content: null,
+                            embeds: [this.embed],
+                        });
                     }
 
                     if (links.length > 0) {
