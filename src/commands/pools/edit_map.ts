@@ -7,7 +7,7 @@ import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Edit the name of a map in the sever",
+    description: "Edit the name of a map in the server",
     slash: true,
     testOnly: true,
     guildOnly: true,
