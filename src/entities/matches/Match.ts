@@ -459,6 +459,7 @@ export class Match extends BaseEntity {
                         await msg.edit({
                             content: null,
                             embeds: [this.embed],
+                            components: [],
                         });
                     }
 

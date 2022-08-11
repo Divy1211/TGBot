@@ -102,12 +102,12 @@ export class GameMap extends BaseEntity {
             .setColor("#ED2939")
             .addFields([
                 {
-                    name: "Times Voted",
+                    name: "Actual Votes",
                     value: `${this.numClicked}`,
                     inline: true,
                 },
                 {
-                    name: "Total Possible Votes",
+                    name: "Possible Votes",
                     value: `${this.numTotal}`,
                     inline: true,
                 },

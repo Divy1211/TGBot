@@ -63,11 +63,22 @@ async function createTestingDatabase() {
     await pool.save();
 
     pool.poolMaps = [];
-    for (let i = 0; i < 10; ++i) {
-        const map = new GameMap(
-            `map #${i}`, "https://static.toiimg.com/thumb/53110049.cms?width=1200&height=900", ensure(queue.guild));
-        await map.save();
 
+    const maps = [
+        new GameMap(`Acclivity`, "https://i.imgur.com/TJx1fC7.png", ensure(queue.guild)),
+        new GameMap(`Acropolis`, "https://i.imgur.com/Bd8zKAR.png", ensure(queue.guild)),
+        new GameMap(`African Clearing`, "https://i.imgur.com/zr0qL0X.png", ensure(queue.guild)),
+        new GameMap(`Arabia`, "https://i.imgur.com/M96ubOm.png", ensure(queue.guild)),
+        new GameMap(`Arena`, "https://i.imgur.com/nVdsfeT.png", ensure(queue.guild)),
+        new GameMap(`Hideout`, "https://i.imgur.com/PEZBJbl.png", ensure(queue.guild)),
+        new GameMap(`Ravines`, "https://i.imgur.com/jEXQA8R.png", ensure(queue.guild)),
+        new GameMap(`Steppe`, "https://i.imgur.com/kYYdh0d.png", ensure(queue.guild)),
+        new GameMap(`Team Islands`, "https://i.imgur.com/r6WyUc3.png", ensure(queue.guild)),
+        new GameMap(`Water Nomad`, "https://i.imgur.com/AFNk7zC.png", ensure(queue.guild)),
+    ]
+    await GameMap.save(maps);
+
+    for(const map of maps) {
         const poolMap = new PoolMap(map, pool, 1);
         await poolMap.save();
     }
@@ -82,7 +93,7 @@ async function main() {
     console.log("db connected!");
 
     // testing code start
-    await createTestingDatabase();
+    // await createTestingDatabase();
 
     // return;
     // testing code end
