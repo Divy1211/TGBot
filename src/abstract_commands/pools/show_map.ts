@@ -9,7 +9,10 @@ import {GameMap} from "../../entities/pools/GameMap";
  * @param guildId The ID of the server in which the Pool is created
  */
 export async function showMap(gameMapUuid: number, guildId: string): Promise<string | MessageEmbed> {
-    const gameMap = await GameMap.findOneBy({uuid: gameMapUuid});
+    const gameMap = await GameMap.findOneBy({
+        uuid: gameMapUuid,
+        guild: {id: guildId},
+    });
     if (!gameMap) {
         return `Map with ID \`${gameMapUuid}\` does not exist in this server`;
     }

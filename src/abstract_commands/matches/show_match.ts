@@ -10,14 +10,17 @@ import {Match} from "../../entities/matches/Match";
  */
 export async function showMatch(guildId: string, matchUuid: number): Promise<string | MessageEmbed> {
     const match = await Match.findOne({
-        where: {uuid: matchUuid},
+        where: {
+            uuid: matchUuid,
+            guild: {id: guildId},
+        },
         relations: {
             players: {
                 user: true,
             },
         },
     });
-    if(!match) {
+    if (!match) {
         return `Match with ID ${matchUuid} does not exist in this server`;
     }
 
