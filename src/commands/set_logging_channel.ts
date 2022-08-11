@@ -22,4 +22,3 @@ export default {
         return await setLoggingChannel(guildId, channelId);
     },
 } as ICommand;
-

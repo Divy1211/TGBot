@@ -14,9 +14,8 @@ import {Queue} from "./entities/queues/Queue";
 import {QueueDefault} from "./entities/queues/QueueDefault";
 import {QueueMsg} from "./entities/queues/QueueMsg";
 import {User} from "./entities/User";
-import {Account} from "./entities/user_data/Account";
+import {AoE2Link} from "./entities/user_data/AoE2Link";
 import {Ban} from "./entities/user_data/Ban";
-import {Profile} from "./entities/user_data/Profile";
 
 export const AppDataSource = new DataSource({
     type: "better-sqlite3",
@@ -35,9 +34,8 @@ export const AppDataSource = new DataSource({
         QueueDefault,
         QueueMsg,
         PlayerStats,
-        Account,
+        AoE2Link,
         Ban,
-        Profile,
         Guild,
         User,
     ],

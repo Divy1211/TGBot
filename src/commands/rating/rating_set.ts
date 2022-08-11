@@ -6,8 +6,13 @@ import {User} from "../../entities/User";
 import {ensure} from "../../utils/general";
 
 export default {
+<<<<<<< HEAD
     category: "General",
     description: "This command resets the ratings of all the users in the server back to the default 1000.",
+=======
+    category: "Admin",
+    description: "Set the rating for a user for a specific queue",
+>>>>>>> main
 
     slash: true,
     testOnly: true,
@@ -26,8 +31,13 @@ export default {
             required: true,
         },
         {
+<<<<<<< HEAD
             name: "leaderboard_uuid",
             description: "If specified, reset the ratings only for this leaderboard.",
+=======
+            name: "queue_uuid",
+            description: "The queue to set the rating for",
+>>>>>>> main
             type: ApplicationCommandOptionTypes.INTEGER,
             required: false,
         },
@@ -43,6 +53,7 @@ export default {
 
         // get the command parameters
         const rating = ensure(options.getInteger("rating"));
+<<<<<<< HEAD
         const userAPI = ensure(options.getUser("user"));
         const user = await User.findOneBy({discordId:userAPI!.id})
 
@@ -117,4 +128,11 @@ export default {
             }
         })
     }
+=======
+        const discordId = ensure(options.getUser("user")?.id);
+        const queueUuid = options.getInteger("queue_uuid") ?? undefined;
+
+        return await ratingSet(discordId, rating, channelId, queueUuid);
+    },
+>>>>>>> main
 } as ICommand;

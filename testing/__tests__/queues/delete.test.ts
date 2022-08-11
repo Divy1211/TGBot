@@ -27,7 +27,7 @@ describe("Invalid Delete", () => {
         const uuid = 10000000;
         expect(
             await deleteQueue(uuid, "channel-1"),
-        ).toBe(`Error: Queue with ID \`${uuid}\` was not found in this channel.`);
+        ).toBe(`Error: Queue with ID \`${uuid}\` does not exist in this channel`);
 
         expect(
             await Queue.findOneBy({uuid: queue.uuid})
@@ -38,7 +38,7 @@ describe("Invalid Delete", () => {
     test("Foreign UUID", async () => {
         expect(
             await deleteQueue(queue.uuid, "channel-2"),
-        ).toBe(`Error: Queue with ID \`${queue.uuid}\` was not found in this channel.`);
+        ).toBe(`Error: Queue with ID \`${queue.uuid}\` does not exist in this channel`);
 
         expect(
             await Queue.findOneBy({uuid: queue.uuid})

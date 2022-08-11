@@ -1,12 +1,20 @@
 import {MessageActionRow, MessageButton, MessageComponentInteraction} from "discord.js";
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
+<<<<<<< HEAD
 import {Leaderboard} from "../../entities/queues/Leaderboard";
 import {User} from "../../entities/User";
 
 export default {
     category: "General",
     description: "This command resets the ratings of all the users in the server back to the default 1000.",
+=======
+import {reset} from "../../abstract_commands/ratings/reset";
+
+export default {
+    category: "Admin",
+    description: "Reset ratings for a user/queue",
+>>>>>>> main
 
     slash: true,
     testOnly: true,
@@ -14,13 +22,22 @@ export default {
     options: [
         {
             name: "user",
+<<<<<<< HEAD
             description: "If specified, reset the ratings only for this user",
+=======
+            description: "The user to reset ratings for. If unspecified, resets the ratings of all users",
+>>>>>>> main
             type: ApplicationCommandOptionTypes.USER,
             required: false,
         },
         {
+<<<<<<< HEAD
             name: "leaderboard_uuid",
             description: "If specified, reset the ratings only for this leaderboard.",
+=======
+            name: "queue_uuid",
+            description: "The queue to reset the ratings for. If unspecified, resets the ratings in all queues",
+>>>>>>> main
             type: ApplicationCommandOptionTypes.INTEGER,
             required: false,
         },
@@ -35,6 +52,7 @@ export default {
         }
 
         // get the command parameters
+<<<<<<< HEAD
         const userAPI = options.getUser("user") ?? null;
         let user:any;
         if (userAPI !== null){
@@ -130,4 +148,11 @@ export default {
             }
         })
     }
+=======
+        const discordId = options.getUser("user")?.id;
+        const queueUuid = options.getInteger("queue_uuid") ?? undefined;
+
+        return await reset(guildId, discordId, queueUuid, {rating: true});
+    },
+>>>>>>> main
 } as ICommand;

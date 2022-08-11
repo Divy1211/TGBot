@@ -9,12 +9,16 @@ import {startMatch} from "./start";
 /**
  * Cancels the specified match and removes the specified users from the match from the queue if it is ongoing
  *
+ * @param guildId The ID of the server that the command is run in
  * @param uuid The uuid of the match to cancel
  * @param userIdsToRemove The IDs of the users to remove from the queue if the match was ongoing
  */
-export async function cancelMatch(uuid: number, userIdsToRemove?: string[]): Promise<string> {
+export async function cancelMatch(guildId: string, uuid: number, userIdsToRemove?: string[]): Promise<string> {
     const match = await Match.findOne({
-        where: {uuid},
+        where: {
+            uuid,
+            guild: {id: guildId},
+        },
         relations: {
             queue: {users: true},
             players: {user: true},
@@ -23,7 +27,7 @@ export async function cancelMatch(uuid: number, userIdsToRemove?: string[]): Pro
     });
 
     if (!match) {
-        return `Error: Match with ID \`${uuid}\` was not found.`;
+        return `Error: Match with ID \`${uuid}\` does not exist in this server`;
     }
 
     const playerUsers = ensure(match.players).map((player: Player) => ensure(player.user));

@@ -191,14 +191,14 @@ describe("Invalid Join Singe Queue", () => {
 
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-1", uuid),
-        ).toBe(`Queue with ID ${uuid} does not exist in this channel`);
+        ).toBe(`Error: Queue with ID ${uuid} does not exist in this channel`);
     });
 
     // join with uuid of queue in another channel
     test("Join Queue UUID of Another Channel", async () => {
         expect(
             await joinQueue("discord-id-1", "channel-1", "guild-1", queue2.uuid),
-        ).toBe(`Queue with ID ${queue2.uuid} does not exist in this channel`);
+        ).toBe(`Error: Queue with ID ${queue2.uuid} does not exist in this channel`);
     });
 
     // join when already in queue

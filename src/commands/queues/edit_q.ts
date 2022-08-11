@@ -32,6 +32,12 @@ export default {
             minValue: 2,
             maxValue: 8,
         },
+        {
+            name: "pool_uuid",
+            description: "The ID of the pool to be used by the queue",
+            type: ApplicationCommandOptionTypes.INTEGER,
+            required: false,
+        },
     ],
 
     callback: async ({interaction}) => {
@@ -44,9 +50,10 @@ export default {
 
         // get the command parameters
         const uuid = ensure(options.getInteger("queue_uuid"));
-        const name = options.getString("name");
-        const numPlayers = options.getInteger("num_players");
+        const name = options.getString("name") ?? undefined;
+        const numPlayers = options.getInteger("num_players") ?? undefined;
+        const poolUuid = options.getInteger("pool_uuid") ?? undefined;
 
-        return await editQueue(uuid, channelId, name, numPlayers);
+        return await editQueue(uuid, channelId, {name, numPlayers, poolUuid});
     },
 } as ICommand;
