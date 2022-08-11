@@ -102,11 +102,15 @@ export class Match extends BaseEntity {
         return this.team(this.winningTeam);
     }
 
-    get team1(): Player[] {
+    get losingTeamPlayers(): Player[] {
+        return this.team(3-this.winningTeam);
+    }
+
+    get teamOnePlayers(): Player[] {
         return this.team(1);
     }
 
-    get team2(): Player[] {
+    get teamTwoPlayers(): Player[] {
         return this.team(2);
     }
 
@@ -129,7 +133,7 @@ export class Match extends BaseEntity {
             .addFields(
                 {
                     name: `Team 1`,
-                    value: `${this.team1.map(({user, rating, ratingDelta}) => {
+                    value: `${this.teamOnePlayers.map(({user, rating, ratingDelta}) => {
                         if (this.endTime !== -1) {
                             return `<@${ensure(user).discordId}> \`${rating} => ` +
                                    `${rating + ratingDelta} (${ratingDelta < 0 ? "" : "+"}${ratingDelta})\``;
@@ -140,7 +144,7 @@ export class Match extends BaseEntity {
                 },
                 {
                     name: `Team 2`,
-                    value: `${this.team2.map(({user, rating, ratingDelta}) => {
+                    value: `${this.teamTwoPlayers.map(({user, rating, ratingDelta}) => {
                         if (this.endTime !== -1) {
                             return `<@${ensure(user).discordId}> \`${rating} => ` +
                                    `${rating + ratingDelta} (${ratingDelta < 0 ? "" : "+"}${ratingDelta})\``;
@@ -286,14 +290,14 @@ export class Match extends BaseEntity {
             .addFields(
                 {
                     name: `Team 1`,
-                    value: `${this.team1.map(
+                    value: `${this.teamOnePlayers.map(
                         (player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
                         .join("\n")}`,
                     inline: true,
                 },
                 {
                     name: `Team 2`,
-                    value: `${this.team2.map(
+                    value: `${this.teamTwoPlayers.map(
                         (player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
                         .join("\n")}`,
                     inline: true,

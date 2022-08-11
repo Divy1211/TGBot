@@ -9,6 +9,7 @@ export async function civWinRate(civ: Civ) {
     });
 
     let wins = 0;
+    let losses = 0;
     for(const match of matches) {
         for(const player of match.winningTeamPlayers) {
             if(player.civ === civ) {
@@ -16,7 +17,13 @@ export async function civWinRate(civ: Civ) {
                 break;
             }
         }
+        for(const player of match.losingTeamPlayers) {
+            if(player.civ === civ) {
+                ++losses;
+                break;
+            }
+        }
     }
 
-    return Math.floor(wins/matches.length * 100)/100;
+    return Math.floor(wins/(wins+losses)*100)/100;
 }
