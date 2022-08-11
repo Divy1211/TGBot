@@ -98,6 +98,10 @@ export class Match extends BaseEntity {
             .sort((p1: Player, p2: Player) => p1.rating > p2.rating ? -1 : 1);
     }
 
+    get winningTeamPlayers(): Player[] {
+        return this.team(this.winningTeam);
+    }
+
     get team1(): Player[] {
         return this.team(1);
     }
