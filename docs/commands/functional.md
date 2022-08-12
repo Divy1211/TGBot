@@ -23,7 +23,7 @@ Note: These specifications are currently ignored due to development purposes, bu
         2. <span style="color:blue">num_players</span>: The max number of players for the queue.
     5. <span style="color:red">Normal Flow</span>: A new `Queue` object is created and saved in the database.
     6. <span style="color:red">Alternate Flow</span>: An error is returned if the command is run outside a server text channel.
-    7. Sequence Diagram: ![sd](./sequence_diagrams/create_q.png)
+    7. Sequence Diagram: ![sd](sequence_diagrams/queues/create_q.png)
 2. `delete_q`
     1. <span style="color:pink">Purpose</span>: This command deletes a queue in a channel.
     2. <span style="color:pink">Constraints</span>: This command can only delete queues that were created in the channel that it is run in.
@@ -32,7 +32,7 @@ Note: These specifications are currently ignored due to development purposes, bu
         1. <span style="color:blue">uuid</span>: The ID of the queue to delete.
     5. <span style="color:red">Normal Flow</span>: A `Queue` object with the provided `uuid` should be fetched and removed from the database.
     6. <span style="color:red">Alternate Flow</span>: An error is returned if the uuid specified does not belong to a queue in the channel that this command is run in.
-    7. Sequence Diagram: ![sd](./sequence_diagrams/delete_q.png)
+    7. Sequence Diagram: ![sd](sequence_diagrams/queues/delete_q.png)
 3. `edit_q`
     1. <span style="color:pink">Purpose</span>: This command can be used to edit the settings of a queue.
     2. <span style="color:pink">Constraints</span>: This command can only edit queues in the channel that this command is run in.
@@ -43,7 +43,7 @@ Note: These specifications are currently ignored due to development purposes, bu
         3. <span style="color:blue">num_players</span>: (optional) The new number of players for the queue. If unspecified, the number of players are not changed.
     5. <span style="color:red">Normal Flow</span>: the `Queue` instance with the given `uuid` is fetched from the database, modified if necessary and saved back.
     6. <span style="color:red">Alternate Flow</span>: return an appropriate message if the queue `uuid` specified is not valid or exists in a different channel than in which this command is run.
-    7. Sequence Diagram: ![sd](./sequence_diagrams/edit_q.png)
+    7. Sequence Diagram: ![sd](sequence_diagrams/queues/edit_q.png)
 4. `set_logging_channel`
     1. <span style="color:pink">Purpose</span>: This command sets a logging channel in a server.
     2. <span style="color:pink">Constraints</span>: This command needs to be run in the channel which the user wants to set as the logging channel.
@@ -261,7 +261,7 @@ A captain is a player/user
         3. <span style="color:blue">show_pool_ids</span>: (default: `false`) If true, show the pool IDs for the queue.
     5. <span style="color:red">Normal Flow</span>: Show an embed with all the queues in the server.
     6. <span style="color:red">Alternate Flow</span>: If no queues are found in the server, show a relevant message.
-    7. Sequence Diagram: ![sd](./sequence_diagrams/list_q.png)
+    7. Sequence Diagram: ![sd](sequence_diagrams/queues/list_q.png)
 2. `join`
     1. <span style="color:pink">Purpose</span>: This command allows a user to join a queue in the channel that this command is run in.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
@@ -273,7 +273,7 @@ A captain is a player/user
     6. <span style="color:red">Alternate Flow 1</span>: If none of the `defaultQ` or `lastQ`s are defined and the `queue_uuid` parameter is unspecified, return a message asking the user to specify it.
     7. <span style="color:red">Alternate Flow 2</span> If no queues are found in the channel, show a relevant message.
     8. Additional Flow: When the number of users in the queue are == `numPlayers` of the queue, then start a match in that queue. When a match is started, remove all the users from any other queues that they are in, *even queues that are on other servers*
-    9. Sequence Diagram: ![sd](./sequence_diagrams/join.png)
+    9. Sequence Diagram: ![sd](sequence_diagrams/queues/join.png)
 3. `leave`
     1. <span style="color:pink">Purpose</span>: This command allows a user to leave a queue in the channel that this command is run in.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
@@ -286,7 +286,7 @@ A captain is a player/user
         - The user is in just one queue, leave that queue.
         - The user is in multiple queues, and the `queue_id` is not specified - show a message asking the user to specify which queue they want to leave.
     7. <span style="color:red">Alternate Flow 2</span> If no queues are found in the channel, show a relevant message.
-    8. Sequence Diagram: ![sd](./sequence_diagrams/leave.png)
+    8. Sequence Diagram: ![sd](sequence_diagrams/queues/leave.png)
 4. `leave_all`
     1. <span style="color:pink">Purpose</span>: This command allows a user to leave all queues in a server.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild.
@@ -308,7 +308,7 @@ A captain is a player/user
         1. <span style="color:blue">queue_uuid</span>: (optional) show the players in this queue.
     5. <span style="color:red">Normal Flow</span>: fetch all the `Queue`s in the channel that this command is used in. If there is just one queue, display an embed with the list of all the players in the queue
     6. <span style="color:red">Alternate Flow</span>: If there are multiple queues in the channel and `queue_uuid` is not specified, return an appropriate message asking the user to specify the queue for which they want to see the players.
-    7. Sequence Diagram: ![sd](./sequence_diagrams/list_players.png)
+    7. Sequence Diagram: ![sd](sequence_diagrams/queues/list_players.png)
 7. `profile`
     1. <span style="color:pink">Purpose</span>: Allow a user to see the profile of a user. This shows the user's rank, rating, total/wins/losses/streak, win rate and the rating changes in the last (max) 5 matches. This will show an embed.
     2. <span style="color:pink">Constraints</span>: This command must be used in a channel in a guild. This command should only show the profiles from the leaderboards in the server that this command is run in.
