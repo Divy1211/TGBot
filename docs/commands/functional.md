@@ -105,7 +105,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     
     7. Sequence Diagram: ![sd](sequence_diagrams/pools/add_map.png)
     
-        
+       
     
 10. `create_pool`
     1. <span style="color:pink">Purpose</span>: This command creates a pool.
@@ -117,68 +117,96 @@ Note: These specifications are currently ignored due to development purposes, bu
     6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the input format is incorrect.
     7. Sequence Diagram:![sd](sequence_diagrams/pools/create_pool.png)
 
-`create_map`
+11. `create_map`
 
       1. <span style="color:pink">Purpose</span>: This command creates a map.
-      2. <span style="color:pink">Constraints</span>: This command can only create a map for a particular server.
-      3. <span style="color:pink">Actors</span>: Admins
-      4. <span style="color:pink">Parameters</span>:
-            1. <span style="color:blue">name</span>: The name of the map.
-      5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `name` and `img_link` of the map, saving the `GameMap` object.
-      6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the input format is incorrect.
-      7. Sequence Diagram:![sd](sequence_diagrams/pools/create_map.png)
 
-1. `edit_pool`
-      1. <span style="color:pink">Purpose</span>: This command can be used to edit the information of a pool.
-      2. <span style="color:pink">Constraints</span>: This command can only edit pools in the server that this command is running in.
-      3. <span style="color:pink">Actors</span>: Admins
-      4. <span style="color:pink">Parameters</span>:
-         1. <span style="color:blue">uuid</span>: The `uuid` of the pool to modify.
-         2. <span style="color:blue">name</span>: The new name of the queue.
-      5. <span style="color:red">Normal Flow</span>: the `Pool` instance with the given `uuid` is fetched from the database, modified if necessary and saved back.
-      6. <span style="color:red">Alternate Flow</span>: return an appropriate message if the pool `uuid` specified is not valid or the new `name` is the same as the previous one.
-      7. Sequence Diagram: ![sd](sequence_diagrams/pools/edit_pool.png)
-2. `edit_map`
-      1. <span style="color:pink">Purpose</span>: This command can be used to edit the information of a map.
-      2. <span style="color:pink">Constraints</span>: This command can only edit maps in the server that this command is running in.
-      3. <span style="color:pink">Actors</span>: Admins
-      4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">uuid</span>: The `uuid` of the map to modify.
-        2. <span style="color:blue">name</span>: The new name of the map.
-      5. <span style="color:red">Normal Flow</span>: the `GameMap` instance with the given `uuid` is fetched from the database, modified if necessary and saved back.
-      6. <span style="color:red">Alternate Flow</span>: return an appropriate message if the map `uuid` specified is not valid or the new `name` is the same as the previous one.
-      7. Sequence Diagram: ![sd](sequence_diagrams/pools/edit_map.png)
+    2. <span style="color:pink">Constraints</span>: This command can only create a map for a particular server.
 
-`delete_pool` 
+    3. <span style="color:pink">Actors</span>: Admins
+         4. <span style="color:pink">Parameters</span>:
+               1. <span style="color:blue">name</span>: The name of the map.
+
+    4. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `name` and `img_link` of the map, saving the `GameMap` object.
+
+    5. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the input format is incorrect.
+
+    6. Sequence Diagram:![sd](sequence_diagrams/pools/create_map.png)
+
+12. `edit_pool`
+
+    1. <span style="color:pink">Purpose</span>: This command can be used to edit the information of a pool.
+
+    2. <span style="color:pink">Constraints</span>: This command can only edit pools in the server that this command is running in.
+
+    3. <span style="color:pink">Actors</span>: Admins
+       4. <span style="color:pink">Parameters</span>:
+          1. <span style="color:blue">uuid</span>: The `uuid` of the pool to modify.
+          2. <span style="color:blue">name</span>: The new name of the queue.
+
+    4. <span style="color:red">Normal Flow</span>: the `Pool` instance with the given `uuid` is fetched from the database, modified if necessary and saved back.
+
+    5. <span style="color:red">Alternate Flow</span>: return an appropriate message if the pool `uuid` specified is not valid or the new `name` is the same as the previous one.
+
+    6. Sequence Diagram: ![sd](sequence_diagrams/pools/edit_pool.png)
+
+13. `edit_map`
+
+    1. <span style="color:pink">Purpose</span>: This command can be used to edit the information of a map.
+
+    2. <span style="color:pink">Constraints</span>: This command can only edit maps in the server that this command is running in.
+
+    3. <span style="color:pink">Actors</span>: Admins
+
+    4. <span style="color:pink">Parameters</span>:
+
+         1. <span style="color:blue">uuid</span>: The `uuid` of the map to modify.
+
+       2. <span style="color:blue">name</span>: The new name of the map.
+
+    5. <span style="color:red">Normal Flow</span>: the `GameMap` instance with the given `uuid` is fetched from the database, modified if necessary and saved back.
+
+    6. <span style="color:red">Alternate Flow</span>: return an appropriate message if the map `uuid` specified is not valid or the new `name` is the same as the previous one.
+
+    7. Sequence Diagram: ![sd](sequence_diagrams/pools/edit_map.png)
+
+14. `delete_pool` 
 
       1. <span style="color:pink">Purpose</span>: This command deletes a pool from the server.
-      2. <span style="color:pink">Constraints</span>: This command can only delete a pool for a particular server.
-      3. <span style="color:pink">Actors</span>: Admins
-      4. <span style="color:pink">Parters</span>:
-                  1. <span style="color:blue">uuid</span>: The uuid of the pool.
-      5. <span style="color:red">Normal Flow</span>: A `Pool` object with the provided `uuid` should be fetched and removed from the database.
-      6. <span style="color:red">Alternate Flow</span>: An error is returned if the `uuid` specified does not belong to a pool in the server that this command is running in.
-      7. Sequence Diagram:![sd](sequence_diagrams/pools/delete_pool.png)
 
-1. `delete_map` 
+    2. <span style="color:pink">Constraints</span>: This command can only delete a pool for a particular server.
+
+    3. <span style="color:pink">Actors</span>: Admins
+
+    4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">uuid</span>: The uuid of the pool.
+
+    5. <span style="color:red">Normal Flow</span>: A `Pool` object with the provided `uuid` should be fetched and removed from the database.
+
+    6. <span style="color:red">Alternate Flow</span>: An error is returned if the `uuid` specified does not belong to a pool in the server that this command is running in.
+
+    7. Sequence Diagram:![sd](sequence_diagrams/pools/delete_pool.png)
+
+15. `delete_map` 
         1. <span style="color:pink">Purpose</span>: This command deletes a map from the server.
         2. <span style="color:pink">Constraints</span>: This command can only delete a map for a particular server.
-        3.  <span style="color:pink">Actors</span>: Admins
+        3. <span style="color:pink">Actors</span>: Admins
         4. <span style="color:pink">Parameters</span>:
-                   1. <span style="color:blue">uuid</span>: The uuid of the map.
+              1. <span style="color:blue">uuid</span>: The uuid of the map.
         5. <span style="color:red">Normal Flow</span>: A `GameMap` object with the provided `uuid` should be fetched and removed from the database.
         6. <span style="color:red">Alternate Flow</span>: An error is returned if the `uuid` specified does not belong to a map in the server that this command is running in.
         7. Sequence Diagram: ![sd](sequence_diagrams/pools/delete_map.png)
-2. `remove_map`
-        1. <span style="color:pink">Purpose</span>: This command removes a map from a pool specified in the server.
-        2. <span style="color:pink">Constraints</span>: This command can only remove a map for a particular pool in the server.
-        3. <span style="color:pink">Actors</span>: Admins
-        4. <span style="color:pink">Parameters</span>:
-                      1. <span style="color:blue">map_uuid</span>: The uuid of the map.
-                      2. <span style="color:blue">pool_uuid</span>: The uuid of the pool, if unspecified will remove it from all pools.
-        5. <span style="color:red">Normal Flow</span>: A `PoolMap` object with the provided `map_uuid` in the pool with the provided `pool_uuid` should be fetched and removed from the pool.
-        6. <span style="color:red">Alternate Flow</span>: An error is returned if the `map_uuid` specified does not belong to a map or the `pool_uuid` specified does not belong to a pool in the server that this command is run in.
-        7. Sequence Diagram: ![sd](sequence_diagrams/pools/remove_map.png)
+
+16. `remove_map`
+    1. <span style="color:pink">Purpose</span>: This command removes a map from a pool specified in the server.
+    2. <span style="color:pink">Constraints</span>: This command can only remove a map for a particular pool in the server.
+    3. <span style="color:pink">Actors</span>: Admins
+    4. <span style="color:pink">Parameters</span>:
+          1. <span style="color:blue">map_uuid</span>: The uuid of the map.
+          2. <span style="color:blue">pool_uuid</span>: The uuid of the pool, if unspecified will remove it from all pools.
+    5. <span style="color:red">Normal Flow</span>: A `PoolMap` object with the provided `map_uuid` in the pool with the provided `pool_uuid` should be fetched and removed from the pool.
+    6. <span style="color:red">Alternate Flow</span>: An error is returned if the `map_uuid` specified does not belong to a map or the `pool_uuid` specified does not belong to a pool in the server that this command is run in.
+    7. Sequence Diagram: ![sd](sequence_diagrams/pools/remove_map.png)
 
 
 ## Mod Commands
