@@ -6,7 +6,7 @@ import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Delete a pool from the sever",
+    description: "Delete a pool from the server",
     slash: true,
     testOnly: true,
     guildOnly: true,
