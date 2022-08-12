@@ -222,6 +222,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     5. <span style="color:red">Normal Flow</span>: All the `Queue`s in the channel that this command is run in should be retrieved. If there is a single queue in the channel, use its `Leaderboard` and set the given user's `rating` in the `PlayerStats` object. Save the `PlayerStats` object back to the database.
     6. <span style="color:red">Alternate Flow 1</span>: If there are more than 1 queues in the channel, ask the user to specify its ID.
     7. <span style="color:red">Alternate Flow 2</span> If there are no queues in the channel, return an appropriate error.
+    8. Sequence Diagram: ![sd](sequence_diagrams/rating/rating_set.png)
 
 2. `rating_reset`
     1. <span style="color:pink">Purpose</span>: This command resets the ratings of all the users in the server back to the default `1000`.
@@ -231,6 +232,7 @@ Note: These specifications are currently ignored due to development purposes, bu
         1. <span style="color:blue">user</span>: (optional): If specified, reset the ratings only for this user.
         2. <span style="color:blue">leaderboard_uuid</span>: (optional) If specified, reset the ratings only for this leaderboard.
     5. <span style="color:red">Normal Flow</span>: Ask for confirmation from the user if they really want to reset ratings. If yes, set all the `rating` values for all the `PlayerStats` lists of all the `Leaderboard` instances in the server to `1000`. Save the modified `PlayerStats` and `Leaderboard` instances back to the database.
+    6. Sequence Diagram: ![sd](sequence_diagrams/rating/rating_reset.png)
 
 2. `stats_reset`
     1. <span style="color:pink">Purpose</span>: This command resets all the statistics of all the users in the server.
@@ -240,6 +242,7 @@ Note: These specifications are currently ignored due to development purposes, bu
         1. <span style="color:blue">user</span>: (optional): If specified, reset the stats only for this user.
         2. <span style="color:blue">leaderboard_uuid</span>: (optional) If specified, reset the ratings only for this leaderboard.
     5. <span style="color:red">Normal Flow</span>: Ask for confirmation from the user if they really want to reset stats. If yes, set all the `numGames` etc. values for all the `PlayerStats` lists of all the `Leaderboard` instances in the server to `0`. Save the modified `PlayerStats` and `Leaderboard` instances back to the database.
+    6. Sequence Diagram: ![sd](sequence_diagrams/rating/stats_reset.png)
 
 3. `ban`
     1. <span style="color:pink">Purpose</span>: This command bans a user from joining queues.
@@ -252,6 +255,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     5. <span style="color:red">Normal Flow</span>: A new `Ban` instance is created, the duration is converted to seconds and added to the current epoch timestamp and saved in `Ban.until`. Save the ban instance in the database.
     6. <span style="color:red">Alternate Flow 1</span>: If the user specified is invalid, return an appropriate error.
     7. <span style="color:red">Alternate Flow 2</span> If the duration specified is in an invalid format, return an appropriate error.
+    8. Sequence Diagram: ![sd](sequence_diagrams/ban/ban.png)
 
 4. `unban`
     1. <span style="color:pink">Purpose</span>: This command removes the ban from a user to join a queue.
@@ -262,6 +266,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     5. <span style="color:red">Normal Flow</span>: The `Ban` instance for the specified `user` (and `guild`) is fetched from the database and removed.
     6. <span style="color:red">Alternate Flow 1</span>: If the user specified is invalid, return an appropriate error.
     7. <span style="color:red">Alternate Flow 2</span> If the timestamp of the `Ban.until` is already passed or there is no ban entry for the user specified, return an error saying that the user is not banned.
+    8. Sequence Diagram: ![sd](sequence_diagrams/ban/unban.png)
 
 5. `report_win`
     1. <span style="color:pink">Purpose</span>: This command can be used to report the winning team for a game.
@@ -275,6 +280,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     6. <span style="color:red">Alternate Flow 1</span>: If the provided `match_uuid` is invalid, return an appropriate error message.
     7. <span style="color:red">Alternate Flow 2</span> If the result for the match for the provided `match_uuid` is already registered, return an appropriate message if `overwrite` is set to `false`.
     8. <span style="color:red">Alternate Flow 3</span> If `overwrite` is set to `true`, then store the new result for the match and re-calculate the elo changes for every player and reflect them in the appropriate `PlayerStats` object (the elo BEFORE the match started are stored in the player objects in every match, so this should be trivial).
+    9. Sequence Diagram: ![sd](sequence_diagrams/matches/report_win.png)
 
 6. `cancel_match`
     1. <span style="color:pink">Purpose</span>: This command can be used to void the result of a match or cancel an ongoing match.
@@ -285,6 +291,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     5. <span style="color:red">Normal Flow</span>: The `Match` instance with the given `uuid` is fetched and if its result has already been registered, undo the rating changes and `numGames` etc. changes to the appropriate `PlayerStats` objects. Remove the match object from the database.
     6. <span style="color:red">Alternate Flow 1</span>: If the provided `match_uuid` is invalid, return an appropriate error message.
     7. <span style="color:red">Alternate Flow 2</span> If the result for the match for the provided `match_uuid` is already registered, return an appropriate message.
+    8. Sequence Diagram: ![sd](sequence_diagrams/matches/cancel_match.png)
 
 7. `reset`
     1. <span style="color:pink">Purpose</span>: This command removes all players from all the queues in the server.
@@ -292,7 +299,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     3. <span style="color:pink">Actors</span>: Admins, Mods
     4. <span style="color:pink">Parameters</span>:
     5. <span style="color:red">Normal Flow</span>: Fetch all the `Queue`s of the guild where this command is run. Remove all the users from all the queues obtained. Save the queues back to the database.
-
+    6. Sequence Diagram: ![sd](sequence_diagrams/queues/reset.png)
 ### Captain Commands
 
 A captain is a player/user
