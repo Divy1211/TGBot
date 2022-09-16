@@ -14,8 +14,7 @@ export function recursiveReaddir(dir: string, full_paths: boolean = false): stri
     let fileNames: string[] = [];
     let names = fs.readdirSync(dir);
     names.forEach((name) => {
-        if (name.match(/^\w*?\.\w+$/)) // if name is a file
-        {
+        if (fs.lstatSync(path.join(dir, name)).isFile()) {
             fileNames.push(full_paths ? dir + "\\" + name : name);
         } else {
             fileNames.push(...recursiveReaddir(path.join(dir, name), full_paths));

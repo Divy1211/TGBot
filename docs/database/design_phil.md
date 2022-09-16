@@ -20,8 +20,9 @@ This document covers what should be kept in mind while designing the classes tha
 3. About the usage of `eager: true` Read [this](https://typeorm.io/relations#relation-options) if you do not know what eager does.
     - Any relation that is frequently or always used with an object has an `eager: true` so that we do not need to explicitly specify loading it in each query.
     - For example, when we load a `Queue` there is a good chance that a player is trying to join/leave it, so we will always load the `players` in the `Queue` so we can determine if there are enough players to start a game.
+    - Note: An eager relation is not loaded if it is loaded indirectly from another relation that is not itself eager. For example, Suppose that a `ShoppingCart` object has a list of `Item`  objects (not `eager`) which in turn have a `Category` object for which `eager` is set to `true`. Now if the `ShoppingCart` object is loaded, and the query also requests `Item` objects to be loaded, the `Item` objects won't load their `Category` objects automatically, this will need to be requested via the original query as well.
 
 ### Constructors
 
-The constructors for each class always initialise an instance's own columns. Any other objects that are in relation with the class may or may not be initialsied by the constructor.
+The constructors for each class always initialise an instance's own columns. Any other objects that are in relation with the class may or may not be initialised by the constructor.
 - For example, a `Leaderboard` instance has a list of `PlayerStatistics` for each player that exists in the `Leaderboard`, but it does not make sense to create a new leaderboard with an existing list of `PlayerStatistics`. It makes more sense for a new `PlayerStatistics` object to set which `Leaderboard` it belongs to using its `leaderboard` backref instead. This is also faster query-wise, as explained in the [Relations](#relations) section.
