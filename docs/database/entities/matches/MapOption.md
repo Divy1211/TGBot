@@ -1,5 +1,15 @@
 ## Map Option
 
+- [Map Option](#map-option)
+  - [1. Functionality](#1-functionality)
+  - [2. Instance Attributes](#2-instance-attributes)
+    - [2.1. `uuid: number`](#21-uuid-number)
+    - [2.2. `numVotes: number`](#22-numvotes-number)
+    - [2.3. `match: Match`](#23-match-match)
+    - [2.4. `map: GameMap`](#24-map-gamemap)
+    - [2.5. `players: Player[]`](#25-players-player)
+  - [3. Methods](#3-methods)
+    - [3.1 `updateVote`](#31-updatevote)
 ### 1. Functionality
 
 In this bot, when players queue up for a game, 5 map voting options are generated for their match and the players can vote on those options to decide the map to play on. The following functionality must be supported by the voting system:
