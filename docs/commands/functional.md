@@ -105,7 +105,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     
     7. Sequence Diagram: ![sd](sequence_diagrams/pools/add_map.png)
     
-        
+       
     
 10. `create_pool`
     1. <span style="color:pink">Purpose</span>: This command creates a pool.
@@ -117,68 +117,96 @@ Note: These specifications are currently ignored due to development purposes, bu
     6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the input format is incorrect.
     7. Sequence Diagram:![sd](sequence_diagrams/pools/create_pool.png)
 
-`create_map`
+11. `create_map`
 
       1. <span style="color:pink">Purpose</span>: This command creates a map.
-      2. <span style="color:pink">Constraints</span>: This command can only create a map for a particular server.
-      3. <span style="color:pink">Actors</span>: Admins
-      4. <span style="color:pink">Parameters</span>:
-            1. <span style="color:blue">name</span>: The name of the map.
-      5. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `name` and `img_link` of the map, saving the `GameMap` object.
-      6. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the input format is incorrect.
-      7. Sequence Diagram:![sd](sequence_diagrams/pools/create_map.png)
 
-1. `edit_pool`
-      1. <span style="color:pink">Purpose</span>: This command can be used to edit the information of a pool.
-      2. <span style="color:pink">Constraints</span>: This command can only edit pools in the server that this command is running in.
-      3. <span style="color:pink">Actors</span>: Admins
-      4. <span style="color:pink">Parameters</span>:
-         1. <span style="color:blue">uuid</span>: The `uuid` of the pool to modify.
-         2. <span style="color:blue">name</span>: The new name of the queue.
-      5. <span style="color:red">Normal Flow</span>: the `Pool` instance with the given `uuid` is fetched from the database, modified if necessary and saved back.
-      6. <span style="color:red">Alternate Flow</span>: return an appropriate message if the pool `uuid` specified is not valid or the new `name` is the same as the previous one.
-      7. Sequence Diagram: ![sd](sequence_diagrams/pools/edit_pool.png)
-2. `edit_map`
-      1. <span style="color:pink">Purpose</span>: This command can be used to edit the information of a map.
-      2. <span style="color:pink">Constraints</span>: This command can only edit maps in the server that this command is running in.
-      3. <span style="color:pink">Actors</span>: Admins
-      4. <span style="color:pink">Parameters</span>:
-        1. <span style="color:blue">uuid</span>: The `uuid` of the map to modify.
-        2. <span style="color:blue">name</span>: The new name of the map.
-      5. <span style="color:red">Normal Flow</span>: the `GameMap` instance with the given `uuid` is fetched from the database, modified if necessary and saved back.
-      6. <span style="color:red">Alternate Flow</span>: return an appropriate message if the map `uuid` specified is not valid or the new `name` is the same as the previous one.
-      7. Sequence Diagram: ![sd](sequence_diagrams/pools/edit_map.png)
+    2. <span style="color:pink">Constraints</span>: This command can only create a map for a particular server.
 
-`delete_pool` 
+    3. <span style="color:pink">Actors</span>: Admins
+         4. <span style="color:pink">Parameters</span>:
+               1. <span style="color:blue">name</span>: The name of the map.
+
+    4. <span style="color:red">Normal Flow</span>: Fetch the `Guild` instance of the guild where this command is run. Set the `name` and `img_link` of the map, saving the `GameMap` object.
+
+    5. <span style="color:red">Alternate Flow</span>: Return an appropriate error message if the input format is incorrect.
+
+    6. Sequence Diagram:![sd](sequence_diagrams/pools/create_map.png)
+
+12. `edit_pool`
+
+    1. <span style="color:pink">Purpose</span>: This command can be used to edit the information of a pool.
+
+    2. <span style="color:pink">Constraints</span>: This command can only edit pools in the server that this command is running in.
+
+    3. <span style="color:pink">Actors</span>: Admins
+       4. <span style="color:pink">Parameters</span>:
+          1. <span style="color:blue">uuid</span>: The `uuid` of the pool to modify.
+          2. <span style="color:blue">name</span>: The new name of the queue.
+
+    4. <span style="color:red">Normal Flow</span>: the `Pool` instance with the given `uuid` is fetched from the database, modified if necessary and saved back.
+
+    5. <span style="color:red">Alternate Flow</span>: return an appropriate message if the pool `uuid` specified is not valid or the new `name` is the same as the previous one.
+
+    6. Sequence Diagram: ![sd](sequence_diagrams/pools/edit_pool.png)
+
+13. `edit_map`
+
+    1. <span style="color:pink">Purpose</span>: This command can be used to edit the information of a map.
+
+    2. <span style="color:pink">Constraints</span>: This command can only edit maps in the server that this command is running in.
+
+    3. <span style="color:pink">Actors</span>: Admins
+
+    4. <span style="color:pink">Parameters</span>:
+
+         1. <span style="color:blue">uuid</span>: The `uuid` of the map to modify.
+
+       2. <span style="color:blue">name</span>: The new name of the map.
+
+    5. <span style="color:red">Normal Flow</span>: the `GameMap` instance with the given `uuid` is fetched from the database, modified if necessary and saved back.
+
+    6. <span style="color:red">Alternate Flow</span>: return an appropriate message if the map `uuid` specified is not valid or the new `name` is the same as the previous one.
+
+    7. Sequence Diagram: ![sd](sequence_diagrams/pools/edit_map.png)
+
+14. `delete_pool` 
 
       1. <span style="color:pink">Purpose</span>: This command deletes a pool from the server.
-      2. <span style="color:pink">Constraints</span>: This command can only delete a pool for a particular server.
-      3. <span style="color:pink">Actors</span>: Admins
-      4. <span style="color:pink">Parters</span>:
-                  1. <span style="color:blue">uuid</span>: The uuid of the pool.
-      5. <span style="color:red">Normal Flow</span>: A `Pool` object with the provided `uuid` should be fetched and removed from the database.
-      6. <span style="color:red">Alternate Flow</span>: An error is returned if the `uuid` specified does not belong to a pool in the server that this command is running in.
-      7. Sequence Diagram:![sd](sequence_diagrams/pools/delete_pool.png)
 
-1. `delete_map` 
+    2. <span style="color:pink">Constraints</span>: This command can only delete a pool for a particular server.
+
+    3. <span style="color:pink">Actors</span>: Admins
+
+    4. <span style="color:pink">Parameters</span>:
+         1. <span style="color:blue">uuid</span>: The uuid of the pool.
+
+    5. <span style="color:red">Normal Flow</span>: A `Pool` object with the provided `uuid` should be fetched and removed from the database.
+
+    6. <span style="color:red">Alternate Flow</span>: An error is returned if the `uuid` specified does not belong to a pool in the server that this command is running in.
+
+    7. Sequence Diagram:![sd](sequence_diagrams/pools/delete_pool.png)
+
+15. `delete_map` 
         1. <span style="color:pink">Purpose</span>: This command deletes a map from the server.
         2. <span style="color:pink">Constraints</span>: This command can only delete a map for a particular server.
-        3.  <span style="color:pink">Actors</span>: Admins
+        3. <span style="color:pink">Actors</span>: Admins
         4. <span style="color:pink">Parameters</span>:
-                   1. <span style="color:blue">uuid</span>: The uuid of the map.
+              1. <span style="color:blue">uuid</span>: The uuid of the map.
         5. <span style="color:red">Normal Flow</span>: A `GameMap` object with the provided `uuid` should be fetched and removed from the database.
         6. <span style="color:red">Alternate Flow</span>: An error is returned if the `uuid` specified does not belong to a map in the server that this command is running in.
         7. Sequence Diagram: ![sd](sequence_diagrams/pools/delete_map.png)
-2. `remove_map`
-        1. <span style="color:pink">Purpose</span>: This command removes a map from a pool specified in the server.
-        2. <span style="color:pink">Constraints</span>: This command can only remove a map for a particular pool in the server.
-        3. <span style="color:pink">Actors</span>: Admins
-        4. <span style="color:pink">Parameters</span>:
-                      1. <span style="color:blue">map_uuid</span>: The uuid of the map.
-                      2. <span style="color:blue">pool_uuid</span>: The uuid of the pool, if unspecified will remove it from all pools.
-        5. <span style="color:red">Normal Flow</span>: A `PoolMap` object with the provided `map_uuid` in the pool with the provided `pool_uuid` should be fetched and removed from the pool.
-        6. <span style="color:red">Alternate Flow</span>: An error is returned if the `map_uuid` specified does not belong to a map or the `pool_uuid` specified does not belong to a pool in the server that this command is run in.
-        7. Sequence Diagram: ![sd](sequence_diagrams/pools/remove_map.png)
+
+16. `remove_map`
+    1. <span style="color:pink">Purpose</span>: This command removes a map from a pool specified in the server.
+    2. <span style="color:pink">Constraints</span>: This command can only remove a map for a particular pool in the server.
+    3. <span style="color:pink">Actors</span>: Admins
+    4. <span style="color:pink">Parameters</span>:
+          1. <span style="color:blue">map_uuid</span>: The uuid of the map.
+          2. <span style="color:blue">pool_uuid</span>: The uuid of the pool, if unspecified will remove it from all pools.
+    5. <span style="color:red">Normal Flow</span>: A `PoolMap` object with the provided `map_uuid` in the pool with the provided `pool_uuid` should be fetched and removed from the pool.
+    6. <span style="color:red">Alternate Flow</span>: An error is returned if the `map_uuid` specified does not belong to a map or the `pool_uuid` specified does not belong to a pool in the server that this command is run in.
+    7. Sequence Diagram: ![sd](sequence_diagrams/pools/remove_map.png)
 
 
 ## Mod Commands
@@ -194,6 +222,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     5. <span style="color:red">Normal Flow</span>: All the `Queue`s in the channel that this command is run in should be retrieved. If there is a single queue in the channel, use its `Leaderboard` and set the given user's `rating` in the `PlayerStats` object. Save the `PlayerStats` object back to the database.
     6. <span style="color:red">Alternate Flow 1</span>: If there are more than 1 queues in the channel, ask the user to specify its ID.
     7. <span style="color:red">Alternate Flow 2</span> If there are no queues in the channel, return an appropriate error.
+    8. Sequence Diagram: ![sd](sequence_diagrams/rating/rating_set.png)
 
 2. `rating_reset`
     1. <span style="color:pink">Purpose</span>: This command resets the ratings of all the users in the server back to the default `1000`.
@@ -203,6 +232,7 @@ Note: These specifications are currently ignored due to development purposes, bu
         1. <span style="color:blue">user</span>: (optional): If specified, reset the ratings only for this user.
         2. <span style="color:blue">leaderboard_uuid</span>: (optional) If specified, reset the ratings only for this leaderboard.
     5. <span style="color:red">Normal Flow</span>: Ask for confirmation from the user if they really want to reset ratings. If yes, set all the `rating` values for all the `PlayerStats` lists of all the `Leaderboard` instances in the server to `1000`. Save the modified `PlayerStats` and `Leaderboard` instances back to the database.
+    6. Sequence Diagram: ![sd](sequence_diagrams/rating/rating_reset.png)
 
 2. `stats_reset`
     1. <span style="color:pink">Purpose</span>: This command resets all the statistics of all the users in the server.
@@ -212,6 +242,7 @@ Note: These specifications are currently ignored due to development purposes, bu
         1. <span style="color:blue">user</span>: (optional): If specified, reset the stats only for this user.
         2. <span style="color:blue">leaderboard_uuid</span>: (optional) If specified, reset the ratings only for this leaderboard.
     5. <span style="color:red">Normal Flow</span>: Ask for confirmation from the user if they really want to reset stats. If yes, set all the `numGames` etc. values for all the `PlayerStats` lists of all the `Leaderboard` instances in the server to `0`. Save the modified `PlayerStats` and `Leaderboard` instances back to the database.
+    6. Sequence Diagram: ![sd](sequence_diagrams/rating/stats_reset.png)
 
 3. `ban`
     1. <span style="color:pink">Purpose</span>: This command bans a user from joining queues.
@@ -224,6 +255,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     5. <span style="color:red">Normal Flow</span>: A new `Ban` instance is created, the duration is converted to seconds and added to the current epoch timestamp and saved in `Ban.until`. Save the ban instance in the database.
     6. <span style="color:red">Alternate Flow 1</span>: If the user specified is invalid, return an appropriate error.
     7. <span style="color:red">Alternate Flow 2</span> If the duration specified is in an invalid format, return an appropriate error.
+    8. Sequence Diagram: ![sd](sequence_diagrams/ban/ban.png)
 
 4. `unban`
     1. <span style="color:pink">Purpose</span>: This command removes the ban from a user to join a queue.
@@ -234,6 +266,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     5. <span style="color:red">Normal Flow</span>: The `Ban` instance for the specified `user` (and `guild`) is fetched from the database and removed.
     6. <span style="color:red">Alternate Flow 1</span>: If the user specified is invalid, return an appropriate error.
     7. <span style="color:red">Alternate Flow 2</span> If the timestamp of the `Ban.until` is already passed or there is no ban entry for the user specified, return an error saying that the user is not banned.
+    8. Sequence Diagram: ![sd](sequence_diagrams/ban/unban.png)
 
 5. `report_win`
     1. <span style="color:pink">Purpose</span>: This command can be used to report the winning team for a game.
@@ -247,6 +280,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     6. <span style="color:red">Alternate Flow 1</span>: If the provided `match_uuid` is invalid, return an appropriate error message.
     7. <span style="color:red">Alternate Flow 2</span> If the result for the match for the provided `match_uuid` is already registered, return an appropriate message if `overwrite` is set to `false`.
     8. <span style="color:red">Alternate Flow 3</span> If `overwrite` is set to `true`, then store the new result for the match and re-calculate the elo changes for every player and reflect them in the appropriate `PlayerStats` object (the elo BEFORE the match started are stored in the player objects in every match, so this should be trivial).
+    9. Sequence Diagram: ![sd](sequence_diagrams/matches/report_win.png)
 
 6. `cancel_match`
     1. <span style="color:pink">Purpose</span>: This command can be used to void the result of a match or cancel an ongoing match.
@@ -257,6 +291,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     5. <span style="color:red">Normal Flow</span>: The `Match` instance with the given `uuid` is fetched and if its result has already been registered, undo the rating changes and `numGames` etc. changes to the appropriate `PlayerStats` objects. Remove the match object from the database.
     6. <span style="color:red">Alternate Flow 1</span>: If the provided `match_uuid` is invalid, return an appropriate error message.
     7. <span style="color:red">Alternate Flow 2</span> If the result for the match for the provided `match_uuid` is already registered, return an appropriate message.
+    8. Sequence Diagram: ![sd](sequence_diagrams/matches/cancel_match.png)
 
 7. `reset`
     1. <span style="color:pink">Purpose</span>: This command removes all players from all the queues in the server.
@@ -264,7 +299,7 @@ Note: These specifications are currently ignored due to development purposes, bu
     3. <span style="color:pink">Actors</span>: Admins, Mods
     4. <span style="color:pink">Parameters</span>:
     5. <span style="color:red">Normal Flow</span>: Fetch all the `Queue`s of the guild where this command is run. Remove all the users from all the queues obtained. Save the queues back to the database.
-
+    6. Sequence Diagram: ![sd](sequence_diagrams/queues/reset.png)
 ### Captain Commands
 
 A captain is a player/user
