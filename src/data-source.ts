@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import {DataSource} from "typeorm";
+import dotenv from "dotenv";
 
 import {Guild} from "./entities/Guild";
 import {MapOption} from "./entities/matches/MapOption";
@@ -17,11 +18,13 @@ import {User} from "./entities/User";
 import {AoE2Link} from "./entities/user_data/AoE2Link";
 import {Ban} from "./entities/user_data/Ban";
 
+dotenv.config();
+
 export const AppDataSource = new DataSource({
     type: "better-sqlite3",
     database: "data/database.sqlite",
     synchronize: true,
-    logging: true,
+    logging: !!process.env.DEV,
     entities: [
         MapOption,
         Match,

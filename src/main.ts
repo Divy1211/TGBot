@@ -34,7 +34,7 @@ export const client = new Djs.Client({
  * @param testServers The test servers to unregister the commands from
  */
 async function unregisterRenamedCommands(commandsDir: string, testServers: string[]): Promise<void> {
-    const commandNames = recursiveReaddir(commandsDir).map((name) => name.replace(".ts", ""));
+    const commandNames = recursiveReaddir(commandsDir).map((name) => name.replace(/\.[tj]s/g, ""));
 
     for (const guildId of testServers) {
         console.log(`Unregistering commands from test server: ${guildId}`);
@@ -105,7 +105,7 @@ async function main() {
 
     new WOKC(client, {
         commandDir,
-        typeScript: true,
+        typeScript: !!process.env.DEV ,
         testServers,
     });
 
