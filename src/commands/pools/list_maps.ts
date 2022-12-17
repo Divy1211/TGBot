@@ -7,7 +7,7 @@ export default {
     category: "General",
     description: "List all the maps on the server, or all the maps of a specific pool",
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

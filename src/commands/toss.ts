@@ -14,7 +14,7 @@ export default {
     description: "Flip a coin",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [],

@@ -9,7 +9,7 @@ export default {
     description: "Set a role for bot mods on the server",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

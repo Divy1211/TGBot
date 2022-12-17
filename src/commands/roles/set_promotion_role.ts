@@ -8,7 +8,7 @@ export default {
     description: "Set a role which is pinged for queue promotions on the server",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

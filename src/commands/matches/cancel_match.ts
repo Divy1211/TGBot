@@ -9,7 +9,7 @@ export default {
     description: "Cancel the result of a match",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

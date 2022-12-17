@@ -9,7 +9,7 @@ export default {
     description: "Set the rating for a user for a specific queue",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

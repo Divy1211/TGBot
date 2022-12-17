@@ -8,7 +8,7 @@ export default {
     category: "Admin",
     description: "Edit the name of a pool in the server",
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

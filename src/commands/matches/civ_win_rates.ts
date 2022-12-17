@@ -10,7 +10,7 @@ export default {
     description: "Calculate the win rates for a specific civilization across all games",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

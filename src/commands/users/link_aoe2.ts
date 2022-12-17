@@ -8,7 +8,7 @@ export default {
     description: "Link a user's steam/aoe2.net account with discord",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

@@ -8,7 +8,7 @@ export default {
     category: "Admin",
     description: "Delete a pool from the server",
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

@@ -8,7 +8,7 @@ export default {
     category: "General",
     description: "Show stats of a map",
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

@@ -9,7 +9,7 @@ export default {
     description: "Unban a user",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

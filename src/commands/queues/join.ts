@@ -9,7 +9,7 @@ export default {
     description: "Join a queue",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

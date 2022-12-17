@@ -7,7 +7,7 @@ export default {
     description: "Reset ratings for a user/queue",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

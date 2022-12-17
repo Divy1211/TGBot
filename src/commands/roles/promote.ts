@@ -7,7 +7,7 @@ export default {
     description: "If set, ping the promotion role for the server",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [],

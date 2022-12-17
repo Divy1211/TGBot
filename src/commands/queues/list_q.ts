@@ -10,7 +10,7 @@ export default {
     description: "List all the queues in the server",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

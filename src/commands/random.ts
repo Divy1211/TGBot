@@ -18,7 +18,7 @@ export default {
     description: "Generate a random number",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

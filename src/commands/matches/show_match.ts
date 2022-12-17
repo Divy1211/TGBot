@@ -9,7 +9,7 @@ export default {
     description: "Show the details of a specific match",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

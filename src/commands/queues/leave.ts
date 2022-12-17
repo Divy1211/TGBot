@@ -9,7 +9,7 @@ export default {
     description: "Leave a queue",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

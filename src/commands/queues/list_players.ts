@@ -8,7 +8,7 @@ export default {
     description: "See all the players in a queue",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

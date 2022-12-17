@@ -8,7 +8,7 @@ export default {
     category: "Admin",
     description: "Remove a map from a pool",
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

@@ -9,7 +9,7 @@ export default {
     description: "Set default join queue if there are multiple queues in a channel",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

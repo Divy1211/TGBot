@@ -7,7 +7,7 @@ export default {
     description: "Shows ping information for the bot",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
 
     callback: async ({interaction}) => {
         // sends a message and checks the difference between the createdTimestamp of the message and original

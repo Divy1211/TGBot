@@ -8,7 +8,7 @@ export default {
     description: "Edit the information of a specific queue",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

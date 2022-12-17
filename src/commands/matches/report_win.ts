@@ -9,7 +9,7 @@ export default {
     description: "Report a won game",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

@@ -7,7 +7,7 @@ export default {
     category: "General",
     description: "List all the pools in the server",
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

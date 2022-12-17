@@ -9,7 +9,7 @@ export default {
     description: "Set the cooldown for pinging the promotion role on the server. 10 minutes by default",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

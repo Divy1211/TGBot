@@ -7,7 +7,7 @@ export default {
     description: "List all the current queue bans on the server",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [],

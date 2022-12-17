@@ -9,7 +9,7 @@ export default {
     description: "Create a TG pickup queue in this channel",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

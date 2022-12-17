@@ -9,7 +9,7 @@ export default {
     category: "Admin",
     description: "Create a map",
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

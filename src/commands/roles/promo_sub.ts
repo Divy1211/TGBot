@@ -8,7 +8,7 @@ export default {
     description: "Add or remove oneself from the promotion role",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [],

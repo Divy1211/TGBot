@@ -7,7 +7,7 @@ export default {
     description: "Remove all users from all queues",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [],

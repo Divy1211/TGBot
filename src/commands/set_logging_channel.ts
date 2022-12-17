@@ -6,7 +6,7 @@ export default {
     description: "Set this channel as the logging channel for bot command usages on this server",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [],

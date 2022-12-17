@@ -8,7 +8,7 @@ export default {
     category: "Admin",
     description: "Add a map to a pool",
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [

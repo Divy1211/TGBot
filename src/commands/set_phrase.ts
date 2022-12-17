@@ -8,7 +8,7 @@ export default {
     description: "Set a phrase when joining a queue",
 
     slash: true,
-    testOnly: true,
+    testOnly: false,
     guildOnly: true,
 
     options: [
