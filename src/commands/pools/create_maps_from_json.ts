@@ -33,7 +33,8 @@ export default {
         const url = ensure(options.getString("url"));
         let maps;
         try {
-            maps = await (await fetch(url)).json();
+            const res = await fetch(url);
+            maps = await res.json();
         } catch (e) {
             return "The provided URL is either invalid or returned bad JSON"
         }

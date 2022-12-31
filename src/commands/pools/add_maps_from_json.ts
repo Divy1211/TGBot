@@ -39,8 +39,6 @@ export default {
         // get the command parameters
         const poolUuid = ensure(options.getInteger("pool_uuid"));
         const url = ensure(options.getString("url"));
-        console.log("test");
-        console.log(url);
         let maps;
         try {
             const res = await fetch(url);

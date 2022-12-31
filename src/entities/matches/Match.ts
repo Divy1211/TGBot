@@ -75,7 +75,6 @@ export class Match extends BaseEntity {
 
         this.guild = ensure(queue.guild);
         this.queue = queue;
-        console.log(playerStats);
         this.leaderboard = ensure(playerStats[0].leaderboard);
 
         this.assignTeams(playerStats);
