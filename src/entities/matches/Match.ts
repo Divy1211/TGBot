@@ -332,7 +332,7 @@ export class Match extends BaseEntity {
             await msg.edit([
                 `Match \`${this.uuid}\` started! The following players need to vote:`,
                 `<@${this.unreadyPlayers.join(">\n<@")}>`,
-                `If someone does not vote, this this will cancel <t:${this.startTime + 5 * 60}:R>!`,
+                `If someone does not vote, this will cancel <t:${this.startTime + 5 * 60}:R>!`,
             ].join("\n"));
 
 
@@ -367,6 +367,11 @@ export class Match extends BaseEntity {
                     content: `<@${vote.user.id}> cancelled the match, reverting to the queue stage...`,
                     components: [],
                 });
+                for(const matchPlayer of ensure(this.players)) {
+                    matchPlayer.isReady = true;
+                }
+                player.isReady = false;
+                await Player.save(ensure(this.players));
                 votes.stop();
             } else {
                 const mapOption = this.getMapOptionByName(vote.customId);
@@ -474,15 +479,14 @@ export class Match extends BaseEntity {
 
         // this callback is run when the 5-minute timer runs out
         votes.on("end", async () => {
-            const unreadyPlayers = ensure(this.players)
-                .filter((player: Player) => !player.isReady)
-                .map((player: Player) => ensure(player.user).discordId);
-
+            const {unreadyPlayers} = this;
             if (unreadyPlayers.length > 0) {
-                await msg.edit({
-                    content: `<@${unreadyPlayers.join(">, <@")}> did not vote in time, aborting match...`,
-                    components: [],
-                });
+                console.log(msg.content);
+                if(!msg.content.endsWith("stage..."))
+                    await msg.edit({
+                        content: `<@${unreadyPlayers.join(">, <@")}> did not vote in time, aborting match...`,
+                        components: [],
+                    });
                 cancelMatch(ensure(this.guild).id, this.uuid, unreadyPlayers).then();
             }
         });
