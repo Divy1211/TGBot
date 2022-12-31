@@ -24,7 +24,7 @@ export const AppDataSource = new DataSource({
     type: "better-sqlite3",
     database: "data/database.sqlite",
     synchronize: true,
-    logging: !!process.env.DEV,
+    logging: !!process.env.ORM_VERBOSE,
     entities: [
         MapOption,
         Match,
