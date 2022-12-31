@@ -104,7 +104,7 @@ async function main() {
     // testing code end
 
     const commandDir = path.join(__dirname, "commands");
-    const testServers = [ensure(process.env.TEST)];
+    const testServers = !!process.env.DEV ? [ensure(process.env.TEST)] : [];
 
     await unregisterRenamedCommands(
         commandDir,
@@ -122,4 +122,7 @@ async function main() {
 
 // main();
 client.on("ready", main);
-client.login(ensure(process.env.TEST_TOKEN)).then();
+if(!!process.env.DEV)
+    client.login(ensure(process.env.TEST_TOKEN)).then();
+else
+    client.login(ensure(process.env.TOKEN)).then();
