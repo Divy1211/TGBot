@@ -1,5 +1,4 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
-import fetch from "node-fetch";
 import {ICommand} from "wokcommands";
 
 import {createMap} from "../../abstract_commands/pools/create_map";

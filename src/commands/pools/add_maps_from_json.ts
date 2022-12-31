@@ -1,23 +1,17 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
-
 import {addMap} from "../../abstract_commands/pools/add_map";
+
 import {ensure} from "../../utils/general";
 
 export default {
     category: "Admin",
-    description: "Add a map to a pool",
+    description: "JSON should be a list of maps which contain a 'uuid' and optionally a 'multiplier' key",
     slash: true,
     testOnly: false,
     guildOnly: true,
 
     options: [
-        {
-            name: "map_uuid",
-            description: "The uuid of the map",
-            type: ApplicationCommandOptionTypes.INTEGER,
-            required: true,
-        },
         {
             name: "pool_uuid",
             description: "The uuid of the pool",
@@ -25,10 +19,10 @@ export default {
             required: true,
         },
         {
-            name: "multiplier",
-            description: "The number of players on this map, if unspecified will be set to 1",
-            type: ApplicationCommandOptionTypes.INTEGER,
-            required: false,
+            name: "url",
+            description: "A URL that returns map objects as JSON. If any map object is invalid, only it will be skipped",
+            type: ApplicationCommandOptionTypes.STRING,
+            required: true,
         },
     ],
 
@@ -41,10 +35,21 @@ export default {
         }
 
         // get the command parameters
-        const mapUuid = ensure(options.getInteger("map_uuid"));
         const poolUuid = ensure(options.getInteger("pool_uuid"));
-        const multiplier = options.getInteger("multiplier") ?? 1;
-
-        return await addMap(guildId, mapUuid, poolUuid, multiplier);
+        const url = ensure(options.getString("url"));
+        let maps;
+        try {
+            const res = await fetch(url);
+            maps = await res.json();
+        } catch (e) {
+            return "The provided URL is either invalid or returned bad JSON"
+        }
+        let responses: string[] = [];
+        for(const map of maps) {
+            if(!map["uuid"])
+                responses.push("Invalid map object, no uuid");
+            responses.push(await addMap(guildId, map["uuid"], poolUuid, map["multiplier"] ?? 1));
+        }
+        return responses.join("\n");
     },
 } as ICommand;
