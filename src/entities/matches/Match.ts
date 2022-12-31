@@ -225,8 +225,7 @@ export class Match extends BaseEntity {
             do {
                 map = choose(mapsMultiplied);
             } while (mapUuids.includes(map.uuid) && pool.poolMaps.length > 5);
-            // if the length is < 5, a repeat is guarantee
-            // d
+            // only re-choose if the length is > 5, otherwise a repeat is guaranteed
             ++map.numShown;
             map.numTotal += ensure(this.queue).numPlayers;
             map.save().then();
@@ -279,7 +278,7 @@ export class Match extends BaseEntity {
     }
 
     getMapOptionByName(name: string): MapOption {
-        return ensure(this.mapOptions).filter((mapOption: MapOption) => mapOption.map.name === name)[0];
+        return ensure(this.mapOptions).filter((mapOption: MapOption) => name.startsWith(mapOption.map.name))[0];
     }
 
     get embed(): MessageEmbed {
@@ -504,13 +503,17 @@ export class Match extends BaseEntity {
         let linkRow1: MessageActionRow = new MessageActionRow();
         let mapRow2: MessageActionRow = new MessageActionRow();
         let linkRow2: MessageActionRow = new MessageActionRow();
-
+        let idCounts: Record<string, number> = {};
         ensure(this.mapOptions).forEach((option: MapOption, i: number) => {
             let mapRow = i <= 2 ? mapRow1 : mapRow2;
             let linkRow = i <= 2 ? linkRow1 : linkRow2;
+
+            option.map.name in idCounts || (idCounts[option.map.name] = 0);
+            idCounts[option.map.name] += 1
+
             mapRow.addComponents(
                 new MessageButton()
-                    .setCustomId(option.map.name)
+                    .setCustomId(option.map.name + idCounts[option.map.name])
                     .setLabel(`${option.map.name}\_\_\_\_`)
                     .setStyle("PRIMARY"),
             );

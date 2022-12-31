@@ -98,7 +98,7 @@ async function main() {
     console.log("db connected!");
 
     // testing code start
-    // await createTestingDatabase();
+    await createTestingDatabase();
 
     // return;
     // testing code end

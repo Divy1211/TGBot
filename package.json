@@ -10,7 +10,7 @@
     "tests": "jest --colors --runInBand",
     "coverage:print": "jest --coverage --colors --runInBand",
     "coverage:report": "jest --coverage --colors --runInBand --reporters",
-    "deploy": "npm run build && ts-node dist/src/main.js"
+    "deploy": "rm -rf ./dist && npm run build && ts-node dist/src/main.js"
   },
   "keywords": [],
   "author": "",
