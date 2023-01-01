@@ -3,6 +3,9 @@ import {ICommand} from "wokcommands";
 
 import {joinQueue} from "../../abstract_commands/queues/join";
 import {User} from "../../entities/User";
+import {Guild} from "../../entities/Guild";
+import {isMod} from "../../abstract_commands/permissions";
+import {GuildMember} from "discord.js";
 
 export default {
     category: "User",
@@ -28,7 +31,7 @@ export default {
     ],
 
     callback: async ({interaction}) => {
-        const {options, channelId, guildId} = interaction;
+        const {options, channelId, guildId, member} = interaction;
 
         let {user} = interaction;
 
@@ -40,6 +43,20 @@ export default {
         // get the command parameters
         const uuid = options.getInteger("queue_uuid") ?? undefined;
         user = options.getUser("user") ?? user;
+
+        if(options.getUser("user")) {
+            let guild = await Guild.findOneBy({id: guildId});
+            if (!guild) {
+                guild = new Guild(guildId);
+            }
+            if(!isMod(member as GuildMember, guild)) {
+                await interaction.reply({
+                    ephemeral: true,
+                    content: "Only moderators are allowed to use this command"
+                })
+                return;
+            }
+        }
 
         return await joinQueue(user.id, channelId, guildId, options.getUser("user") !== null, uuid);
     },
