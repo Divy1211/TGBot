@@ -50,7 +50,7 @@ export default {
         }
 
         // get the command parameters
-        const name = ensure(options.getString("name"));
+        const name = ensure(options.getString("name")).replace("@", "\\@");
         const imgLink = options.getString("img_link") ?? undefined;
 
         return await createMap(guildId, name, imgLink);

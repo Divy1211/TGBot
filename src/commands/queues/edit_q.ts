@@ -65,10 +65,13 @@ export default {
 
         // get the command parameters
         const uuid = ensure(options.getInteger("queue_uuid"));
-        const name = options.getString("name") ?? undefined;
         const numPlayers = options.getInteger("num_players") ?? undefined;
         const poolUuid = options.getInteger("pool_uuid") ?? undefined;
+        let name = options.getString("name") ?? undefined;
 
+        if(name) {
+            name = name.replace("@", "\\@");
+        }
         return await editQueue(uuid, channelId, {name, numPlayers, poolUuid});
     },
 } as ICommand;

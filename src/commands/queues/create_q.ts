@@ -59,7 +59,7 @@ export default {
         }
 
         // get the command parameters
-        const name = ensure(options.getString("name"));
+        const name = ensure(options.getString("name")).replace("@", "\\@");
         const numPlayers = ensure(options.getInteger("num_players"));
         const poolUuid = options.getInteger("pool_uuid") ?? undefined;
 

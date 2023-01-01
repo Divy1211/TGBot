@@ -59,7 +59,7 @@ export default {
         // get the command parameters
         const user = ensure(options.getUser("user"));
         const duration = options.getString("duration") ?? "";
-        const reason = options.getString("reason") ?? "";
+        const reason = (options.getString("reason") ?? "").replace("@", "\\@");
 
         return await banUser(user.id, guildId, duration, reason);
     },

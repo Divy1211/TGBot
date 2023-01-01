@@ -57,7 +57,7 @@ export default {
         for(const map of maps) {
             if(!map["name"])
                 responses.push("Invalid map object, no name");
-            responses.push(await createMap(guildId, map["name"], map["img_link"] ?? undefined));
+            responses.push(await createMap(guildId, map["name"].replace("@", "\\@"), map["img_link"] ?? undefined));
         }
         return responses.join("\n");
     },

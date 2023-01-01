@@ -44,7 +44,7 @@ export default {
         }
 
         // get the command parameters
-        const name = ensure(options.getString("name"));
+        const name = ensure(options.getString("name")).replace("@", "\\@");
 
         return await createPool(name, guildId);
     },

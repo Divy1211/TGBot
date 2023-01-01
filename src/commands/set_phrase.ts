@@ -36,7 +36,7 @@ export default {
 
         // get the command parameters
         const queueUuid = ensure(options.getInteger("queue_uuid"));
-        const phrase = ensure(options.getString("phrase"));
+        const phrase = ensure(options.getString("phrase")).replace("@", "\\@");
 
         return await setPhrase(user.id, guildId, queueUuid, phrase);
     },

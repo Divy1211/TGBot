@@ -50,8 +50,11 @@ export default {
 
         // get the command parameters
         const poolUuid = ensure(options.getInteger("uuid"));
-        const name = options.getString("name") ?? undefined;
+        let name = options.getString("name") ?? undefined;
 
+        if(name) {
+            name = name.replace("@", "\\@");
+        }
         return await editPool(guildId, poolUuid, name);
     },
 } as ICommand;

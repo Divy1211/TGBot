@@ -1,5 +1,4 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
-import fetch from "node-fetch";
 import {ICommand} from "wokcommands";
 
 import {editMap} from "../../abstract_commands/pools/edit_map";
@@ -57,9 +56,12 @@ export default {
 
         // get the command parameters
         const mapUuid = ensure(options.getInteger("map_uuid"));
-        const name = options.getString("name") ?? undefined;
         let imgLink = options.getString("img_link") ?? undefined;
+        let name = options.getString("name") ?? undefined;
 
+        if(name) {
+            name = name.replace("@", "\\@");
+        }
         return await editMap(guildId, mapUuid, {newName: name, newImgLink: imgLink});
     },
 } as ICommand;
