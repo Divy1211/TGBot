@@ -367,11 +367,12 @@ export class Match extends BaseEntity {
                     content: `<@${vote.user.id}> cancelled the match, reverting to the queue stage...`,
                     components: [],
                 });
-                for(const matchPlayer of ensure(this.players)) {
+
+                for(const matchPlayer of ensure(this.players))
                     matchPlayer.isReady = true;
-                }
                 player.isReady = false;
                 await Player.save(ensure(this.players));
+
                 votes.stop();
             } else {
                 const mapOption = this.getMapOptionByName(vote.customId);
@@ -481,12 +482,13 @@ export class Match extends BaseEntity {
         votes.on("end", async () => {
             const {unreadyPlayers} = this;
             if (unreadyPlayers.length > 0) {
-                console.log(msg.content);
-                if(!msg.content.endsWith("stage..."))
+                await new Promise(f => setTimeout(f, 500));
+                if(!msg.content.endsWith("stage...")) {
                     await msg.edit({
                         content: `<@${unreadyPlayers.join(">, <@")}> did not vote in time, aborting match...`,
                         components: [],
                     });
+                }
                 cancelMatch(ensure(this.guild).id, this.uuid, unreadyPlayers).then();
             }
         });
