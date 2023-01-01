@@ -41,8 +41,17 @@ export default {
         }
 
         const discordId = options.getUser("user")?.id ?? user.id;
-        const steamId = options.getString("steam_id") ?? undefined;
-        const profileId = options.getString("aoe2_net_profile_id") ?? undefined;
+        let steamId = options.getString("steam_id") ?? "";
+        let profileId = options.getString("aoe2_net_profile_id") ?? "";
+
+        let profileIdMatch = profileId.match(/(?:https:\/\/aoe2\.net\/#aoe2de-profile-)?(\d+)/);
+        if(profileIdMatch) {
+            profileId = profileIdMatch[1];
+        }
+        let steamIdMatch = steamId.match(/(?:https:\/\/steamcommunity\.com\/profiles\/)?(\d+)/);
+        if(steamIdMatch) {
+            steamId = steamIdMatch[1];
+        }
 
         await interaction.deferReply();
         await interaction.editReply(await linkAoE2(discordId, steamId, profileId));

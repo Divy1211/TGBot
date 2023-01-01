@@ -368,8 +368,9 @@ export class Match extends BaseEntity {
                     components: [],
                 });
 
-                for(const matchPlayer of ensure(this.players))
+                for(const matchPlayer of ensure(this.players)) {
                     matchPlayer.isReady = true;
+                }
                 player.isReady = false;
                 await Player.save(ensure(this.players));
 

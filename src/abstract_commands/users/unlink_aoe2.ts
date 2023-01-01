@@ -6,8 +6,8 @@ import {AoE2Link} from "../../entities/user_data/AoE2Link";
  * @param discordId The ID of the user to link
  */
 export async function unlinkAoE2(discordId: string) {
-    const aoe2link = await AoE2Link.findOneBy({user: {discordId}});
-    await aoe2link?.remove();
+    const aoe2links = await AoE2Link.findBy({user: {discordId}});
+    await AoE2Link.remove(aoe2links);
 
     return `Unlinked successfully`;
 }

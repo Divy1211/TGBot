@@ -18,16 +18,21 @@ export async function linkAoE2(discordId: string, steamId?: string, profileId?: 
     }
 
     if(!steamId && !profileId) {
-        return "At least one of steam or aoe2.net profile IDs must be specified";
+        return "At least one of steam or aoe2.net profile IDs must be valid";
     }
 
     const leaderboards = [0,1,2,3,4,13,14];
 
     if(steamId && !profileId) {
         for(const leaderboard of leaderboards) {
-            const player: any = await (await fetch(
-                `https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=${leaderboard}&start=1&count=1&steam_id=${steamId}\n`,
-            )).json();
+            let player;
+            try {
+                player = await (await fetch(
+                    `https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=${leaderboard}&start=1&count=1&steam_id=${steamId}\n`,
+                )).json();
+            } catch (e) {
+                return "Linking failed";
+            }
 
             profileId = player.leaderboard[0]?.profile_id;
             if (profileId) {
@@ -38,9 +43,14 @@ export async function linkAoE2(discordId: string, steamId?: string, profileId?: 
 
     if(profileId && !steamId) {
         for(const leaderboard of leaderboards) {
-            const player: any = await (await fetch(
-                `https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=${leaderboard}&start=1&count=1&profile_id=${profileId}\n`
-            )).json();
+            let player;
+            try {
+                player = await (await fetch(
+                    `https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=${leaderboard}&start=1&count=1&profile_id=${profileId}\n`
+                )).json();
+            } catch (e) {
+                return "Linking failed";
+            }
 
             steamId = player.leaderboard[0]?.steam_id;
             if (steamId) {
