@@ -25,5 +25,9 @@ export async function civWinRate(civ: Civ) {
         }
     }
 
-    return Math.floor(wins/(wins+losses)*100)/100;
+    const total = wins+losses;
+    if(total === 0) {
+        return "-";
+    }
+    return `${Math.floor(wins/(wins+losses)*100)/100}`;
 }

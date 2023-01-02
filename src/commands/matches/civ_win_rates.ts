@@ -16,12 +16,9 @@ export default {
     options: [
         {
             name: "civ",
-            description: "The id of the match to cancel",
-            type: ApplicationCommandOptionTypes.INTEGER,
+            description: "The name of the civilization to show winrates for",
+            type: ApplicationCommandOptionTypes.STRING,
             required: true,
-            choices: [
-
-            ],
         },
     ],
 
@@ -33,8 +30,11 @@ export default {
         }
 
         // get the command parameters
-        const civ: Civ = ensure(options.getInteger("civ")) as Civ;
+        const civ: Civ = Civ[ensure(options.getString("civ")).toUpperCase() as CivString] as Civ;
 
-        return await civWinRate(civ);
+        if(!civ) {
+            return `'${options.getString("civ")}' is not a valid civilization`;
+        }
+        return `Win rate of ${Civ[civ].charAt(0) + Civ[civ].slice(1).toLowerCase()}: \`${await civWinRate(civ)}\``;
     },
 } as ICommand;

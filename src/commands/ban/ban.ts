@@ -24,7 +24,7 @@ export default {
         },
         {
             name: "duration",
-            description: "The duration to ban the user for",
+            description: "The duration to ban the user for. Specify in hh:mm[:ss] format",
             type: ApplicationCommandOptionTypes.STRING,
             required: false,
         },
