@@ -39,5 +39,5 @@ export async function addMap(
 
     const targetedMap = new PoolMap(map, pool, multiplier);
     await targetedMap.save();
-    return `Map "${map.name}" added to pool "${pool.name}"`;
+    return `Map "${map.name}" added to pool "${pool.name}" with multiplier \`${multiplier}\``;
 }
