@@ -50,6 +50,7 @@ export default {
             })
             return;
         }
+        await interaction.deferReply();
 
         // get the command parameters
         const poolUuid = ensure(options.getInteger("pool_uuid"));
@@ -59,7 +60,8 @@ export default {
             const res = await fetch(url);
             maps = await res.json();
         } catch (e) {
-            return "The provided URL is either invalid or returned bad JSON"
+            await interaction.editReply("The provided URL is either invalid or returned bad JSON");
+            return;
         }
         let responses: string[] = [];
         for(const map of maps) {
@@ -67,6 +69,6 @@ export default {
                 responses.push("Invalid map object, no uuid");
             responses.push(await addMap(guildId, map["uuid"], poolUuid, map["multiplier"] ?? 1));
         }
-        return responses.join("\n");
+        await interaction.editReply(responses.join("\n"));
     },
 } as ICommand;
