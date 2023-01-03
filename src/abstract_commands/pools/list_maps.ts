@@ -61,7 +61,7 @@ export async function listMaps(
         embed.addFields([
             {
                 name: "ID",
-                value: gameMaps.map((gameMap: GameMap) => `\`${gameMap.uuid}\``).join("\n"),
+                value: gameMaps.map((gameMap: GameMap) => `${gameMap.uuid}`).join("\n"),
                 inline: true,
             },
         ]);

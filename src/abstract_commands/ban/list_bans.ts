@@ -18,6 +18,12 @@ export async function listBans(guildId: string): Promise<MessageEmbed> {
         },
     });
 
+    for(const ban of bans) {
+        if (ban.until !== -1 && ban.until < Date.now() / 1000) {
+            await ban.remove();
+        }
+    }
+
     if (bans.length === 0) {
         return new MessageEmbed()
             .setTitle("Bans")
