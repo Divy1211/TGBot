@@ -324,6 +324,7 @@ export class Match extends BaseEntity {
 
         // the actual vote listener
         votes.on("collect", async (vote) => {
+            vote.deferReply();
             const player = await this.setReady(vote.user.id);
 
             // update the list of players that need to vote in the original message
@@ -340,8 +341,7 @@ export class Match extends BaseEntity {
                         ephemeral: true,
                         content: this.voteReroll(player),
                     }).then();
-                } catch (e) {
-                }
+                } catch (e) {}
 
                 // if the vote count for rerolls reaches a majority, actually reroll
                 if (this.numVotesReroll >= ensure(this.players).length / 2) {
@@ -358,9 +358,7 @@ export class Match extends BaseEntity {
             } else if (vote.customId === "cancel") {
                 try {
                     await vote.deferUpdate();
-                } catch (e) {
-                }
-
+                } catch (e) {}
                 await msg.edit({
                     content: `<@${vote.user.id}> cancelled the match, reverting to the queue stage...`,
                     components: [],
