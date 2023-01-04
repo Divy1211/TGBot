@@ -106,16 +106,16 @@ export async function report(
     }
 
     let teamRatings = teamStats.map((team: PlayerStats[]) => team.map(
-        (stats: PlayerStats) => new Rating(stats.rating, stats.sigma + 5 * stats.streak)
+        (stats: PlayerStats) => new Rating(stats.rating, stats.sigma + 5 * Math.abs(stats.streak))
     ));
     teamRatings = rate(teamRatings);
+    const idx = match.winningTeam === 2 ? 1 : 0;
+    const newPlayerRatings = [...teamRatings[idx], ...teamRatings[1-idx]];
+    const playerStats = [...teamStats[idx], ...teamStats[1-idx]];
 
-    const newPlayerRatings = [...teamRatings[0], ...teamRatings[1]];
-    const playerStats = [...teamStats[0], ...teamStats[1]];
-
-    for (const [player2, newRating, stats] of zip(ensure(match.players), newPlayerRatings, playerStats)) {
-        player2.ratingDelta = Math.floor(newRating.mu-stats.rating);
-        stats.rating += player2.ratingDelta;
+    for (const [player, newRating, stats] of zip(ensure(match.players), newPlayerRatings, playerStats)) {
+        player.ratingDelta = Math.floor(newRating.mu-stats.rating);
+        stats.rating += player.ratingDelta;
         // sigma should never be lower than 25
         stats.sigma = Math.max(25, Math.floor(newRating.sigma));
     }
