@@ -14,7 +14,7 @@ export default {
     options: [
         {
             name: "show_pool_ids",
-            description: "If true, show the IDs of the pools. Default: false",
+            description: "If true, show the IDs of the pools. Default: true",
             type: ApplicationCommandOptionTypes.BOOLEAN,
             required: false,
         },
@@ -29,7 +29,7 @@ export default {
         }
 
         // get the command parameters
-        const showPoolIds = options.getBoolean("show_pool_ids") ?? false;
+        const showPoolIds = options.getBoolean("show_pool_ids") ?? true;
 
         await generatePaginatedEmbed(await listPools(guildId, showPoolIds), interaction);
     },

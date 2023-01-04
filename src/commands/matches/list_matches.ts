@@ -14,7 +14,7 @@ export default {
     options: [
         {
             name: "show_match_ids",
-            description: "If true, show the IDs of the matches. Default: false",
+            description: "If true, show the IDs of the matches. Default: true",
             type: ApplicationCommandOptionTypes.BOOLEAN,
             required: false,
         },
@@ -41,7 +41,7 @@ export default {
         }
 
         // get the command parameters
-        const showMatchIds = options.getBoolean("show_match_ids") ?? false;
+        const showMatchIds = options.getBoolean("show_match_ids") ?? true;
         const discordId = options.getUser("user")?.id;
         const queueId = options.getInteger("queue_id") ?? undefined;
 

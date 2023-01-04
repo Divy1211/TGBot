@@ -27,13 +27,13 @@ export async function listMatches(
             leaderboard: true,
         }
     });
-    if(!queue) {
+    if(queueId && !queue) {
         return `Error: Queue with ID \`${queueId}\` does not exist in this channel`;
     }
     const allMatches = await Match.find({
         where: {
             guild: {id: guildId},
-            leaderboard: {uuid: ensure(queue.leaderboard).uuid},
+            leaderboard: {uuid: queue?.leaderboard?.uuid},
             players: {
                 user: {discordId}
             }
@@ -60,6 +60,10 @@ export async function listMatches(
         if(i%10 === 0) {
             embed = new MessageEmbed()
                 .setTitle("Matches")
+                .setDescription(
+                    (discordId ? `Showing matches for <@${discordId}>` : "Showing all matches")
+                    + queueId ? ` in the queue "${ensure(queue).name}"` : ""
+                )
                 .setColor("#ED2939")
             embeds.push(embed);
         }

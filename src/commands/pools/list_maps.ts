@@ -21,7 +21,7 @@ export default {
         },
         {
             name: "show_map_ids",
-            description: "If true, show the IDs of the maps. Default: false",
+            description: "If true, show the IDs of the maps. Default: true",
             type: ApplicationCommandOptionTypes.BOOLEAN,
             required: false,
         },
@@ -42,9 +42,9 @@ export default {
         }
 
         // get the command parameters
+        const showMapIds = options.getBoolean("show_map_ids") ?? true;
         const poolUuid = options.getInteger("pool_uuid") ?? undefined;
         const showPoolIds = options.getBoolean("show_pool_ids") ?? false;
-        const showMapIds = options.getBoolean("show_map_ids") ?? false;
 
         const resp = await listMaps(guildId, showPoolIds, showMapIds, poolUuid);
         if(typeof resp === "string") {

@@ -30,6 +30,8 @@ export async function listPools(guildId: string, showPoolIds?: boolean): Promise
         if(i%10 === 0) {
             embed = new MessageEmbed()
                 .setTitle("Server Pools")
+                .setDescription("No pools found")
+                .setDescription(`Showing ${i+1}-${Math.min(i+11, allPools.length)}/${allPools.length} Pools`)
                 .setColor("#ED2939");
             embeds.push(embed);
         }

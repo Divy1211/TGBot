@@ -37,6 +37,7 @@ export async function listBans(guildId: string): Promise<MessageEmbed[]> {
         if(i%10 === 0) {
             embed = new MessageEmbed()
                 .setTitle("Bans")
+                .setDescription("The following users are currently banned:")
                 .setColor("#ED2939");
             embeds.push(embed);
         }

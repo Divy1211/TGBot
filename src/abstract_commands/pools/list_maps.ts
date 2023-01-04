@@ -48,8 +48,8 @@ export async function listMaps(
         return [
             new MessageEmbed()
                 .setTitle("Server Maps")
-                .setColor("#ED2939")
                 .setDescription("No maps found")
+                .setColor("#ED2939")
         ];
     }
     let embeds: MessageEmbed[] = [];
@@ -59,6 +59,7 @@ export async function listMaps(
         if (i % 10 === 0) {
             embed = new MessageEmbed()
                 .setTitle("Server Maps")
+                .setDescription(`Showing ${i+1}-${Math.min(i+11, gameMaps.length)}/${gameMaps.length} Maps`)
                 .setColor("#ED2939");
             embeds.push(embed);
         }

@@ -20,8 +20,8 @@ export default {
             required: false,
         },
         {
-            name: "show_leaderboard_id",
-            description: "If true, show the leaderboard IDs for the queue. Default: false",
+            name: "show_q_ids",
+            description: "If true, show the queue IDs. Default: true",
             type: ApplicationCommandOptionTypes.BOOLEAN,
             required: false,
         },
@@ -43,10 +43,10 @@ export default {
 
         // get the command parameters
         const all = options.getBoolean("all") ?? false;
-        const showPools = options.getBoolean("show_pool_ids") ?? false;
-        const showLeaderboard = options.getBoolean("show_leaderboard_id") ?? false;
+        const showQIds = options.getBoolean("show_leaderboard_id") ?? false;
+        const showPoolIds = options.getBoolean("show_pool_ids") ?? false;
 
-        const resp = await listQ(channelId, guildId, all, showPools, showLeaderboard);
+        const resp = await listQ(channelId, guildId, all, showQIds, showPoolIds);
         if(typeof resp === "string") {
             await interaction.reply({
                 content: resp,

@@ -99,6 +99,7 @@ export class GameMap extends BaseEntity {
     get embed(): MessageEmbed {
         let embed = new MessageEmbed()
             .setTitle(this.name)
+            .setDescription(this.name)
             .setColor("#ED2939")
             .addFields([
                 {
