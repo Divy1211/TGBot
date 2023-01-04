@@ -3,7 +3,6 @@ import {ICommand} from "wokcommands";
 
 import {showMap} from "../../abstract_commands/pools/show_map";
 import {ensure} from "../../utils/general";
-import edit_map from "./edit_map";
 
 export default {
     category: "General",
