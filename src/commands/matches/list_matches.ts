@@ -54,7 +54,6 @@ export default {
             })
             return;
         }
-
         await generatePaginatedEmbed(resp, interaction);
     },
 } as ICommand;

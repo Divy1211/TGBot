@@ -3,6 +3,7 @@ import {ICommand} from "wokcommands";
 
 import {showMap} from "../../abstract_commands/pools/show_map";
 import {ensure} from "../../utils/general";
+import edit_map from "./edit_map";
 
 export default {
     category: "General",
@@ -29,6 +30,11 @@ export default {
         // get the command parameters
         const mapUuid = ensure(options.getInteger("map_uuid"));
 
-        return await showMap(mapUuid, guildId);
+        const resp = await showMap(mapUuid, guildId);
+        await interaction.reply({
+            content: typeof resp === "string" ? resp : undefined,
+            embeds: typeof resp === "string" ? [] : [resp],
+            ephemeral: true,
+        });
     },
 } as ICommand;

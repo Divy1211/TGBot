@@ -33,15 +33,9 @@ export default {
         const uuid = ensure(options.getInteger("match_uuid"));
 
         const resp = await showMatch(guildId, uuid);
-        if(typeof resp === "string") {
-            await interaction.reply({
-                content: resp,
-                ephemeral: true,
-            });
-            return;
-        }
         await interaction.reply({
-            embeds: [resp],
+            content: typeof resp === "string" ? resp : undefined,
+            embeds: typeof resp === "string" ? [] : [resp],
             ephemeral: true,
         });
     },

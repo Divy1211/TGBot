@@ -48,7 +48,11 @@ export default {
 
         const resp = await listQ(channelId, guildId, all, showPools, showLeaderboard);
         if(typeof resp === "string") {
-            return resp;
+            await interaction.reply({
+                content: resp,
+                ephemeral: true,
+            })
+            return;
         }
         await generatePaginatedEmbed(resp, interaction);
     },
