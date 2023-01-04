@@ -1,7 +1,6 @@
 import {Message, MessageActionRow, MessageButton, MessageEmbed, TextBasedChannel} from "discord.js";
-import fetch from "node-fetch";
 import {quality, Rating} from "ts-trueskill";
-import {BaseEntity, Column, Entity, In, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 
 import {cancelMatch} from "../../abstract_commands/matches/cancel";
 import {client} from "../../main";
@@ -12,7 +11,6 @@ import {Pool} from "../pools/Pool";
 import {Leaderboard} from "../queues/Leaderboard";
 import {PlayerStats} from "../queues/PlayerStats";
 import {Queue} from "../queues/Queue";
-import {AoE2Link} from "../user_data/AoE2Link";
 import {MapOption} from "./MapOption";
 import {Player} from "./Player";
 
@@ -395,86 +393,85 @@ export class Match extends BaseEntity {
                         content: null,
                         embeds: [this.embed],
                     });
-
-                    const matchUsers = ensure(this.players).map((player: Player) => player.user);
-                    const links = await AoE2Link.findBy({user: In(matchUsers)});
-                    let profileIdMap: {[profileId: string]: boolean} = {};
-                    for (const link of links) {
-                        if (!link.profileId) {
-                            continue;
-                        }
-                        profileIdMap[link.profileId] = true;
-                    }
-
-                    const setGameButtons = async () => {
-                        let lobbies;
-                        try {
-                            const res = await fetch("https://aoe2.net/api/lobbies?game=aoe2de");
-                            lobbies = await res.json();
-                        } catch (e) {
-                            // aoe2.net unavailable
-                        }
-                        if (!lobbies) {
-                            return;
-                        }
-
-                        for (const lobby of lobbies) {
-                            for (const player of lobby[`players`]) {
-                                if (!profileIdMap[player[`profile_id`]]) {
-                                    continue;
-                                }
-
-                                if(this.lobbyId != lobby[`match_id`]) {
-                                    this.lobbyId = lobby[`match_id`];
-                                    await this.save();
-                                }
-
-                                if(!lobby[`started`]) {
-                                    setTimeout(setGameButtons, 5 * 1000);
-                                } else if(!lobby[`finished`]) {
-                                    setTimeout(setGameButtons, 60 * 1000);
-                                } else {
-                                    // todo: detect drop
-                                }
-
-                                await msg.edit({
-                                    content: null,
-                                    embeds: [this.embed],
-                                    components: [
-                                        new MessageActionRow().addComponents(
-                                            new MessageButton()
-                                                .setLabel("Join")
-                                                .setURL(`https://aoe2.net/j/${lobby[`match_id`]}`)
-                                                .setStyle("LINK")
-                                                .setEmoji("🎮"),
-
-                                            new MessageButton()
-                                                .setLabel("Spectate")
-                                                .setURL(`https://aoe2.net/s/${lobby[`match_id`]}`)
-                                                .setStyle("LINK")
-                                                .setEmoji("👓"),
-                                        ),
-                                    ],
-                                });
-                                return;
-                            }
-                        }
-
-                        setTimeout(setGameButtons, 5 * 1000);
-                        await msg.edit({
-                            content: null,
-                            embeds: [this.embed],
-                            components: [],
-                        });
-                    }
-
-                    if (links.length > 0) {
-                        setGameButtons().then();
-                        setTimeout(setGameButtons, 5 * 1000);
-                    }
-
                     await this.save();
                     votes.stop();
+                    // todo: uncomment this when there is a lobby API available again
+                    // const matchUsers = ensure(this.players).map((player: Player) => player.user);
+                    // const links = await AoE2Link.findBy({user: In(matchUsers)});
+                    // let profileIdMap: {[profileId: string]: boolean} = {};
+                    // for (const link of links) {
+                    //     if (!link.profileId) {
+                    //         continue;
+                    //     }
+                    //     profileIdMap[link.profileId] = true;
+                    // }
+                    //
+                    // const setGameButtons = async () => {
+                    //     let lobbies;
+                    //     try {
+                    //         const res = await fetch("https://aoe2.net/api/lobbies?game=aoe2de");
+                    //         lobbies = await res.json();
+                    //     } catch (e) {
+                    //         // aoe2.net unavailable
+                    //     }
+                    //     if (!lobbies) {
+                    //         return;
+                    //     }
+                    //
+                    //     for (const lobby of lobbies) {
+                    //         for (const player of lobby[`players`]) {
+                    //             if (!profileIdMap[player[`profile_id`]]) {
+                    //                 continue;
+                    //             }
+                    //
+                    //             if(this.lobbyId != lobby[`match_id`]) {
+                    //                 this.lobbyId = lobby[`match_id`];
+                    //                 await this.save();
+                    //             }
+                    //
+                    //             if(!lobby[`started`]) {
+                    //                 setTimeout(setGameButtons, 5 * 1000);
+                    //             } else if(!lobby[`finished`]) {
+                    //                 setTimeout(setGameButtons, 60 * 1000);
+                    //             } else {
+                    //                 // todo: detect drop
+                    //             }
+                    //
+                    //             await msg.edit({
+                    //                 content: null,
+                    //                 embeds: [this.embed],
+                    //                 components: [
+                    //                     new MessageActionRow().addComponents(
+                    //                         new MessageButton()
+                    //                             .setLabel("Join")
+                    //                             .setURL(`https://aoe2.net/j/${lobby[`match_id`]}`)
+                    //                             .setStyle("LINK")
+                    //                             .setEmoji("🎮"),
+                    //
+                    //                         new MessageButton()
+                    //                             .setLabel("Spectate")
+                    //                             .setURL(`https://aoe2.net/s/${lobby[`match_id`]}`)
+                    //                             .setStyle("LINK")
+                    //                             .setEmoji("👓"),
+                    //                     ),
+                    //                 ],
+                    //             });
+                    //             return;
+                    //         }
+                    //     }
+                    //
+                    //     setTimeout(setGameButtons, 5 * 1000);
+                    //     await msg.edit({
+                    //         content: null,
+                    //         embeds: [this.embed],
+                    //         components: [],
+                    //     });
+                    // }
+                    //
+                    // if (links.length > 0) {
+                    //     setGameButtons().then();
+                    //     setTimeout(setGameButtons, 5 * 1000);
+                    // }
                 }
             }
         });

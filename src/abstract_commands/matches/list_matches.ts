@@ -1,22 +1,48 @@
 import {MessageEmbed} from "discord.js";
 
 import {Match} from "../../entities/matches/Match";
-import {ensure} from "../../utils/general";
+import {ensure, enumerate} from "../../utils/general";
+import {Player} from "../../entities/matches/Player";
+import {Queue} from "../../entities/queues/Queue";
 
 /**
  * List all the matches played in the server
  *
  * @param guildId The ID of the server in which the command is run
+ * @param discordId The ID of the user to show matches for
+ * @param queueId The ID of the queue whose leaderboard to show matches for
  * @param showMatchIds If true, show the IDs of the matches
  */
-export async function listMatches(guildId: string, showMatchIds?: boolean): Promise<MessageEmbed[]> {
+export async function listMatches(
+    guildId: string,
+    discordId?: string,
+    queueId?: number,
+    showMatchIds?: boolean
+): Promise<string | MessageEmbed[]> {
+    const queue = await Queue.findOne({
+        where: {
+            guild: {id: guildId},
+            uuid: queueId,
+        },
+        relations: {
+            leaderboard: true,
+        }
+    });
+    if(!queue) {
+        return `Error: Queue with ID \`${queueId}\` does not exist in this channel`;
+    }
     const allMatches = await Match.find({
         where: {
             guild: {id: guildId},
+            leaderboard: {uuid: ensure(queue.leaderboard).uuid},
+            players: {
+                user: {discordId}
+            }
         },
         relations: {
-            players: true,
-        },
+            map: true,
+            players: true
+        }
     });
 
     if (allMatches.length === 0) {

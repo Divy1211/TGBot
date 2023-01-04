@@ -18,6 +18,18 @@ export default {
             type: ApplicationCommandOptionTypes.BOOLEAN,
             required: false,
         },
+        {
+            name: "user",
+            description: "When selected, only show matches of this user.",
+            type: ApplicationCommandOptionTypes.USER,
+            required: false,
+        },
+        {
+            name: "queue_id",
+            description: "Only show matches of the leaderboard of this particular queue",
+            type: ApplicationCommandOptionTypes.INTEGER,
+            required: false,
+        },
     ],
 
     callback: async ({interaction}) => {
@@ -30,7 +42,19 @@ export default {
 
         // get the command parameters
         const showMatchIds = options.getBoolean("show_match_ids") ?? false;
+        const discordId = options.getUser("user")?.id;
+        const queueId = options.getInteger("queue_id") ?? undefined;
 
-        await generatePaginatedEmbed(await listMatches(guildId, showMatchIds), interaction);
+        const resp = await listMatches(guildId, discordId, queueId, showMatchIds);
+
+        if(typeof resp === "string") {
+            await interaction.reply({
+                content: resp,
+                ephemeral: true,
+            })
+            return;
+        }
+
+        await generatePaginatedEmbed(resp, interaction);
     },
 } as ICommand;
