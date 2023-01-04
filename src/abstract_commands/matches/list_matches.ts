@@ -1,8 +1,7 @@
 import {MessageEmbed} from "discord.js";
 
 import {Match} from "../../entities/matches/Match";
-import {ensure, enumerate} from "../../utils/general";
-import {Player} from "../../entities/matches/Player";
+import {ensure} from "../../utils/general";
 import {Queue} from "../../entities/queues/Queue";
 
 /**
