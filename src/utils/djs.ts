@@ -6,17 +6,18 @@ import {ensure, enumerate} from "./general";
  *
  * @param start If viewing starting page
  * @param end If viewing ending page
+ * @param uuid pass in unique number per interaction row
  */
-function getFlipButtons({start = false, end = false}) {
+function getFlipButtons({start = false, end = false}, uuid: number) {
     return new MessageActionRow().addComponents(
         [
             new MessageButton()
-            .setCustomId("prev_page")
+            .setCustomId(`prev_page${uuid}`)
             .setStyle("SECONDARY")
             .setEmoji("⬅")
             .setDisabled(start),
             new MessageButton()
-            .setCustomId("next_page")
+            .setCustomId(`next_page${uuid}`)
             .setStyle("SECONDARY")
             .setEmoji("➡")
             .setDisabled(end)
@@ -45,9 +46,10 @@ export async function generatePaginatedEmbed(embeds: MessageEmbed[], interaction
     }
 
     let page: number = 0;
+    let time = +Date.now();
     await interaction.reply({
         embeds: [embeds[page]],
-        components: [getFlipButtons({ start: true })],
+        components: [getFlipButtons({ start: true }, time)],
         ephemeral: true
     })
 
@@ -56,16 +58,20 @@ export async function generatePaginatedEmbed(embeds: MessageEmbed[], interaction
         time: 1000 * 60 * 5, // time in ms, 5 minute time out
     });
     flip.on("collect", async (flip) => {
-        flip.deferUpdate()
-        if(flip.customId === "next_page") {
+        try {
+            await flip.deferUpdate();
+        } catch (e) {}
+        if(flip.customId === `next_page${time}`) {
+            time = +Date.now();
             await interaction.editReply({
                 embeds: [embeds[++page]],
-                components: [getFlipButtons({end: page === embeds.length-1})],
+                components: [getFlipButtons({end: page === embeds.length-1}, time)],
             })
-        } else if(flip.customId === "prev_page") {
+        } else if(flip.customId === `prev_page${time}`) {
+            time = +Date.now();
             await interaction.editReply({
                 embeds: [embeds[--page]],
-                components: [getFlipButtons({start: page === 0})],
+                components: [getFlipButtons({start: page === 0}, time)],
             })
         }
     });
