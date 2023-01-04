@@ -32,6 +32,17 @@ export default {
         // get the command parameters
         const uuid = ensure(options.getInteger("match_uuid"));
 
-        return await showMatch(guildId, uuid);
+        const resp = await showMatch(guildId, uuid);
+        if(typeof resp === "string") {
+            await interaction.reply({
+                content: resp,
+                ephemeral: true,
+            });
+            return;
+        }
+        await interaction.reply({
+            embeds: [resp],
+            ephemeral: true,
+        });
     },
 } as ICommand;

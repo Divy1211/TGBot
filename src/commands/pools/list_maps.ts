@@ -2,6 +2,7 @@ import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
 import {listMaps} from "../../abstract_commands/pools/list_maps";
+import {generatePaginatedEmbed} from "../../utils/djs";
 
 export default {
     category: "General",
@@ -45,6 +46,14 @@ export default {
         const showPoolIds = options.getBoolean("show_pool_ids") ?? false;
         const showMapIds = options.getBoolean("show_map_ids") ?? false;
 
-        return listMaps(guildId, showPoolIds, showMapIds, poolUuid);
+        const resp = await listMaps(guildId, showPoolIds, showMapIds, poolUuid);
+        if(typeof resp === "string") {
+            await interaction.reply({
+                content: resp,
+                ephemeral: true,
+            })
+            return;
+        }
+        await generatePaginatedEmbed(resp, interaction);
     },
 } as ICommand;

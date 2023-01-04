@@ -85,7 +85,7 @@ export class GameMap extends BaseEntity {
         if (poolIds.length === 0) {
             return "-";
         }
-        return `\`${poolIds.join("`, `")}\``;
+        return `${poolIds.join(",")}`;
     }
 
     get hyperlinkedName(): string {

@@ -2,6 +2,7 @@ import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
 import {listMatches} from "../../abstract_commands/matches/list_matches";
+import {generatePaginatedEmbed} from "../../utils/djs";
 
 export default {
     category: "General",
@@ -30,6 +31,6 @@ export default {
         // get the command parameters
         const showMatchIds = options.getBoolean("show_match_ids") ?? false;
 
-        return await listMatches(guildId, showMatchIds);
+        await generatePaginatedEmbed(await listMatches(guildId, showMatchIds), interaction);
     },
 } as ICommand;

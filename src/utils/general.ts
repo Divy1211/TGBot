@@ -1,4 +1,14 @@
 /**
+ * Same as the python enumerate function
+ *
+ * @param iteratble: an iterable
+ * @param start: the number to start from (default: 0)
+ */
+export function enumerate<T>(iteratble: T[], start: number = 0): [number, T][] {
+    return Array.from({length: iteratble.length}).map((_, i) => [i, iteratble[i]]);
+}
+
+/**
  * Same as the python zip function
  *
  * @param rows: a list of arrays
@@ -141,4 +151,23 @@ export function getDuration(hhmmss: string): {error?: string, hh: number, mm: nu
     }
 
     return {hh, mm, ss};
+}
+
+/**
+ * Split an array based on a boolean function
+ *
+ * @param array An array to split
+ * @param fn The boolean function to split by
+ *
+ * @return A tuple of two arrays, the first array containing all values for which fn is true, the second containing the
+ * rest
+ */
+export function partition<T>(array: T[], fn: (element: T) => boolean) {
+    return array.reduce(
+        (result: T[][], element) => {
+            result[fn(element)?0:1].push(element)
+            return result;
+        },
+        [[], []]
+    );
 }

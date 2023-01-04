@@ -1,5 +1,6 @@
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
+
 import {listPlayers} from "../../abstract_commands/queues/list_players";
 import {User} from "../../entities/User";
 
@@ -31,6 +32,11 @@ export default {
         // get the command parameters
         const uuid = options.getInteger("queue_uuid") ?? undefined;
 
-        return await listPlayers(channelId, uuid);
+        const resp = await listPlayers(channelId, uuid);
+        await interaction.reply({
+            content: typeof resp === "string" ? resp : undefined,
+            embeds: typeof resp === "string" ? [] : [resp],
+            ephemeral: true
+        })
     },
 } as ICommand;

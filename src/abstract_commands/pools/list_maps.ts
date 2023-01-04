@@ -2,7 +2,6 @@ import {MessageEmbed} from "discord.js";
 
 import {GameMap} from "../../entities/pools/GameMap";
 import {Pool} from "../../entities/pools/Pool";
-import {ensure} from "../../utils/general";
 
 /**
  * List all maps
@@ -17,7 +16,7 @@ export async function listMaps(
     showPoolIds: boolean,
     showMapIds: boolean,
     poolUuid?: number,
-): Promise<string | MessageEmbed> {
+): Promise<string | MessageEmbed[]> {
     const pool = await Pool.findOne({
         where: {
             uuid: poolUuid,
@@ -32,9 +31,8 @@ export async function listMaps(
     if (poolUuid) {
         if (!pool) {
             return `Pool with ID \`${poolUuid}\` does not exist in this server`;
-        } else {
-            return pool.getMapEmbed(showMapIds);
         }
+        return pool.getMapEmbeds(showMapIds);
     }
 
     const gameMaps = await GameMap.find({
@@ -47,43 +45,50 @@ export async function listMaps(
     });
 
     if (gameMaps.length === 0) {
-        return new MessageEmbed()
-            .setTitle("Server Maps")
-            .setColor("#ED2939")
-            .setDescription("No maps found");
+        return [
+            new MessageEmbed()
+                .setTitle("Server Maps")
+                .setColor("#ED2939")
+                .setDescription("No maps found")
+        ];
     }
+    let embeds: MessageEmbed[] = [];
+    let embed = new MessageEmbed();
+    for(let i = 0; i < gameMaps.length; i+=10) {
+        const maps = gameMaps.slice(i, i + 10);
+        if (i % 10 === 0) {
+            embed = new MessageEmbed()
+                .setTitle("Server Maps")
+                .setColor("#ED2939");
+            embeds.push(embed);
+        }
+        if (showMapIds) {
+            embed.addFields([
+                {
+                    name: "ID",
+                    value: maps.map((gameMap: GameMap) => `${gameMap.uuid}`).join("\n"),
+                    inline: true,
+                },
+            ]);
+        }
 
-    let embed = new MessageEmbed()
-        .setTitle(poolUuid !== undefined ? ensure(pool).name : "Server Maps")
-        .setColor("#ED2939");
-
-    if (showMapIds) {
         embed.addFields([
             {
-                name: "ID",
-                value: gameMaps.map((gameMap: GameMap) => `${gameMap.uuid}`).join("\n"),
+                name: "Name",
+                value: maps.map((gameMap: GameMap) => `${gameMap.hyperlinkedName}`).join("\n"),
                 inline: true,
             },
         ]);
+
+        if (showPoolIds) {
+            embed.addFields([
+                {
+                    name: "Pool IDs",
+                    value: maps.map((gameMap: GameMap) => gameMap.poolIds).join("\n"),
+                    inline: true,
+                },
+            ]);
+        }
     }
-
-    embed.addFields([
-        {
-            name: "Name",
-            value: gameMaps.map((gameMap: GameMap) => gameMap.hyperlinkedName).join("\n"),
-            inline: true,
-        },
-    ]);
-
-    if (showPoolIds) {
-        embed.addFields([
-            {
-                name: "Pool IDs",
-                value: gameMaps.map((gameMap: GameMap) => gameMap.poolIds).join("\n"),
-                inline: true,
-            },
-        ]);
-    }
-
-    return embed;
+    return embeds;
 }

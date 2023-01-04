@@ -1,6 +1,7 @@
 import {ICommand} from "wokcommands";
 
 import {listBans} from "../../abstract_commands/ban/list_bans";
+import {generatePaginatedEmbed} from "../../utils/djs";
 
 export default {
     category: "General",
@@ -20,6 +21,6 @@ export default {
             return "This command can only be run in a text channel in a server";
         }
 
-        return await listBans(guildId);
+        await generatePaginatedEmbed(await listBans(guildId), interaction);
     },
 } as ICommand;

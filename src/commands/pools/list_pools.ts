@@ -2,6 +2,7 @@ import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
 import {listPools} from "../../abstract_commands/pools/list_pools";
+import {generatePaginatedEmbed} from "../../utils/djs";
 
 export default {
     category: "General",
@@ -30,6 +31,6 @@ export default {
         // get the command parameters
         const showPoolIds = options.getBoolean("show_pool_ids") ?? false;
 
-        return await listPools(guildId, showPoolIds)
+        await generatePaginatedEmbed(await listPools(guildId, showPoolIds), interaction);
     },
 } as ICommand;

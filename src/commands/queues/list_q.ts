@@ -1,9 +1,8 @@
-import {EmbedFieldData, MessageEmbed} from "discord.js";
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {Queue} from "../../entities/queues/Queue";
-import {ensure} from "../../utils/general";
+import {listQ} from "../../abstract_commands/queues/list_q";
+import {generatePaginatedEmbed} from "../../utils/djs";
 
 export default {
     category: "General",
@@ -43,75 +42,14 @@ export default {
         }
 
         // get the command parameters
-        const all = options.getBoolean("all") ?? true;
-        const showLeaderboard = options.getBoolean("show_leaderboard_id") ?? false;
+        const all = options.getBoolean("all") ?? false;
         const showPools = options.getBoolean("show_pool_ids") ?? false;
+        const showLeaderboard = options.getBoolean("show_leaderboard_id") ?? false;
 
-        const queues = await Queue.find({
-            where: all ? {guild: {id: guildId}} : {channelId},
-            relations: {leaderboard: showLeaderboard, pools: showPools},
-        });
-
-        if (queues.length === 0) {
-            return "No queues found. Create one using /create_q!";
+        const resp = await listQ(channelId, guildId, all, showPools, showLeaderboard);
+        if(typeof resp === "string") {
+            return resp;
         }
-
-        let embed = new MessageEmbed()
-            .setDescription(all ? "All queues in the server" : "All queues in this channel")
-            .setColor("#ED2939")
-            .setTitle("Queues");
-
-        // this is mostly string formatting stuff:
-        let fields: EmbedFieldData[] = [
-            {
-                name: "ID   Players   Name",
-                value: queues.map(({uuid, name, numPlayers, users}) => {
-                    return `\`${uuid} \` \`  ${users.length}/${numPlayers}  \` ${name}`;
-                }).join("\n"),
-                inline: true,
-            },
-        ];
-
-        if (showPools || showLeaderboard) {
-            let columns = [];
-
-            if (showLeaderboard) {
-                columns.push("Leaderboard ID");
-            }
-            if (showPools) {
-                columns.push("Pools");
-            }
-
-            fields.push(
-                {
-                    name: columns.join("   "),
-                    value: queues.map(({leaderboard, pools}) => {
-                        let strs = [];
-
-                        if (showLeaderboard) {
-                            strs.push(`\`       ${ensure(leaderboard).uuid}       \``);
-                        }
-
-                        if (showPools) {
-                            strs.push(`\`${ensure(pools)?.map((pool) => pool.uuid).join(", ")}\``);
-                        }
-
-                        return strs.join(" ");
-                    }).join("\n"),
-                    inline: true,
-                },
-            );
-        }
-
-        if (all) {
-            fields.push({
-                name: "Channel",
-                value: queues.map(({channelId}) => `<#${channelId}>`).join("\n"),
-                inline: true,
-            });
-        }
-
-        embed.addFields(fields);
-        return embed;
+        await generatePaginatedEmbed(resp, interaction);
     },
 } as ICommand;
