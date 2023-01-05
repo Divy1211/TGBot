@@ -324,7 +324,9 @@ export class Match extends BaseEntity {
 
         // the actual vote listener
         votes.on("collect", async (vote) => {
-            vote.deferReply();
+            try {
+                await vote.deferReply();
+            } catch (e) {}
             const player = await this.setReady(vote.user.id);
 
             // update the list of players that need to vote in the original message
@@ -357,7 +359,7 @@ export class Match extends BaseEntity {
 
             } else if (vote.customId === "cancel") {
                 try {
-                    await vote.deferUpdate();
+                    vote.deferUpdate().then();
                 } catch (e) {}
                 await msg.edit({
                     content: `<@${vote.user.id}> cancelled the match, reverting to the queue stage...`,

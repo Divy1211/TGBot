@@ -53,7 +53,7 @@ export class Queue extends BaseEntity {
     getPlayerEmbed() {
         return new MessageEmbed()
             .setTitle(this.name)
-            .setDescription(`The following players waiting for a game in queue:`)
+            .setDescription(`The following players are waiting for a game in queue:`)
             .setColor("#ED2939")
             .addFields(
                 {
