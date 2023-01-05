@@ -94,6 +94,7 @@ async function createTestingDatabase() {
 }
 
 async function main() {
+    client?.user?.setActivity({name: "commands (v0.0.5)", type: "LISTENING"});
     await AppDataSource.initialize();
     console.log("db connected!");
 
@@ -116,7 +117,6 @@ async function main() {
         typeScript: !!process.env.DEV,
         testServers,
     });
-
     startLogger();
 }
 
