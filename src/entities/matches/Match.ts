@@ -246,11 +246,11 @@ export class Match extends BaseEntity {
         this.map.save().then();
     }
 
-    async setReady(userId: string): Promise<Player> {
+    setReady(userId: string): Player {
         const player = ensure(this.players).filter((player: Player) => userId === ensure(player.user).discordId)[0];
         if (!player.isReady) {
             player.isReady = true;
-            await player.save();
+            player.save().then();
         }
         return player;
     }
@@ -318,19 +318,25 @@ export class Match extends BaseEntity {
         // create a vote listener with a time limit of 5 minutes and filter events by the users in the game only.
         const playerDiscordIds = ensure(this.players).map((player: Player) => ensure(player.user).discordId);
         const votes = channel.createMessageComponentCollector({
-            filter: (buttonInteraction) => playerDiscordIds.includes(buttonInteraction.user.id),
+            filter: (vote) => {
+                const isPlayer = playerDiscordIds.includes(vote.user.id);
+                if(!isPlayer) {
+                    vote.reply({
+                        ephemeral: true,
+                        content: "You cannot vote for a map in a match that you are not playing in"
+                    }).then();
+                }
+                return isPlayer;
+            },
             time: 1000 * 60 * 5, // time in ms, 5 minute time out
         });
 
         // the actual vote listener
         votes.on("collect", async (vote) => {
-            try {
-                await vote.deferReply();
-            } catch (e) {}
-            const player = await this.setReady(vote.user.id);
+            const player = this.setReady(vote.user.id);
 
             // update the list of players that need to vote in the original message
-            await msg.edit([
+            const msgEdited = msg.edit([
                 `Match \`${this.uuid}\` started! The following players need to vote:`,
                 `<@${this.unreadyPlayers.join(">\n<@")}>`,
                 `If someone does not vote, this will cancel <t:${this.startTime + 5 * 60}:R>!`,
@@ -350,21 +356,24 @@ export class Match extends BaseEntity {
                     this.numVotesReroll = 0;
                     this.regenMapOptions();
 
+                    const oldMsg = msg;
+                    msgEdited.then(() => {
+                        oldMsg.delete();
+                    });
                     await this.unreadyAll();
-
-                    await msg.delete();
                     msg = await this.sendOptions(channel, false);
                 }
                 await this.save();
-
             } else if (vote.customId === "cancel") {
                 try {
                     vote.deferUpdate().then();
                 } catch (e) {}
+                await msgEdited;
                 await msg.edit({
                     content: `<@${vote.user.id}> cancelled the match, reverting to the queue stage...`,
                     components: [],
                 });
+                msg.content = `<@${vote.user.id}> cancelled the match, reverting to the queue stage...`;
 
                 for(const matchPlayer of ensure(this.players)) {
                     matchPlayer.isReady = true;
@@ -380,15 +389,16 @@ export class Match extends BaseEntity {
                         ephemeral: true,
                         content: mapOption.updateVote(player),
                     }).then();
-                } catch (e) {
-                }
+                } catch (e) {}
 
                 await mapOption.save();
 
                 if (this.unreadyPlayers.length === 0) {
                     this.determineMap();
-
-                    await msg.delete();
+                    const oldMsg = msg;
+                    msgEdited.then(() => {
+                        oldMsg.delete();
+                    });
                     msg = await channel.send({
                         content: null,
                         embeds: [this.embed],
@@ -480,7 +490,6 @@ export class Match extends BaseEntity {
         votes.on("end", async () => {
             const {unreadyPlayers} = this;
             if (unreadyPlayers.length > 0) {
-                await new Promise(f => setTimeout(f, 500));
                 if(!msg.content.endsWith("stage...")) {
                     await msg.edit({
                         content: `<@${unreadyPlayers.join(">, <@")}> did not vote in time, aborting match...`,
