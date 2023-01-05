@@ -40,7 +40,7 @@ export default {
         const team = options.getInteger("team") ?? undefined;
 
         try {
-            return await report(user.id, channelId, member as GuildMember, matchUuid, team, true);
+            return await report(user.id, channelId, member as GuildMember, matchUuid, team, false);
         } catch (e) {
             return "Error: API Error";
         }
