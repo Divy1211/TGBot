@@ -30,7 +30,7 @@ export async function listMatches(
     if(queueId && !queue) {
         return `Error: Queue with ID \`${queueId}\` does not exist in this channel`;
     }
-    const allMatches = await Match.find({
+    const allMatches = (await Match.find({
         where: {
             guild: {id: guildId},
             leaderboard: {uuid: queue?.leaderboard?.uuid},
@@ -42,7 +42,7 @@ export async function listMatches(
             map: true,
             players: true
         }
-    });
+    })).reverse();
 
     if (allMatches.length === 0) {
         return [
