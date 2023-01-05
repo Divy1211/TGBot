@@ -26,7 +26,7 @@ export async function reset(guildId: string, discordId?: string, queueUuid?: num
     for(const playerStat of playerStats) {
         if(rating) {
             playerStat.rating = 1000;
-            playerStat.sigma = 200;
+            playerStat.sigma = 100;
         }
         if(stats) {
             playerStat.numGames = 0;

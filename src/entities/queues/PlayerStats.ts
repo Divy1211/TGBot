@@ -63,7 +63,7 @@ export class PlayerStats extends BaseEntity {
         this.numLosses = numLosses ?? 0;
         this.numWins = numWins ?? 0;
         this.rating = rating ?? 1000;
-        this.sigma = sigma ?? 200;
+        this.sigma = sigma ?? 100;
         this.streak = streak ?? 0;
     }
 }

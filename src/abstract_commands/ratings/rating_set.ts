@@ -1,5 +1,3 @@
-import {gunzip} from "zlib";
-import list_players from "../../commands/queues/list_players";
 import {PlayerStats} from "../../entities/queues/PlayerStats";
 import {Queue} from "../../entities/queues/Queue";
 import {User} from "../../entities/User";
@@ -49,7 +47,7 @@ export async function ratingSet(
 
     if(stats) {
         stats.rating = rating;
-        stats.sigma = 200;
+        stats.sigma = 100;
     } else {
         let user = await User.findOneBy({discordId});
         if (!user) {
