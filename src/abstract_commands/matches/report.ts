@@ -58,6 +58,9 @@ export async function report(
     }
 
     const match = ensure(player.match);
+    if(!match.map) {
+        return "Error: Cannot report match before it has begun";
+    }
     const guild = ensure(match.guild);
     const isModerator = isMod(member, guild);
     await guild.save();
