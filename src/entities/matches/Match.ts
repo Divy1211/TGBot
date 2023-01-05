@@ -524,7 +524,7 @@ export class Match extends BaseEntity {
                 new MessageButton()
                     .setLabel(option.map.name)
                     // we are not removing this default link. period.
-                    .setURL(option.map.imgLink ?? "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+                    .setURL(option.map.imgLink || "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
                     .setStyle("LINK"),
             );
         });
