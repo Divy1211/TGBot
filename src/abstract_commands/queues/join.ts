@@ -6,6 +6,7 @@ import {QueueDefault} from "../../entities/queues/QueueDefault";
 import {User} from "../../entities/User";
 import {Ban} from "../../entities/user_data/Ban";
 import {startMatch} from "../matches/start";
+import {QueueMsg} from "../../entities/queues/QueueMsg";
 
 export async function joinQueue(discordId: string, channelId: string, guildId: string): Promise<string | MessageEmbed>
 export async function joinQueue(
@@ -112,6 +113,10 @@ export async function joinQueue(
         return "You are already in the queue!";
     }
 
+    const phrase = await QueueMsg.findOneBy({
+        user: {discordId},
+        queue: {uuid: queue.uuid}
+    })
     qDefault.lastQ = queue;
     await qDefault.save();
 
@@ -124,5 +129,9 @@ export async function joinQueue(
 
     await queue.save();
 
-    return queue.getPlayerEmbed();
+    const embed = queue.getPlayerEmbed();
+    if(phrase) {
+        embed.setDescription(phrase.msg);
+    }
+    return embed;
 }
