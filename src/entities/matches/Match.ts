@@ -526,7 +526,8 @@ export class Match extends BaseEntity {
             mapRow.addComponents(
                 new MessageButton()
                     .setCustomId(option.map.name + idCounts[option.map.name])
-                    .setLabel(`${option.map.name}\_\_\_\_`)
+                    .setLabel(`${option.map.name}`)
+                    .setEmoji("🗳")
                     .setStyle("PRIMARY"),
             );
             linkRow.addComponents(
