@@ -16,9 +16,9 @@ export default {
 
     options: [
         {
-            name: "map_uuid",
-            description: "The uuid of the map to remove",
-            type: ApplicationCommandOptionTypes.INTEGER,
+            name: "map_uuids",
+            description: "Comma separated list of uuids of the map to remove",
+            type: ApplicationCommandOptionTypes.STRING,
             required: true,
         },
     ],
@@ -42,10 +42,29 @@ export default {
             })
             return;
         }
+        await interaction.deferReply();
 
         // get the command parameters
-        const mapUuid = ensure(options.getInteger("map_uuid"));
+        const mapUuids = ensure(options.getString("map_uuids")).split(",");
+        const deleteGameResponses: string[] = [];
+        const deleteGamePromises = [];
 
-        return await deleteGameMap(mapUuid, guildId);
-    },
+        for (const mapUuid of mapUuids) {
+            // Invalid input was provided by the user
+            if(!Number(mapUuid)){
+                deleteGameResponses.push(`Error : Map with id ${mapUuid} should be a number!`);
+                interaction.editReply(deleteGameResponses.join("\n"));
+                continue;
+            }
+
+            deleteGamePromises.push(deleteGameMap(Number(mapUuid), guildId)
+                .then(deleteGameResponse => {
+                    deleteGameResponses.push(deleteGameResponse);
+                    interaction.editReply(deleteGameResponses.join("\n"));
+                }));
+        }
+
+        await Promise.all(deleteGamePromises)
+        .then(() => interaction.editReply(deleteGameResponses.join("\n")));
+    }
 } as ICommand;
