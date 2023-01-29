@@ -53,7 +53,7 @@ export default {
         for (const queueUuid of qUuids) {
             // Invalid input was provided by the user
             if(!Number(queueUuid)){
-                deleteQueueResponses.push(`Error : Queue with id ${queueUuid} should be a number!`);
+                deleteQueueResponses.push(`Error: Queue with id ${queueUuid} should be a number!`);
                 interaction.editReply(deleteQueueResponses.join("\n"));
                 continue;
             }

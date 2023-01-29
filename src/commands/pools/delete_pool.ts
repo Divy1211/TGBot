@@ -52,7 +52,7 @@ export default {
         for (const poolUuid of poolUuids) {
             // Invalid input was provided by the user
             if(!Number(poolUuid)){
-                deletePoolResponses.push(`Error : Pool with id ${poolUuid} should be a number!`);
+                deletePoolResponses.push(`Error: Pool with id ${poolUuid} should be a number!`);
                 interaction.editReply(deletePoolResponses.join("\n"));
                 continue;
             }

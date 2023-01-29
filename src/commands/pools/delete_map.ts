@@ -52,7 +52,7 @@ export default {
         for (const mapUuid of mapUuids) {
             // Invalid input was provided by the user
             if(!Number(mapUuid)){
-                deleteGameResponses.push(`Error : Map with id ${mapUuid} should be a number!`);
+                deleteGameResponses.push(`Error: Map with id ${mapUuid} should be a number!`);
                 interaction.editReply(deleteGameResponses.join("\n"));
                 continue;
             }
