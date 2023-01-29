@@ -9,7 +9,7 @@ import {GuildMember} from "discord.js";
 
 export default {
     category: "Admin",
-    description: "Create a TG pickup queue in this channel",
+    description: "Delete a TG pickup queue in this channel",
 
     slash: true,
     testOnly: false,
@@ -17,9 +17,9 @@ export default {
 
     options: [
         {
-            name: "uuid",
-            description: "The ID of the queue to delete",
-            type: ApplicationCommandOptionTypes.INTEGER,
+            name: "uuids",
+            description: "Comma spearated list of Id's of the queue to delete",
+            type: ApplicationCommandOptionTypes.STRING,
             required: true,
         },
     ],
@@ -43,10 +43,29 @@ export default {
             })
             return;
         }
+        await interaction.deferReply();
 
         // get the command parameters
-        const uuid = ensure(options.getInteger("uuid"));
+        const qUuids = ensure(options.getString("uuids")).split(",");
+        const deleteQueueResponses: string[] = [];
+        const deleteQueuePromises = [];
 
-        return await deleteQueue(uuid, channelId);
+        for (const queueUuid of qUuids) {
+            // Invalid input was provided by the user
+            if(!Number(queueUuid)){
+                deleteQueueResponses.push(`Error : Queue with id ${queueUuid} should be a number!`);
+                interaction.editReply(deleteQueueResponses.join("\n"));
+                continue;
+            }
+
+            deleteQueuePromises.push(deleteQueue(Number(queueUuid), guildId)
+                .then(response => {
+                    deleteQueueResponses.push(response);
+                    interaction.editReply(deleteQueueResponses.join("\n"));
+                }));
+        }
+
+        await Promise.all(deleteQueuePromises)
+        .then(() => interaction.editReply(deleteQueueResponses.join("\n")));
     },
 } as ICommand;
