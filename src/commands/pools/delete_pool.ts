@@ -16,9 +16,9 @@ export default {
 
     options: [
         {
-            name: "pool_uuid",
-            description: "The uuid of the pool to remove",
-            type: ApplicationCommandOptionTypes.INTEGER,
+            name: "pool_uuids",
+            description: "Comma separated list of uuids of the pool to remove",
+            type: ApplicationCommandOptionTypes.STRING,
             required: true,
         },
     ],
@@ -42,10 +42,29 @@ export default {
             })
             return;
         }
+        await interaction.deferReply();
 
         // get the command parameters
-        const poolUuid = ensure(options.getInteger("pool_uuid"));
+        const poolUuids = ensure(options.getString("pool_uuids")).split(",");
+        const deletePoolResponses: string[] = [];
+        const deletePoolPromises = [];
 
-        return await deletePool(poolUuid, guildId);
+        for (const poolUuid of poolUuids) {
+            // Invalid input was provided by the user
+            if(!Number(poolUuid)){
+                deletePoolResponses.push(`Error: Pool with id ${poolUuid} should be a number!`);
+                interaction.editReply(deletePoolResponses.join("\n"));
+                continue;
+            }
+
+            deletePoolPromises.push(deletePool(Number(poolUuid), guildId)
+                .then(deletePoolResponse => {
+                    deletePoolResponses.push(deletePoolResponse);
+                    interaction.editReply(deletePoolResponses.join("\n"));
+                }));
+        }
+
+        await Promise.all(deletePoolPromises)
+        .then(() => interaction.editReply(deletePoolResponses.join("\n")));
     },
 } as ICommand;
