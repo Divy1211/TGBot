@@ -13,7 +13,7 @@ import {startMatch} from "./start";
  * @param uuid The uuid of the match to cancel
  * @param userIdsToRemove The IDs of the users to remove from the queue if the match was ongoing
  */
-export async function cancelMatch(guildId: string, uuid: number, userIdsToRemove?: string[]): Promise<string> {
+export async function cancelMatch (guildId: string, uuid: number, userIdsToRemove?: string[]): Promise<string> {
     const match = await Match.findOne({
         where: {
             uuid,
@@ -57,7 +57,7 @@ export async function cancelMatch(guildId: string, uuid: number, userIdsToRemove
 
         const channel = await client.channels.fetch(queue.channelId);
         if (channel?.isText()) {
-            channel.send({embeds: [queue.getPlayerEmbed()]}).then();
+            channel.send({embeds: [queue.getPlayerEmbed(), ]}).then();
         }
     }
 

@@ -4,8 +4,9 @@
  * @param iteratble: an iterable
  * @param start: the number to start from (default: 0)
  */
-export function enumerate<T>(iteratble: T[], start: number = 0): [number, T][] {
-    return Array.from({length: iteratble.length}).map((_, i) => [i, iteratble[i]]);
+export function enumerate<T> (iteratble: T[], start: number = 0): Array<[number, T]> {
+    return Array.from({length: iteratble.length}).map((_, i) => [i,
+        iteratble[i], ]);
 }
 
 /**
@@ -13,12 +14,10 @@ export function enumerate<T>(iteratble: T[], start: number = 0): [number, T][] {
  *
  * @param rows: a list of arrays
  */
-export function zip<T extends any[][], K>(...rows: T): {[K in keyof T]: T[K][0]}[] {
+export function zip<T extends any[][], K> (...rows: T): Array<{[K in keyof T]: T[K][0]}> {
     const minLen = Math.min(...rows.map(row => row.length));
 
-    return Array.from({length: minLen}).map(
-        (_, i) => rows.map(row => row[i])
-    ) as {[K in keyof T]: T[K][0]}[];
+    return Array.from({length: minLen}).map((_, i) => rows.map(row => row[i])) as Array<{[K in keyof T]: T[K][0]}>;
 }
 
 /**
@@ -31,7 +30,7 @@ export function zip<T extends any[][], K>(...rows: T): {[K in keyof T]: T[K][0]}
  *
  * @author Karol Majewski @ https://stackoverflow.com/a/54738437/7230293
  */
-export function ensure<T>(argument: T | undefined | null, message = "This value was promised to be there."): T {
+export function ensure<T> (argument: T | undefined | null, message = "This value was promised to be there."): T {
     if (argument === undefined || argument === null) {
         throw new TypeError(message);
     }
@@ -45,11 +44,10 @@ export function ensure<T>(argument: T | undefined | null, message = "This value 
  * @param callback
  * @param ms
  */
-export function startInterval(callback: () => void, ms: number): NodeJS.Timer {
+export function startInterval (callback: () => void, ms: number): NodeJS.Timer {
     callback();
     return setInterval(callback, ms);
 }
-
 
 /**
  * Assert the parameter given to not be undefined or null. Does not return the given argument
@@ -59,7 +57,7 @@ export function startInterval(callback: () => void, ms: number): NodeJS.Timer {
  *
  * @author Aleksey L. @ https://stackoverflow.com/a/59017341/7230293
  */
-export function assert(value: unknown): asserts value {
+export function assert (value: unknown): asserts value {
     if (value === undefined || value === null) {
         throw new TypeError("value must be defined");
     }
@@ -70,7 +68,7 @@ export function assert(value: unknown): asserts value {
  *
  * @param array The array to chose elements from
  */
-export function choose<T>(array: T[]): T {
+export function choose<T> (array: T[]): T {
     return array[Math.floor(Math.random() * array.length)];
 }
 
@@ -81,8 +79,8 @@ export function choose<T>(array: T[]): T {
  * @param k The number of elements to choose
  * @param replacement choose with replacement
  */
-export function choices<T>(array: T[], k: number, replacement = false): T[] {
-    let choicesLs: T[] = [];
+export function choices<T> (array: T[], k: number, replacement = false): T[] {
+    const choicesLs: T[] = [];
 
     for (let i = 0; i < k; ++i) {
         const choice = array[Math.floor(Math.random() * array.length)];
@@ -101,18 +99,18 @@ export function choices<T>(array: T[], k: number, replacement = false): T[] {
  * @param array The array to generate the combinations from
  * @param r The group size
  */
-export function combinations<T>(array: T[], r: number): T[][] {
+export function combinations<T> (array: T[], r: number): T[][] {
     if (r > array.length) {
         throw Error("the number of elements to choose from must be larger than the amount to choose");
     }
 
     if (r === 1) {
-        return array.map((element: T) => [element]);
+        return array.map((element: T) => [element, ]);
     }
 
-    let combos: T[][] = [];
+    const combos: T[][] = [];
 
-    let copy = [...array];
+    const copy = [...array,];
     while (r - 1 < copy.length) {
         const first = copy.splice(0, 1);
 
@@ -129,9 +127,15 @@ export function combinations<T>(array: T[], r: number): T[][] {
  *
  * @param hhmmss The string to extract the hh, mm and ss values from
  */
-export function getDuration(hhmmss: string): {error?: string, hh: number, mm: number, ss: number} {
+export function getDuration (hhmmss: string): {error?: string, hh: number, mm: number, ss: number} {
     // ss will be undefined if not specified
-    let [_, hh, mm, ss]: (string | number)[] = hhmmss.match(/^(\d+):(\d{2})(?::(\d{2}))?$/) ?? ["-1", "-1", "-1", "-1"];
+    let [_,
+        hh,
+        mm,
+        ss, ]: Array<string | number> = hhmmss.match(/^(\d+):(\d{2})(?::(\d{2}))?$/) ?? ["-1",
+        "-1",
+        "-1",
+        "-1", ];
     if (hh === "-1") {
         return {error: "Error: The format of the specified duration is invalid, please try again", hh: 0, mm: 0, ss: 0};
     }
@@ -162,12 +166,11 @@ export function getDuration(hhmmss: string): {error?: string, hh: number, mm: nu
  * @return A tuple of two arrays, the first array containing all values for which fn is true, the second containing the
  * rest
  */
-export function partition<T>(array: T[], fn: (element: T) => boolean) {
-    return array.reduce(
-        (result: T[][], element) => {
-            result[fn(element)?0:1].push(element)
-            return result;
-        },
-        [[], []]
-    );
+export function partition<T> (array: T[], fn: (element: T) => boolean) {
+    return array.reduce((result: T[][], element) => {
+        result[fn(element) ? 0 : 1].push(element);
+        return result;
+    },
+    [[],
+        [], ]);
 }

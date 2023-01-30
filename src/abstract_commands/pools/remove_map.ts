@@ -10,8 +10,8 @@ import {ensure} from "../../utils/general";
  * @param gameMapUuid The uuid of the map
  * @param poolUuid? The uuid of the pool
  */
-export async function removeMap(guildId: string, gameMapUuid: number, poolUuid?: number): Promise<string> {
-    let gameMap = await GameMap.findOne({
+export async function removeMap (guildId: string, gameMapUuid: number, poolUuid?: number): Promise<string> {
+    const gameMap = await GameMap.findOne({
         where: {
             uuid: gameMapUuid,
             guild: {id: guildId},
@@ -33,7 +33,7 @@ export async function removeMap(guildId: string, gameMapUuid: number, poolUuid?:
 
         return `Map "${gameMap.name}" removed from all pools`;
     } else if ((await Pool.findOneBy({uuid: poolUuid, guild: {id: guildId}})) === null) {
-        return `Pool with ID \`${poolUuid}\` does not exist in this server`
+        return `Pool with ID \`${poolUuid}\` does not exist in this server`;
     }
 
     gameMap.poolMaps = ensure(gameMap.poolMaps).filter((poolMap: PoolMap) => ensure(poolMap.pool).uuid !== poolUuid);

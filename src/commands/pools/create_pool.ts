@@ -35,11 +35,11 @@ export default {
         if (!guild) {
             guild = new Guild(guildId);
         }
-        if(!isAdmin(member as GuildMember, guild)) {
+        if (!isAdmin(member as GuildMember, guild)) {
             await interaction.reply({
                 ephemeral: true,
-                content: "Only admins are allowed to use this command"
-            })
+                content: "Only admins are allowed to use this command",
+            });
             return;
         }
 

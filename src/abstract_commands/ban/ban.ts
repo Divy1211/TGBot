@@ -1,8 +1,7 @@
 import {Guild} from "../../entities/Guild";
 import {User} from "../../entities/User";
 import {Ban} from "../../entities/user_data/Ban";
-import {ensure} from "../../utils/general";
-import {getDuration} from "../../utils/general";
+import {ensure, getDuration} from "../../utils/general";
 
 /**
  * Bans a user from joining queues in a specific server
@@ -12,12 +11,10 @@ import {getDuration} from "../../utils/general";
  * @param duration The duration to ban the user for
  * @param reason The reason for banning the user
  */
-export async function banUser(
-    discordId: string,
+export async function banUser (discordId: string,
     guildId: string,
     duration: string,
-    reason: string,
-): Promise<string> {
+    reason: string): Promise<string> {
     let guild = await Guild.findOne({where: {id: guildId}, relations: {bans: true}});
     if (!guild) {
         guild = new Guild(guildId);
@@ -25,7 +22,7 @@ export async function banUser(
 
     let user = await User.findOneBy({discordId});
     if (!user) {
-        user = new User(discordId, {guilds: [ensure(guild)]});
+        user = new User(discordId, {guilds: [ensure(guild), ]});
     }
 
     let ban = await Ban.findOneBy({user: {discordId}, guild: {id: guildId}});

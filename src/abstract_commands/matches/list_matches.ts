@@ -12,12 +12,10 @@ import {Queue} from "../../entities/queues/Queue";
  * @param queueId The ID of the queue whose leaderboard to show matches for
  * @param showMatchIds If true, show the IDs of the matches
  */
-export async function listMatches(
-    guildId: string,
+export async function listMatches (guildId: string,
     discordId?: string,
     queueId?: number,
-    showMatchIds?: boolean
-): Promise<string | MessageEmbed[]> {
+    showMatchIds?: boolean): Promise<string | MessageEmbed[]> {
     const queue = await Queue.findOne({
         where: {
             guild: {id: guildId},
@@ -25,9 +23,9 @@ export async function listMatches(
         },
         relations: {
             leaderboard: true,
-        }
+        },
     });
-    if(queueId && !queue) {
+    if (queueId && !queue) {
         return `Error: Queue with ID \`${queueId}\` does not exist in this channel`;
     }
     const allMatches = (await Match.find({
@@ -35,13 +33,13 @@ export async function listMatches(
             guild: {id: guildId},
             leaderboard: {uuid: queue?.leaderboard?.uuid},
             players: {
-                user: {discordId}
-            }
+                user: {discordId},
+            },
         },
         relations: {
             map: true,
-            players: true
-        }
+            players: true,
+        },
     })).reverse();
 
     if (allMatches.length === 0) {
@@ -49,22 +47,22 @@ export async function listMatches(
             new MessageEmbed()
                 .setTitle("Matches")
                 .setDescription("No matches found")
-                .setColor("#ED2939")
+                .setColor("#ED2939"),
         ];
     }
 
-    let embeds: MessageEmbed[] = [];
+    const embeds: MessageEmbed[] = [];
     let embed = new MessageEmbed();
-    for(let i = 0; i < allMatches.length; i+=10) {
-        const matches = allMatches.slice(i, i+10);
-        if(i%10 === 0) {
+    for (let i = 0; i < allMatches.length; i += 10) {
+        const matches = allMatches.slice(i, i + 10);
+        if (i % 10 === 0) {
             embed = new MessageEmbed()
                 .setTitle("Matches")
-                .setDescription(
-                    (discordId ? `Showing matches for <@${discordId}>` : "Showing all matches")
-                    + queueId ? ` in the queue "${ensure(queue).name}"` : ""
-                )
-                .setColor("#ED2939")
+                .setDescription((discordId ? `Showing matches for <@${discordId}>` : "Showing all matches") +
+                    queueId
+                    ? ` in the queue "${ensure(queue).name}"`
+                    : "")
+                .setColor("#ED2939");
             embeds.push(embed);
         }
 

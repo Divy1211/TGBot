@@ -47,11 +47,11 @@ export default {
         const showPoolIds = options.getBoolean("show_pool_ids") ?? false;
 
         const resp = await listMaps(guildId, showPoolIds, showMapIds, poolUuid);
-        if(typeof resp === "string") {
+        if (typeof resp === "string") {
             await interaction.reply({
                 content: resp,
                 ephemeral: true,
-            })
+            });
             return;
         }
         await generatePaginatedEmbed(resp, interaction);

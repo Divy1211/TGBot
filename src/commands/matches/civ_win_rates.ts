@@ -32,7 +32,7 @@ export default {
         // get the command parameters
         const civ: Civ = Civ[ensure(options.getString("civ")).toUpperCase() as CivString] as Civ;
 
-        if(!civ) {
+        if (!civ) {
             return `'${options.getString("civ")}' is not a valid civilization`;
         }
         return `Win rate of ${Civ[civ].charAt(0) + Civ[civ].slice(1).toLowerCase()}: \`${await civWinRate(civ)}\``;

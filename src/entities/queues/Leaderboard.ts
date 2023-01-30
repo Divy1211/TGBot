@@ -8,24 +8,24 @@ import {Queue} from "./Queue";
 @Entity()
 export class Leaderboard extends BaseEntity {
     @PrimaryGeneratedColumn()
-    uuid!: number;
+        uuid!: number;
 
     @ManyToOne(() => Guild, (guild: Guild) => guild.leaderboards, {onDelete: "CASCADE"})
-    guild?: Guild;
+        guild?: Guild;
 
     @OneToMany(() => Queue, (queue: Queue) => queue.leaderboard)
-    queue?: Queue[];
+        queue?: Queue[];
 
     @OneToMany(() => PlayerStats, (playerStats: PlayerStats) => playerStats.leaderboard, {cascade: true, eager: true})
-    playerStats!: PlayerStats[];
+        playerStats!: PlayerStats[];
 
     @OneToMany(() => Match, (match: Match) => match.leaderboard)
-    matches?: Match[];
+        matches?: Match[];
 
-    constructor();
-    constructor(guild: Guild);
+    constructor ();
+    constructor (guild: Guild);
 
-    constructor(guild?: Guild) {
+    constructor (guild?: Guild) {
         super();
 
         this.guild = guild;

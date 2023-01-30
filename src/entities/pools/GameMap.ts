@@ -8,37 +8,37 @@ import {PoolMap} from "./PoolMap";
 @Entity()
 export class GameMap extends BaseEntity {
     @PrimaryGeneratedColumn()
-    uuid!: number;
+        uuid!: number;
 
     @Column()
-    name: string;
+        name: string;
 
     @Column()
-    imgLink: string;
+        imgLink: string;
 
     @Column()
-    numTotal: number;
+        numTotal: number;
 
     @Column()
-    numClicked: number;
+        numClicked: number;
 
     @Column()
-    numShown: number;
+        numShown: number;
 
     @Column()
-    numChosen: number;
+        numChosen: number;
 
     @ManyToOne(() => Guild, (guild: Guild) => guild.maps, {cascade: true, onDelete: "CASCADE"})
-    guild?: Guild;
+        guild?: Guild;
 
     @OneToMany(() => PoolMap, (poolMap: PoolMap) => poolMap.map)
-    poolMaps?: PoolMap[];
+        poolMaps?: PoolMap[];
 
-    constructor();
-    constructor(name: string, guild: Guild);
-    constructor(name: string, imgLink: string, guild: Guild);
+    constructor ();
+    constructor (name: string, guild: Guild);
+    constructor (name: string, imgLink: string, guild: Guild);
 
-    constructor(name?: string, imgLink?: Guild | string, guild?: Guild) {
+    constructor (name?: string, imgLink?: Guild | string, guild?: Guild) {
         if (imgLink instanceof Guild) {
             guild = imgLink;
             imgLink = undefined;
@@ -56,7 +56,7 @@ export class GameMap extends BaseEntity {
         this.guild = guild;
     }
 
-    get chooseRate(): number | string {
+    get chooseRate (): number | string {
         if (this.numShown === 0) {
             return "-";
         }
@@ -65,7 +65,7 @@ export class GameMap extends BaseEntity {
         return Math.floor(rate * 100) / 100;
     }
 
-    get clickThroughRate(): number | string {
+    get clickThroughRate (): number | string {
         if (this.numTotal === 0) {
             return "-";
         }
@@ -74,8 +74,8 @@ export class GameMap extends BaseEntity {
         return Math.floor(rate * 100) / 100;
     }
 
-    get poolIds(): string {
-        let poolIds: number[] = [];
+    get poolIds (): string {
+        const poolIds: number[] = [];
         for (const poolMap of ensure(this.poolMaps)) {
             const poolId = ensure(poolMap.pool).uuid;
             if (!poolIds.includes(poolId)) {
@@ -88,7 +88,7 @@ export class GameMap extends BaseEntity {
         return `${poolIds.join(",")}`;
     }
 
-    get hyperlinkedName(): string {
+    get hyperlinkedName (): string {
         // the name is hyperlinked to the image if available, same format as markdown
         if (this.imgLink) {
             return `[${this.name}](${this.imgLink})`;
@@ -96,8 +96,8 @@ export class GameMap extends BaseEntity {
         return this.name;
     }
 
-    get embed(): MessageEmbed {
-        let embed = new MessageEmbed()
+    get embed (): MessageEmbed {
+        const embed = new MessageEmbed()
             .setTitle(this.name)
             .setDescription(this.name)
             .setColor("#ED2939")

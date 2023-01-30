@@ -8,45 +8,45 @@ import {PoolMap} from "./PoolMap";
 @Entity()
 export class Pool extends BaseEntity {
     @PrimaryGeneratedColumn()
-    uuid!: number;
+        uuid!: number;
 
     @Column()
-    name: string;
+        name: string;
 
     @ManyToOne(() => Guild, (guild: Guild) => guild.pools, {cascade: true, onDelete: "CASCADE"})
-    guild?: Guild;
+        guild?: Guild;
 
     @ManyToMany(() => Queue, (queue: Queue) => queue.pools)
-    queues?: Queue[];
+        queues?: Queue[];
 
     @OneToMany(() => PoolMap, (poolMap: PoolMap) => poolMap.pool, {cascade: true, eager: true})
-    poolMaps!: PoolMap[];
+        poolMaps!: PoolMap[];
 
-    constructor();
-    constructor(name: string, guild: Guild);
+    constructor ();
+    constructor (name: string, guild: Guild);
 
-    constructor(name?: string, guild?: Guild) {
+    constructor (name?: string, guild?: Guild) {
         super();
 
         this.name = name ?? "";
         this.guild = guild;
     }
 
-    getMapEmbeds(showMapIds: boolean = false): MessageEmbed[] {
-        if(this.poolMaps.length === 0) {
+    getMapEmbeds (showMapIds: boolean = false): MessageEmbed[] {
+        if (this.poolMaps.length === 0) {
             return [
                 new MessageEmbed()
                     .setTitle(this.name)
                     .setColor("#ED2939")
-                    .setDescription("No maps in pool")
+                    .setDescription("No maps in pool"),
             ];
         }
 
-        let embeds: MessageEmbed[] = [];
+        const embeds: MessageEmbed[] = [];
         let embed = new MessageEmbed();
-        for(let i = 0; i < this.poolMaps.length; i+=10) {
-            const poolMaps = this.poolMaps.slice(i, i+10);
-            if(i%10 === 0) {
+        for (let i = 0; i < this.poolMaps.length; i += 10) {
+            const poolMaps = this.poolMaps.slice(i, i + 10);
+            if (i % 10 === 0) {
                 embed = new MessageEmbed()
                     .setTitle(this.name)
                     .setColor("#ED2939");

@@ -8,7 +8,7 @@ import {ensure, partition} from "../../utils/general";
  *
  * @param guildId The ID of the server to list the bans for
  */
-export async function listBans(guildId: string): Promise<MessageEmbed[]> {
+export async function listBans (guildId: string): Promise<MessageEmbed[]> {
     const allBans = await Ban.find({
         where: {
             guild: {id: guildId},
@@ -18,7 +18,8 @@ export async function listBans(guildId: string): Promise<MessageEmbed[]> {
         },
     });
 
-    const [expiredBans, pendingBans] = partition(allBans, (ban) => ban.until !== -1 && ban.until < Date.now()/1000);
+    const [expiredBans,
+        pendingBans, ] = partition(allBans, (ban) => ban.until !== -1 && ban.until < Date.now() / 1000);
     Ban.remove(expiredBans).then();
 
     if (pendingBans.length === 0) {
@@ -26,15 +27,15 @@ export async function listBans(guildId: string): Promise<MessageEmbed[]> {
             new MessageEmbed()
                 .setTitle("Bans")
                 .setDescription("No bans")
-                .setColor("#ED2939")
+                .setColor("#ED2939"),
         ];
     }
 
-    let embeds: MessageEmbed[] = [];
+    const embeds: MessageEmbed[] = [];
     let embed = new MessageEmbed();
-    for(let i = 0; i < pendingBans.length; i+=10) {
+    for (let i = 0; i < pendingBans.length; i += 10) {
         const bans = pendingBans.slice(i, i + 10);
-        if(i%10 === 0) {
+        if (i % 10 === 0) {
             embed = new MessageEmbed()
                 .setTitle("Bans")
                 .setDescription("The following users are currently banned:")
@@ -59,5 +60,5 @@ export async function listBans(guildId: string): Promise<MessageEmbed[]> {
             },
         ]);
     }
-    return embeds
+    return embeds;
 }

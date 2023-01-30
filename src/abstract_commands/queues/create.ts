@@ -12,13 +12,11 @@ import {Queue} from "../../entities/queues/Queue";
  * @param channelId The ID of the channel in which the queue should be created
  * @param poolUuid The ID of the pool to be used by the queue
  */
-export async function createQueue(
-    name: string,
+export async function createQueue (name: string,
     numPlayers: number,
     guildId: string,
     channelId: string,
-    poolUuid?: number,
-): Promise<string> {
+    poolUuid?: number): Promise<string> {
     let pool;
     if (poolUuid) {
         pool = await Pool.findOneBy({uuid: poolUuid});
@@ -34,8 +32,8 @@ export async function createQueue(
 
     const queue = new Queue(name, guild, new Leaderboard(guild), numPlayers, channelId);
 
-    if(pool) {
-        queue.pools = [pool];
+    if (pool) {
+        queue.pools = [pool, ];
     }
 
     await queue.save();

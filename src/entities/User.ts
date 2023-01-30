@@ -7,28 +7,27 @@ import {Queue} from "./queues/Queue";
 
 @Entity()
 export class User extends BaseEntity {
-
     @PrimaryColumn()
-    discordId!: string;
+        discordId!: string;
 
     @Column()
-    inGame: boolean;
+        inGame: boolean;
 
     @ManyToMany(() => Guild, (guild: Guild) => guild.users, {cascade: true})
-    guilds?: Guild[];
+        guilds?: Guild[];
 
     @ManyToMany(() => Queue, (queue: Queue) => queue.users)
-    queues?: Queue[];
+        queues?: Queue[];
 
     @ManyToOne(() => Match, {onDelete: "SET NULL"})
     @JoinColumn()
-    currentMatch?: Match | null;
+        currentMatch?: Match | null;
 
-    constructor();
-    constructor(discordId: string);
-    constructor(discordId: string, {guilds}: {guilds?: Guild[]});
+    constructor ();
+    constructor (discordId: string);
+    constructor (discordId: string, {guilds}: {guilds?: Guild[]});
 
-    constructor(discordId?: string, {guilds}: {guilds?: Guild[]} = {}) {
+    constructor (discordId?: string, {guilds}: {guilds?: Guild[]} = {}) {
         super();
 
         this.discordId = discordId ?? "";

@@ -48,11 +48,11 @@ export default {
         if (!guild) {
             guild = new Guild(guildId);
         }
-        if(!isMod(member as GuildMember, guild)) {
+        if (!isMod(member as GuildMember, guild)) {
             await interaction.reply({
                 ephemeral: true,
-                content: "Only moderators are allowed to use this command"
-            })
+                content: "Only moderators are allowed to use this command",
+            });
             return;
         }
 

@@ -9,35 +9,35 @@ import {Leaderboard} from "./Leaderboard";
 @Entity()
 export class Queue extends BaseEntity {
     @PrimaryGeneratedColumn()
-    uuid!: number;
+        uuid!: number;
 
     @Column()
-    name: string;
+        name: string;
 
     @Column()
-    numPlayers: number;
+        numPlayers: number;
 
     @Column()
-    channelId: string;
+        channelId: string;
 
     @ManyToOne(() => Guild, (guild: Guild) => guild.queues, {cascade: true, onDelete: "CASCADE"})
-    guild?: Guild;
+        guild?: Guild;
 
     @ManyToMany(() => Pool, (pool: Pool) => pool.queues)
     @JoinTable()
-    pools?: Pool[];
+        pools?: Pool[];
 
     @ManyToMany(() => User, (user: User) => user.queues, {cascade: true, eager: true, onDelete: "CASCADE"})
     @JoinTable()
-    users!: User[];
+        users!: User[];
 
     @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.queue, {cascade: true, onDelete: "CASCADE"})
-    leaderboard?: Leaderboard;
+        leaderboard?: Leaderboard;
 
-    constructor();
-    constructor(name: string, guild: Guild, leaderboard: Leaderboard, numPlayers: number, channelId: string);
+    constructor ();
+    constructor (name: string, guild: Guild, leaderboard: Leaderboard, numPlayers: number, channelId: string);
 
-    constructor(name?: string, guild?: Guild, leaderboard?: Leaderboard, numPlayers?: number, channelId?: string) {
+    constructor (name?: string, guild?: Guild, leaderboard?: Leaderboard, numPlayers?: number, channelId?: string) {
         super();
 
         this.name = name ?? "";
@@ -50,18 +50,16 @@ export class Queue extends BaseEntity {
     /**
      * Get an embed to show the players in the given queue
      */
-    getPlayerEmbed() {
+    getPlayerEmbed () {
         return new MessageEmbed()
             .setTitle(this.name)
-            .setDescription(`The following players are waiting for a game in queue:`)
+            .setDescription("The following players are waiting for a game in queue:")
             .setColor("#ED2939")
-            .addFields(
-                {
-                    name: `Players ${this.users.length}/${this.numPlayers}`,
-                    value: this.users.map((user, i) => {
-                        return `${i + 1}. <@${user.discordId}>`;
-                    }).join("\n") || "No players in queue",
-                },
-            );
+            .addFields({
+                name: `Players ${this.users.length}/${this.numPlayers}`,
+                value: this.users.map((user, i) => {
+                    return `${i + 1}. <@${user.discordId}>`;
+                }).join("\n") || "No players in queue",
+            });
     }
 }

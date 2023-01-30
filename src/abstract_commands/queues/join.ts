@@ -7,16 +7,16 @@ import {User} from "../../entities/User";
 import {Ban} from "../../entities/user_data/Ban";
 import {startMatch} from "../matches/start";
 
-export async function joinQueue(discordId: string, channelId: string, guildId: string): Promise<string | MessageEmbed>
-export async function joinQueue(
+export async function joinQueue (discordId: string, channelId: string, guildId: string): Promise<string | MessageEmbed>;
+export async function joinQueue (
     discordId: string, channelId: string, guildId: string, bypassBan: boolean,
-): Promise<string | MessageEmbed>
-export async function joinQueue(
+): Promise<string | MessageEmbed>;
+export async function joinQueue (
     discordId: string, channelId: string, guildId: string, uuid: number,
-): Promise<string | MessageEmbed>
-export async function joinQueue(
+): Promise<string | MessageEmbed>;
+export async function joinQueue (
     discordId: string, channelId: string, guildId: string, bypassBan: boolean, uuid?: number,
-): Promise<string | MessageEmbed>
+): Promise<string | MessageEmbed>;
 
 /**
  * Puts the given user into a queue in the given channel or the specified queue
@@ -27,13 +27,11 @@ export async function joinQueue(
  * @param bypassBan If true, bypasses a ban if any on joining the queue
  * @param uuid? The ID of the queue to join
  */
-export async function joinQueue(
-    discordId: string,
+export async function joinQueue (discordId: string,
     channelId: string,
     guildId: string,
     bypassBan: boolean | number = false,
-    uuid?: number,
-): Promise<string | MessageEmbed> {
+    uuid?: number): Promise<string | MessageEmbed> {
     if (typeof bypassBan === "number") {
         uuid = bypassBan;
         bypassBan = false;
@@ -48,7 +46,7 @@ export async function joinQueue(
             return "There are no queues in this channel. Ask an admin to create one using /create_q!";
         }
 
-        user = new User(discordId, {guilds: [guild]});
+        user = new User(discordId, {guilds: [guild, ]});
         await user.save();
     }
 
@@ -62,9 +60,9 @@ export async function joinQueue(
             if (ban.until !== -1 && ban.until < Date.now() / 1000) {
                 await ban.remove();
             } else if (ban.until !== -1) {
-                return `You are banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ``} until <t:${ban.until}> which is <t:${ban.until}:R>`;
+                return `You are banned from joining a queue${ban.reason ? ` for "${ban.reason}"` : ""} until <t:${ban.until}> which is <t:${ban.until}:R>`;
             } else {
-                return `You are banned from joining a queue permanently${ban.reason ? ` for "${ban.reason}"` : ``}`;
+                return `You are banned from joining a queue permanently${ban.reason ? ` for "${ban.reason}"` : ""}`;
             }
         }
     }

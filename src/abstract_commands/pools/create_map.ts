@@ -9,8 +9,8 @@ import {GameMap} from "../../entities/pools/GameMap";
  * @param name The name of the map
  * @param imgLink The link of the preview image
  */
-export async function createMap(guildId: string, name: string, imgLink: string = ""): Promise<string> {
-    if(imgLink) {
+export async function createMap (guildId: string, name: string, imgLink: string = ""): Promise<string> {
+    if (imgLink) {
         try {
             await fetch(imgLink);
         } catch (e) {

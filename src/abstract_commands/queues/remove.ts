@@ -1,11 +1,10 @@
 import {Queue} from "../../entities/queues/Queue";
 
-
 /**
  * Remove all users from all queues in the given server
  * @param guildId The id of the server in which the queues must be emptied
  */
-export async function removeAll(guildId: string): Promise<string> {
+export async function removeAll (guildId: string): Promise<string> {
     const queues = await Queue.find({
         where: {
             guild: {id: guildId},

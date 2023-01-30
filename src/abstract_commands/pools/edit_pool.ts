@@ -7,8 +7,8 @@ import {Pool} from "../../entities/pools/Pool";
  * @param poolUuid The uuid of the pool
  * @param newName The new name of the pool
  */
-export async function editPool(guildId: string, poolUuid: number, newName?: string): Promise<string> {
-    let pool = await Pool.findOneBy({uuid: poolUuid, guild: {id: guildId}});
+export async function editPool (guildId: string, poolUuid: number, newName?: string): Promise<string> {
+    const pool = await Pool.findOneBy({uuid: poolUuid, guild: {id: guildId}});
     if (!pool) {
         return `Pool with ID ${poolUuid} does not exist in this server`;
     }

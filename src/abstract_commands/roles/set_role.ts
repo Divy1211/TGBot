@@ -7,7 +7,7 @@ import {Guild} from "../../entities/Guild";
  * @param role which role property to set
  * @param roleId The ID of the role to be set
  */
-export async function setRole(guildId: string, role: "admin" | "mod" | "promotion", roleId?: string): Promise<string> {
+export async function setRole (guildId: string, role: "admin" | "mod" | "promotion", roleId?: string): Promise<string> {
     let guild = await Guild.findOneBy({id: guildId});
     if (!guild) {
         guild = new Guild(guildId);
@@ -16,8 +16,7 @@ export async function setRole(guildId: string, role: "admin" | "mod" | "promotio
     guild[`${role}RoleId`] = roleId ?? null;
     await guild.save();
 
-    if(!roleId)
-        return `The ${role} role for the server has been unset.`;
+    if (!roleId) { return `The ${role} role for the server has been unset.`; }
 
     return `Role <@&${roleId}> has been set as the ${role} role.`;
 }

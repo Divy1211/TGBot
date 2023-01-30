@@ -21,7 +21,7 @@ export default {
             .setTitle("🏓Ping Information")
             .addFields([
                 {
-                    name: `Bot Latency`,
+                    name: "Bot Latency",
                     value: `\`${message.createdTimestamp - interaction.createdTimestamp}ms\``,
                     inline: true,
                 },

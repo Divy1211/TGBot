@@ -51,7 +51,7 @@ module.exports = {
       "allowNullableNumber": false,
       "allowAny": false
     }],
-    "function-call-argument-newline": ["error", "always"],
+    "function-call-argument-newline": ["error", "consistent"],
     "curly": ["error","all"],
     "array-element-newline": ["error", "always"],
     "jsdoc/no-types": 0,
@@ -64,6 +64,6 @@ module.exports = {
   }],
   "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 2 }],
   "function-paren-newline": ["error", "never"],
-
+  "object-property-newline": ["error", { "allowAllPropertiesOnSameLine": true }]
   }
 }

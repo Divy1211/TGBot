@@ -7,7 +7,7 @@ import {getDuration} from "../../utils/general";
  * @param guildId
  * @param cooldown
  */
-export async function setPromoCooldown(guildId: string, cooldown: string): Promise<string> {
+export async function setPromoCooldown (guildId: string, cooldown: string): Promise<string> {
     const {error, hh, mm, ss} = getDuration(cooldown);
     if (error) {
         return error;

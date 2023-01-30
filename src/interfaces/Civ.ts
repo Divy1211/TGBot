@@ -44,5 +44,5 @@ export enum Civ {
     DRAVIDIANS,
     BENGALIS,
     GURJARAS,
-    INDIANS = 99,
+    INDIANS = 99
 }
