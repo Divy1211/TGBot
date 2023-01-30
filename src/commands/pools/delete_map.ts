@@ -1,11 +1,12 @@
+import {GuildMember} from "discord.js";
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {deleteGameMap} from "../../abstract_commands/pools/delete_map";
-import {ensure} from "../../utils/general";
-import {Guild} from "../../entities/Guild";
 import {isAdmin} from "../../abstract_commands/permissions";
-import {GuildMember} from "discord.js";
+import {deleteGameMap} from "../../abstract_commands/pools/delete_map";
+import {Guild} from "../../entities/Guild";
+import {ensure} from "../../utils/general";
+
 
 export default {
     category: "Admin",
@@ -35,11 +36,11 @@ export default {
         if (!guild) {
             guild = new Guild(guildId);
         }
-        if(!isAdmin(member as GuildMember, guild)) {
+        if (!isAdmin(member as GuildMember, guild)) {
             await interaction.reply({
                 ephemeral: true,
-                content: "Only admins are allowed to use this command"
-            })
+                content: "Only admins are allowed to use this command",
+            });
             return;
         }
         await interaction.deferReply();
@@ -51,7 +52,7 @@ export default {
 
         for (const mapUuid of mapUuids) {
             // Invalid input was provided by the user
-            if(!Number(mapUuid)){
+            if (!Number(mapUuid)) {
                 deleteGameResponses.push(`Error: Map with id ${mapUuid} should be a number!`);
                 interaction.editReply(deleteGameResponses.join("\n"));
                 continue;
@@ -65,6 +66,6 @@ export default {
         }
 
         await Promise.all(deleteGamePromises)
-        .then(() => interaction.editReply(deleteGameResponses.join("\n")));
-    }
+            .then(() => interaction.editReply(deleteGameResponses.join("\n")));
+    },
 } as ICommand;

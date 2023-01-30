@@ -1,11 +1,12 @@
+import {GuildMember} from "discord.js";
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {ICommand} from "wokcommands";
 
-import {deleteQueue} from "../../abstract_commands/queues/delete";
-import {ensure} from "../../utils/general";
-import {Guild} from "../../entities/Guild";
 import {isAdmin} from "../../abstract_commands/permissions";
-import {GuildMember} from "discord.js";
+import {deleteQueue} from "../../abstract_commands/queues/delete";
+import {Guild} from "../../entities/Guild";
+import {ensure} from "../../utils/general";
+
 
 export default {
     category: "Admin",
@@ -36,11 +37,11 @@ export default {
         if (!guild) {
             guild = new Guild(guildId);
         }
-        if(!isAdmin(member as GuildMember, guild)) {
+        if (!isAdmin(member as GuildMember, guild)) {
             await interaction.reply({
                 ephemeral: true,
-                content: "Only admins are allowed to use this command"
-            })
+                content: "Only admins are allowed to use this command",
+            });
             return;
         }
         await interaction.deferReply();
@@ -52,7 +53,7 @@ export default {
 
         for (const queueUuid of qUuids) {
             // Invalid input was provided by the user
-            if(!Number(queueUuid)){
+            if (!Number(queueUuid)) {
                 deleteQueueResponses.push(`Error: Queue with id ${queueUuid} should be a number!`);
                 interaction.editReply(deleteQueueResponses.join("\n"));
                 continue;
@@ -66,6 +67,6 @@ export default {
         }
 
         await Promise.all(deleteQueuePromises)
-        .then(() => interaction.editReply(deleteQueueResponses.join("\n")));
+            .then(() => interaction.editReply(deleteQueueResponses.join("\n")));
     },
 } as ICommand;
