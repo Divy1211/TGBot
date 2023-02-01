@@ -8,11 +8,8 @@ import {Queue} from "../../entities/queues/Queue";
  * @param channelId The ID of the channel in which this command is used
  * @param uuid The ID of the queue to join
  */
-export async function listPlayers(
-    channelId: string,
-    uuid?: number,
-): Promise<string | MessageEmbed> {
-
+export async function listPlayers (channelId: string,
+    uuid?: number): Promise<string | MessageEmbed> {
     // If the uuid is provided, load that queue. If not,
     // load all the queues in the channel that this command is run.
     // If there are no queues, return.

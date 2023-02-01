@@ -36,11 +36,11 @@ export default {
         if (!guild) {
             guild = new Guild(guildId);
         }
-        if(!isAdmin(member as GuildMember, guild)) {
+        if (!isAdmin(member as GuildMember, guild)) {
             await interaction.reply({
                 ephemeral: true,
-                content: "Only admins are allowed to use this command"
-            })
+                content: "Only admins are allowed to use this command",
+            });
             return;
         }
         await interaction.deferReply();
@@ -55,11 +55,10 @@ export default {
             await interaction.editReply("The provided URL is either invalid or returned bad JSON");
             return;
         }
-        let responses: string[] = [];
-        for(const map of maps) {
-            if(!map["name"])
-                responses.push("Invalid map object, no name");
-            responses.push(await createMap(guildId, map["name"].replace("@", "\\@"), map["img_link"] ?? undefined));
+        const responses: string[] = [];
+        for (const map of maps) {
+            if (!map.name) { responses.push("Invalid map object, no name"); }
+            responses.push(await createMap(guildId, map.name.replace("@", "\\@"), map.img_link ?? undefined));
         }
         await interaction.editReply(responses.join("\n"));
     },

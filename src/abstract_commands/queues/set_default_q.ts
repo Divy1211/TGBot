@@ -2,7 +2,6 @@ import {Queue} from "../../entities/queues/Queue";
 import {QueueDefault} from "../../entities/queues/QueueDefault";
 import {User} from "../../entities/User";
 
-
 /**
  * Sets the default queue in a channel for a user
  *
@@ -11,12 +10,10 @@ import {User} from "../../entities/User";
  * @param guildId The ID of the server to set the default in
  * @param queueUuid The ID of the queue to set as default
  */
-export async function setDefaultQ(
-    discordId: string,
+export async function setDefaultQ (discordId: string,
     channelId: string,
     guildId: string,
-    queueUuid: number,
-): Promise<string> {
+    queueUuid: number): Promise<string> {
     const queue = await Queue.findOneBy({
         uuid: queueUuid,
         guild: {id: guildId},

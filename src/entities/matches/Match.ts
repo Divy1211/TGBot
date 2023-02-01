@@ -1,5 +1,5 @@
 import {Message, MessageActionRow, MessageButton, MessageEmbed, TextBasedChannel} from "discord.js";
-import {quality, Rating} from "ts-trueskill";
+import {Rating, quality} from "ts-trueskill";
 import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 
 import {cancelMatch} from "../../abstract_commands/matches/cancel";
@@ -17,48 +17,48 @@ import {Player} from "./Player";
 @Entity()
 export class Match extends BaseEntity {
     @PrimaryGeneratedColumn()
-    uuid!: number;
+        uuid!: number;
 
     @Column()
-    lobbyId: number;
+        lobbyId: number;
 
     @Column()
-    startTime: number;
+        startTime: number;
 
     // end time = -1 if ongoing game
     @Column()
-    endTime: number;
+        endTime: number;
 
     @Column()
-    winningTeam: number;
+        winningTeam: number;
 
     @Column()
-    numVotesReroll: number;
+        numVotesReroll: number;
 
     @ManyToOne(() => GameMap, {eager: true, onDelete: "SET NULL"})
     @JoinColumn()
-    map!: GameMap;
+        map!: GameMap;
 
     @OneToMany(() => Player, (player: Player) => player.match, {cascade: true})
-    players?: Player[];
+        players?: Player[];
 
     @OneToMany(() => MapOption, (mapOption: MapOption) => mapOption.match, {cascade: true})
-    mapOptions?: MapOption[];
+        mapOptions?: MapOption[];
 
     @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.matches, {onDelete: "CASCADE"})
-    leaderboard?: Leaderboard;
+        leaderboard?: Leaderboard;
 
     @ManyToOne(() => Queue, {onDelete: "SET NULL"})
-    queue?: Queue;
+        queue?: Queue;
 
     @ManyToOne(() => Guild)
     @JoinColumn()
-    guild?: Guild;
+        guild?: Guild;
 
-    constructor();
-    constructor(playerStats: PlayerStats[], queue: Queue);
+    constructor ();
+    constructor (playerStats: PlayerStats[], queue: Queue);
 
-    constructor(playerStats?: PlayerStats[], queue?: Queue) {
+    constructor (playerStats?: PlayerStats[], queue?: Queue) {
         super();
 
         this.lobbyId = -1;
@@ -79,78 +79,77 @@ export class Match extends BaseEntity {
         this.regenMapOptions();
     }
 
-    get status(): string {
+    get status (): string {
         return this.endTime === -1 ? "Ongoing" : `Ended <t:${this.endTime}:R>`;
     }
 
-    get unreadyPlayers(): string[] {
+    get unreadyPlayers (): string[] {
         return ensure(this.players)
             .filter((player: Player) => !player.isReady)
             .map((player: Player) => ensure(player.user).discordId);
     }
 
-    private team(team: number): Player[] {
+    private team (team: number): Player[] {
         // return array sorted in descending order by rating
         return ensure(this.players).filter((player: Player) => player.team === team)
             .sort((p1: Player, p2: Player) => p1.rating > p2.rating ? -1 : 1);
     }
 
-    get winningTeamPlayers(): Player[] {
+    get winningTeamPlayers (): Player[] {
         return this.team(this.winningTeam);
     }
 
-    get losingTeamPlayers(): Player[] {
-        return this.team(3-this.winningTeam);
+    get losingTeamPlayers (): Player[] {
+        return this.team(3 - this.winningTeam);
     }
 
-    get teamOnePlayers(): Player[] {
+    get teamOnePlayers (): Player[] {
         return this.team(1);
     }
 
-    get teamTwoPlayers(): Player[] {
+    get teamTwoPlayers (): Player[] {
         return this.team(2);
     }
 
-    get duration(): string {
+    get duration (): string {
         let dur;
         if (this.endTime === -1) {
             dur = Math.floor(Date.now() / 1000) - this.startTime;
         } else {
             dur = this.endTime - this.startTime;
         }
-        return ensure(new Date(dur * 1000).toISOString().match(/\d{2}:\d{2}:\d{2}/))[0];
+        return ensure(new Date(dur * 1000).toISOString()
+            .match(/\d{2}:\d{2}:\d{2}/))[0];
     }
 
-    getResultEmbed(showMapImg: boolean = false): MessageEmbed {
-        let embed = new MessageEmbed()
+    getResultEmbed (showMapImg: boolean = false): MessageEmbed {
+        const embed = new MessageEmbed()
             .setTitle(`Match ${this.uuid}`)
             .setDescription(`Map: ${this.map?.hyperlinkedName ?? "Undecided"}, Duration: ${this.duration}`)
             .setColor("#ED2939")
             .setThumbnail("https://upload.wikimedia.org/wikipedia/fr/5/55/AoE_Definitive_Edition.png")
-            .addFields(
-                {
-                    name: `Team 1`,
-                    value: `${this.teamOnePlayers.map(({user, rating, ratingDelta}) => {
-                        if (this.endTime !== -1) {
-                            return `<@${ensure(user).discordId}> \`${rating} => ` +
+            .addFields({
+                name: "Team 1",
+                value: `${this.teamOnePlayers.map(({user, rating, ratingDelta}) => {
+                    if (this.endTime !== -1) {
+                        return `<@${ensure(user).discordId}> \`${rating} => ` +
                                    `${rating + ratingDelta} (${ratingDelta < 0 ? "" : "+"}${ratingDelta})\``;
-                        }
-                        return `<@${ensure(user).discordId}> \`${rating}\``;
-                    }).join("\n")}`,
-                    inline: true,
-                },
-                {
-                    name: `Team 2`,
-                    value: `${this.teamTwoPlayers.map(({user, rating, ratingDelta}) => {
-                        if (this.endTime !== -1) {
-                            return `<@${ensure(user).discordId}> \`${rating} => ` +
+                    }
+                    return `<@${ensure(user).discordId}> \`${rating}\``;
+                }).join("\n")}`,
+                inline: true,
+            },
+            {
+                name: "Team 2",
+                value: `${this.teamTwoPlayers.map(({user, rating, ratingDelta}) => {
+                    if (this.endTime !== -1) {
+                        return `<@${ensure(user).discordId}> \`${rating} => ` +
                                    `${rating + ratingDelta} (${ratingDelta < 0 ? "" : "+"}${ratingDelta})\``;
-                        }
-                        return `<@${ensure(user).discordId}> \`${rating}\``;
-                    }).join("\n")}`,
-                    inline: true,
-                },
-            );
+                    }
+                    return `<@${ensure(user).discordId}> \`${rating}\``;
+                }).join("\n")}`,
+                inline: true,
+            });
 
         if (showMapImg && this.map?.imgLink) {
             embed.setImage(this.map.imgLink);
@@ -159,43 +158,49 @@ export class Match extends BaseEntity {
         return embed;
     }
 
-    assignTeams(playerStats: PlayerStats[]): void {
+    assignTeams (playerStats: PlayerStats[]): void {
         this.players = [];
 
-        const possibleTeams: PlayerStats[][] = combinations(playerStats, Math.floor(playerStats.length/2));
+        const possibleTeams: PlayerStats[][] = combinations(playerStats, Math.floor(playerStats.length / 2));
         let bestTeams: PlayerStats[][] = [];
         let highestQuality = -1;
 
-        for(let i = 0; i < possibleTeams.length/2; ++i) {
+        for (let i = 0; i < possibleTeams.length / 2; ++i) {
             const team1 = possibleTeams[i];
-            const team2 = possibleTeams.slice(-i-1)[0];
+            const team2 = possibleTeams.slice(-i - 1)[0];
 
             const ratingsTeam1 = team1.map((stats: PlayerStats) => new Rating(stats.rating, stats.sigma + 5 * Math.abs(stats.streak)));
             const ratingsTeam2 = team2.map((stats: PlayerStats) => new Rating(stats.rating, stats.sigma + 5 * Math.abs(stats.streak)));
 
-            let q = quality([ratingsTeam1, ratingsTeam2]);
-            if(q > highestQuality) {
+            const q = quality([ratingsTeam1,
+                ratingsTeam2,]);
+            if (q > highestQuality) {
                 highestQuality = q;
-                bestTeams = [team1, team2];
+                bestTeams = [team1,
+                    team2, ];
             }
         }
 
-        const [team1, team2] = bestTeams;
+        const [team1,
+            team2, ] = bestTeams;
 
         team1.sort((a: PlayerStats, b: PlayerStats) => a.rating > b.rating ? -1 : 1);
         team2.sort((a: PlayerStats, b: PlayerStats) => a.rating > b.rating ? -1 : 1);
 
-        for(const [i, stats] of team1.entries()) {
+        for (const [i,
+            stats, ] of team1.entries()) {
             this.players.push(new Player(stats, this, 1, i === 0));
         }
 
-        for(const [i, stats] of team2.entries()) {
+        for (const [i,
+            stats, ] of team2.entries()) {
             this.players.push(new Player(stats, this, 2, i === 0));
         }
     }
 
-    regenMapOptions(): void {
-        const pools: Pool[] = Array(5).fill(ensure(this.queue?.pools)).flat();
+    regenMapOptions (): void {
+        const pools: Pool[] = Array(5).fill(ensure(this.queue?.pools))
+            .flat();
         pools.length = 5;
 
         MapOption.find({
@@ -211,7 +216,7 @@ export class Match extends BaseEntity {
         this.mapOptions = [];
 
         for (const pool of pools) {
-            let mapsMultiplied: GameMap[] = [];
+            const mapsMultiplied: GameMap[] = [];
             for (const poolMap of pool.poolMaps) {
                 mapsMultiplied.push(...Array(poolMap.multiplier).fill(poolMap.map));
             }
@@ -231,7 +236,7 @@ export class Match extends BaseEntity {
         }
     }
 
-    determineMap(): void {
+    determineMap (): void {
         // find the map with the highest number of votes. If there is a tie, choose randomly
         this.map = ensure(this.mapOptions).reduce((max: MapOption, mapOption: MapOption) => {
             if (max.numVotes < mapOption.numVotes) {
@@ -246,7 +251,7 @@ export class Match extends BaseEntity {
         this.map.save().then();
     }
 
-    setReady(userId: string): Player {
+    setReady (userId: string): Player {
         const player = ensure(this.players).filter((player: Player) => userId === ensure(player.user).discordId)[0];
         if (!player.isReady) {
             player.isReady = true;
@@ -255,7 +260,7 @@ export class Match extends BaseEntity {
         return player;
     }
 
-    async unreadyAll(): Promise<void> {
+    async unreadyAll (): Promise<void> {
         for (const player of ensure(this.players)) {
             player.isReady = false;
             player.votedReroll = false;
@@ -263,7 +268,7 @@ export class Match extends BaseEntity {
         }
     }
 
-    voteReroll(player: Player): string {
+    voteReroll (player: Player): string {
         if (player.votedReroll) {
             player.votedReroll = false;
             --this.numVotesReroll;
@@ -274,40 +279,35 @@ export class Match extends BaseEntity {
         return "You voted for a re-roll";
     }
 
-    getMapOptionByName(name: string): MapOption {
+    getMapOptionByName (name: string): MapOption {
         return ensure(this.mapOptions).filter((mapOption: MapOption) => name.startsWith(mapOption.map.name))[0];
     }
 
-    get embed(): MessageEmbed {
-
+    get embed (): MessageEmbed {
         return new MessageEmbed()
             .setTitle(`Match ${this.uuid}`)
             .setColor("#ED2939")
-            .addFields(
-                {
-                    name: `Team 1`,
-                    value: `${this.teamOnePlayers.map(
-                        (player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
-                        .join("\n")}`,
-                    inline: true,
-                },
-                {
-                    name: `Team 2`,
-                    value: `${this.teamTwoPlayers.map(
-                        (player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
-                        .join("\n")}`,
-                    inline: true,
-                },
-                {
-                    name: `Map`,
-                    value: `${ensure(this.map).name}`,
-                },
-            )
+            .addFields({
+                name: "Team 1",
+                value: `${this.teamOnePlayers.map((player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
+                    .join("\n")}`,
+                inline: true,
+            },
+            {
+                name: "Team 2",
+                value: `${this.teamTwoPlayers.map((player: Player) => `<@${ensure(player.user).discordId}> (${player.rating})`)
+                    .join("\n")}`,
+                inline: true,
+            },
+            {
+                name: "Map",
+                value: `${ensure(this.map).name}`,
+            })
             .setImage(ensure(this.map).imgLink)
             .setThumbnail("https://upload.wikimedia.org/wikipedia/fr/5/55/AoE_Definitive_Edition.png");
     }
 
-    async setupVotingOptions() {
+    async setupVotingOptions () {
         const channel = await client.channels.fetch(ensure(this.queue).channelId);
         if (!channel?.isText()) {
             return;
@@ -320,10 +320,10 @@ export class Match extends BaseEntity {
         const votes = channel.createMessageComponentCollector({
             filter: (vote) => {
                 const isPlayer = playerDiscordIds.includes(vote.user.id);
-                if(!isPlayer) {
+                if (!isPlayer) {
                     vote.reply({
                         ephemeral: true,
-                        content: "You cannot vote for a map in a match that you are not playing in"
+                        content: "You cannot vote for a map in a match that you are not playing in",
                     }).then();
                 }
                 return isPlayer;
@@ -341,7 +341,6 @@ export class Match extends BaseEntity {
                 `<@${this.unreadyPlayers.join(">\n<@")}>`,
                 `If someone does not vote, this will cancel <t:${this.startTime + 5 * 60}:R>!`,
             ].join("\n"));
-
 
             if (vote.customId === "reroll") {
                 try {
@@ -375,7 +374,7 @@ export class Match extends BaseEntity {
                 });
                 msg.content = `<@${vote.user.id}> cancelled the match, reverting to the queue stage...`;
 
-                for(const matchPlayer of ensure(this.players)) {
+                for (const matchPlayer of ensure(this.players)) {
                     matchPlayer.isReady = true;
                 }
                 player.isReady = false;
@@ -401,7 +400,7 @@ export class Match extends BaseEntity {
                     });
                     msg = await channel.send({
                         content: null,
-                        embeds: [this.embed],
+                        embeds: [this.embed, ],
                     });
                     await this.save();
                     votes.stop();
@@ -490,7 +489,7 @@ export class Match extends BaseEntity {
         votes.on("end", async () => {
             const {unreadyPlayers} = this;
             if (unreadyPlayers.length > 0) {
-                if(!msg.content.endsWith("stage...")) {
+                if (!msg.content.endsWith("stage...")) {
                     await msg.edit({
                         content: `<@${unreadyPlayers.join(">, <@")}> did not vote in time, aborting match...`,
                         components: [],
@@ -507,50 +506,40 @@ export class Match extends BaseEntity {
      * @param channel The channel to send the options in
      * @param reroll If set to false, the option to reroll won't be generated
      */
-    async sendOptions(
-        channel: TextBasedChannel,
-        reroll: boolean = true,
-    ): Promise<Message> {
-        let mapRow1: MessageActionRow = new MessageActionRow();
-        let linkRow1: MessageActionRow = new MessageActionRow();
-        let mapRow2: MessageActionRow = new MessageActionRow();
-        let linkRow2: MessageActionRow = new MessageActionRow();
-        let idCounts: Record<string, number> = {};
+    async sendOptions (channel: TextBasedChannel,
+        reroll: boolean = true): Promise<Message> {
+        const mapRow1: MessageActionRow = new MessageActionRow();
+        const linkRow1: MessageActionRow = new MessageActionRow();
+        const mapRow2: MessageActionRow = new MessageActionRow();
+        const linkRow2: MessageActionRow = new MessageActionRow();
+        const idCounts: Record<string, number> = {};
         ensure(this.mapOptions).forEach((option: MapOption, i: number) => {
-            let mapRow = i <= 2 ? mapRow1 : mapRow2;
-            let linkRow = i <= 2 ? linkRow1 : linkRow2;
+            const mapRow = i <= 2 ? mapRow1 : mapRow2;
+            const linkRow = i <= 2 ? linkRow1 : linkRow2;
 
             option.map.name in idCounts || (idCounts[option.map.name] = 0);
-            idCounts[option.map.name] += 1
+            idCounts[option.map.name] += 1;
 
-            mapRow.addComponents(
-                new MessageButton()
-                    .setCustomId(option.map.name + idCounts[option.map.name])
-                    .setLabel(`${option.map.name}\_\_\_\_`)
-                    .setStyle("PRIMARY"),
-            );
-            linkRow.addComponents(
-                new MessageButton()
-                    .setLabel(option.map.name)
-                    // we are not removing this default link. period.
-                    .setURL(option.map.imgLink || "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-                    .setStyle("LINK"),
-            );
+            mapRow.addComponents(new MessageButton()
+                .setCustomId(option.map.name + idCounts[option.map.name])
+                .setLabel(`${option.map.name}\_\_\_\_`)
+                .setStyle("PRIMARY"));
+            linkRow.addComponents(new MessageButton()
+                .setLabel(option.map.name)
+            // we are not removing this default link. period.
+                .setURL(option.map.imgLink || "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+                .setStyle("LINK"));
         });
 
-        linkRow2.addComponents(
-            new MessageButton()
-                .setCustomId("cancel")
-                .setLabel("Cancel")
-                .setStyle("DANGER"),
-        );
+        linkRow2.addComponents(new MessageButton()
+            .setCustomId("cancel")
+            .setLabel("Cancel")
+            .setStyle("DANGER"));
         if (reroll) {
-            mapRow2.addComponents(
-                new MessageButton()
-                    .setCustomId("reroll")
-                    .setLabel("Re-Roll")
-                    .setStyle("SUCCESS"),
-            );
+            mapRow2.addComponents(new MessageButton()
+                .setCustomId("reroll")
+                .setLabel("Re-Roll")
+                .setStyle("SUCCESS"));
         }
 
         return await channel.send({
@@ -559,7 +548,10 @@ export class Match extends BaseEntity {
                 `<@${this.unreadyPlayers.join(">\n<@")}>`,
                 `If someone does not vote, this match will cancel <t:${this.startTime + 5 * 60}:R>!`,
             ].join("\n"),
-            components: [mapRow1, linkRow1, mapRow2, linkRow2],
+            components: [mapRow1,
+                linkRow1,
+                mapRow2,
+                linkRow2, ],
         });
     }
 }

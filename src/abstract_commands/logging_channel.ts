@@ -7,10 +7,8 @@ import {client} from "../main";
  * @param guildId The ID of the server to set the logging channel for
  * @param channelId The ID of the channel to set as the logging channel
  */
-export async function setLoggingChannel(
-    guildId: string,
-    channelId: string,
-): Promise<string> {
+export async function setLoggingChannel (guildId: string,
+    channelId: string): Promise<string> {
     const channel = await client.channels.fetch(channelId);
 
     if (!channel?.isText()) {

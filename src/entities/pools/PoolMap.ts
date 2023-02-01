@@ -6,21 +6,21 @@ import {Pool} from "./Pool";
 @Entity()
 export class PoolMap extends BaseEntity {
     @PrimaryGeneratedColumn()
-    uuid!: number;
+        uuid!: number;
 
     @ManyToOne(() => GameMap, {eager: true, onDelete: "CASCADE"})
-    map: GameMap;
+        map: GameMap;
 
     @ManyToOne(() => Pool, (pool: Pool) => pool.poolMaps, {onDelete: "CASCADE"})
-    pool?: Pool;
+        pool?: Pool;
 
     @Column()
-    multiplier: number;
+        multiplier: number;
 
-    constructor();
-    constructor(map: GameMap, pool: Pool, multiplier: number);
+    constructor ();
+    constructor (map: GameMap, pool: Pool, multiplier: number);
 
-    constructor(map?: GameMap, pool?: Pool, multiplier?: number) {
+    constructor (map?: GameMap, pool?: Pool, multiplier?: number) {
         super();
         this.map = map ?? new GameMap();
         this.pool = pool;

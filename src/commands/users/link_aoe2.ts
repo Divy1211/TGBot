@@ -44,12 +44,12 @@ export default {
         let steamId = options.getString("steam_id") ?? "";
         let profileId = options.getString("aoe2_net_profile_id") ?? "";
 
-        let profileIdMatch = profileId.match(/(?:https:\/\/aoe2\.net\/#aoe2de-profile-)?(\d+)/);
-        if(profileIdMatch) {
+        const profileIdMatch = profileId.match(/(?:https:\/\/aoe2\.net\/#aoe2de-profile-)?(\d+)/);
+        if (profileIdMatch) {
             profileId = profileIdMatch[1];
         }
-        let steamIdMatch = steamId.match(/(?:https:\/\/steamcommunity\.com\/profiles\/)?(\d+)/);
-        if(steamIdMatch) {
+        const steamIdMatch = steamId.match(/(?:https:\/\/steamcommunity\.com\/profiles\/)?(\d+)/);
+        if (steamIdMatch) {
             steamId = steamIdMatch[1];
         }
 

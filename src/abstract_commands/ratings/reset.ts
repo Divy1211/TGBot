@@ -10,8 +10,7 @@ import {PlayerStats} from "../../entities/queues/PlayerStats";
  * @param rating If true, resets the ratings
  * @param stats If true, resets statistics
  */
-export async function reset(guildId: string, discordId?: string, queueUuid?: number, {rating, stats}: {rating?: boolean, stats?: boolean} = {}): Promise<string> {
-
+export async function reset (guildId: string, discordId?: string, queueUuid?: number, {rating, stats}: {rating?: boolean, stats?: boolean} = {}): Promise<string> {
     // if one of the parameters is undefined, that filter is ignored
     const playerStats = await PlayerStats.find({
         where: {
@@ -23,12 +22,12 @@ export async function reset(guildId: string, discordId?: string, queueUuid?: num
         },
     });
 
-    for(const playerStat of playerStats) {
-        if(rating) {
+    for (const playerStat of playerStats) {
+        if (rating) {
             playerStat.rating = 1000;
             playerStat.sigma = 100;
         }
-        if(stats) {
+        if (stats) {
             playerStat.numGames = 0;
             playerStat.numLosses = 0;
             playerStat.numWins = 0;
@@ -37,11 +36,11 @@ export async function reset(guildId: string, discordId?: string, queueUuid?: num
         await playerStat.save();
     }
 
-    let msg = discordId    ? `<@${discordId}>'s ` : `All players' `;
-    msg += rating          ? "ratings " : "";
+    let msg = discordId ? `<@${discordId}>'s ` : "All players' ";
+    msg += rating ? "ratings " : "";
     msg += rating && stats ? "and " : "";
-    msg += stats           ? "statistics " : "";
-    msg += (queueUuid      ? `for queue with ID ${queueUuid} ` : `for all queues `) + `have been reset!`;
+    msg += stats ? "statistics " : "";
+    msg += (queueUuid ? `for queue with ID ${queueUuid} ` : "for all queues ") + "have been reset!";
 
     return msg;
 }

@@ -32,7 +32,7 @@ export default {
         const resp = await showMap(mapUuid, guildId);
         await interaction.reply({
             content: typeof resp === "string" ? resp : undefined,
-            embeds: typeof resp === "string" ? [] : [resp],
+            embeds: typeof resp === "string" ? [] : [resp, ],
             ephemeral: true,
         });
     },

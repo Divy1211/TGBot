@@ -9,15 +9,13 @@ import {GameMap} from "../../entities/pools/GameMap";
  * @param newName The new name of the map
  * @param newImgLink The new image link for the map
  */
-export async function editMap(
-    guildId: string,
+export async function editMap (guildId: string,
     mapUuid: number,
     {
         newName,
         newImgLink,
-    }: {newName?: string, newImgLink?: string},
-): Promise<string> {
-    let gameMap = await GameMap.findOneBy({uuid: mapUuid, guild: {id: guildId}});
+    }: {newName?: string, newImgLink?: string}): Promise<string> {
+    const gameMap = await GameMap.findOneBy({uuid: mapUuid, guild: {id: guildId}});
     if (!gameMap) {
         return `Map with ID ${mapUuid} does not exist in this server`;
     }
@@ -26,7 +24,7 @@ export async function editMap(
         gameMap.name = newName;
     }
     if (newImgLink) {
-        if(newImgLink === "null") {
+        if (newImgLink === "null") {
             gameMap.imgLink = "";
         } else {
             try {

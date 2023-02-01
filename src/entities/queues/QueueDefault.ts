@@ -4,35 +4,35 @@ import {User} from "../User";
 import {Queue} from "./Queue";
 
 interface OptionalArgs {
-    defaultQ?: Queue;
-    lastQ?: Queue;
+    defaultQ?: Queue
+    lastQ?: Queue
 }
 
 @Entity()
 export class QueueDefault extends BaseEntity {
     @PrimaryGeneratedColumn()
-    uuid!: number;
+        uuid!: number;
 
     @Column()
-    channelId: string;
+        channelId: string;
 
     @ManyToOne(() => User, {cascade: true, onDelete: "CASCADE"})
     @JoinColumn()
-    user?: User;
+        user?: User;
 
     @ManyToOne(() => Queue, {cascade: true, eager: true, onDelete: "SET NULL"})
     @JoinColumn()
-    defaultQ?: Queue;
+        defaultQ?: Queue;
 
     @ManyToOne(() => Queue, {cascade: true, eager: true, onDelete: "SET NULL"})
     @JoinColumn()
-    lastQ?: Queue;
+        lastQ?: Queue;
 
-    constructor();
-    constructor(user: User, channelId: string);
-    constructor(user: User, channelId: string, {defaultQ, lastQ}: OptionalArgs);
+    constructor ();
+    constructor (user: User, channelId: string);
+    constructor (user: User, channelId: string, {defaultQ, lastQ}: OptionalArgs);
 
-    constructor(user?: User, channelId?: string, {defaultQ, lastQ}: OptionalArgs = {}) {
+    constructor (user?: User, channelId?: string, {defaultQ, lastQ}: OptionalArgs = {}) {
         super();
 
         this.user = user;

@@ -1,5 +1,5 @@
 import {GuildMember} from "discord.js";
-import {rate, Rating} from "ts-trueskill";
+import {Rating, rate} from "ts-trueskill";
 
 import {Player} from "../../entities/matches/Player";
 import {PlayerStats} from "../../entities/queues/PlayerStats";
@@ -16,14 +16,12 @@ import {isMod} from "../permissions";
  * @param team The losing team
  * @param loss if false, reporting a win.
  */
-export async function report(
-    discordId: string | undefined,
+export async function report (discordId: string | undefined,
     channelId: string,
     member: GuildMember,
     matchUuid?: number,
     team?: number,
-    loss: boolean = true,
-) {
+    loss: boolean = true) {
     if (matchUuid && team) {
         discordId = undefined;
     }
@@ -58,7 +56,7 @@ export async function report(
     }
 
     const match = ensure(player.match);
-    if(!match.map) {
+    if (!match.map) {
         return "Error: Cannot report match before it has begun";
     }
     const guild = ensure(match.guild);
@@ -82,7 +80,8 @@ export async function report(
 
     await match.save();
 
-    let teamStats: PlayerStats[][] = [[], []];
+    let teamStats: PlayerStats[][] = [[],
+        [], ];
     for (const player of ensure(match.players)) {
         const user = ensure(player.user);
         user.inGame = false;
@@ -105,19 +104,22 @@ export async function report(
         stats.lastMatch = match;
     }
     if (match.winningTeam === 2) {
-        teamStats = [teamStats[1], teamStats[0]];
+        teamStats = [teamStats[1],
+            teamStats[0], ];
     }
 
-    let teamRatings = teamStats.map((team: PlayerStats[]) => team.map(
-        (stats: PlayerStats) => new Rating(stats.rating, stats.sigma + 5 * Math.abs(stats.streak))
-    ));
+    let teamRatings = teamStats.map((team: PlayerStats[]) => team.map((stats: PlayerStats) => new Rating(stats.rating, stats.sigma + 5 * Math.abs(stats.streak))));
     teamRatings = rate(teamRatings);
     const idx = match.winningTeam === 2 ? 1 : 0;
-    const newPlayerRatings = [...teamRatings[idx], ...teamRatings[1-idx]];
-    const playerStats = [...teamStats[idx], ...teamStats[1-idx]];
+    const newPlayerRatings = [...teamRatings[idx],
+        ...teamRatings[1 - idx], ];
+    const playerStats = [...teamStats[idx],
+        ...teamStats[1 - idx], ];
 
-    for (const [player, newRating, stats] of zip(ensure(match.players), newPlayerRatings, playerStats)) {
-        player.ratingDelta = Math.floor(newRating.mu-stats.rating);
+    for (const [player,
+        newRating,
+        stats, ] of zip(ensure(match.players), newPlayerRatings, playerStats)) {
+        player.ratingDelta = Math.floor(newRating.mu - stats.rating);
         stats.rating += player.ratingDelta;
         // sigma should never be lower than 25
         stats.sigma = Math.max(25, Math.floor(newRating.sigma));

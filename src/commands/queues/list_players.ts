@@ -35,8 +35,8 @@ export default {
         const resp = await listPlayers(channelId, uuid);
         await interaction.reply({
             content: typeof resp === "string" ? resp : undefined,
-            embeds: typeof resp === "string" ? [] : [resp],
-            ephemeral: true
-        })
+            embeds: typeof resp === "string" ? [] : [resp, ],
+            ephemeral: true,
+        });
     },
 } as ICommand;

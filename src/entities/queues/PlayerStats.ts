@@ -5,56 +5,54 @@ import {User} from "../User";
 import {Leaderboard} from "./Leaderboard";
 
 interface OptionalArgs {
-    numGames?: number;
-    numLosses?: number;
-    numWins?: number;
-    rating?: number;
-    sigma?: number;
-    streak?: number;
+    numGames?: number
+    numLosses?: number
+    numWins?: number
+    rating?: number
+    sigma?: number
+    streak?: number
 }
 
 @Entity()
 export class PlayerStats extends BaseEntity {
     @PrimaryGeneratedColumn()
-    uuid!: number;
+        uuid!: number;
 
     @Column()
-    numGames: number;
+        numGames: number;
 
     @Column()
-    numLosses: number;
+        numLosses: number;
 
     @Column()
-    numWins: number;
+        numWins: number;
 
     @Column()
-    rating: number;
+        rating: number;
 
     @Column()
-    sigma: number;
+        sigma: number;
 
     @Column()
-    streak: number;
+        streak: number;
 
     @ManyToOne(() => User, {eager: true, onDelete: "CASCADE"})
     @JoinColumn()
-    user: User;
+        user: User;
 
     @ManyToOne(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.playerStats, {onDelete: "CASCADE"})
-    leaderboard?: Leaderboard;
+        leaderboard?: Leaderboard;
 
     @ManyToOne(() => Match, {onDelete: "CASCADE"})
     @JoinColumn()
-    lastMatch?: Match;
+        lastMatch?: Match;
 
-    constructor();
-    constructor(user: User, leaderboard: Leaderboard);
-    constructor(user: User, leaderboard: Leaderboard, {numGames, numLosses, numWins, rating, sigma, streak}: OptionalArgs);
+    constructor ();
+    constructor (user: User, leaderboard: Leaderboard);
+    constructor (user: User, leaderboard: Leaderboard, {numGames, numLosses, numWins, rating, sigma, streak}: OptionalArgs);
 
-    constructor(
-        user?: User, leaderboard?: Leaderboard,
-        {numGames, numLosses, numWins, rating, sigma, streak}: OptionalArgs = {},
-    ) {
+    constructor (user?: User, leaderboard?: Leaderboard,
+        {numGames, numLosses, numWins, rating, sigma, streak}: OptionalArgs = {}) {
         super();
 
         this.user = user ?? new User();

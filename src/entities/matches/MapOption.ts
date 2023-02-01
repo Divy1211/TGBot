@@ -6,7 +6,7 @@ import {
     JoinTable,
     ManyToMany,
     ManyToOne,
-    PrimaryGeneratedColumn,
+    PrimaryGeneratedColumn
 } from "typeorm";
 
 import {GameMap} from "../pools/GameMap";
@@ -16,26 +16,26 @@ import {Player} from "./Player";
 @Entity()
 export class MapOption extends BaseEntity {
     @PrimaryGeneratedColumn()
-    uuid!: number;
+        uuid!: number;
 
     @Column()
-    numVotes: number;
+        numVotes: number;
 
     @ManyToOne(() => Match, (match: Match) => match.mapOptions, {onDelete: "CASCADE"})
-    match: Match;
+        match: Match;
 
     @ManyToOne(() => GameMap, {eager: true, onDelete: "SET NULL"})
     @JoinColumn()
-    map: GameMap;
+        map: GameMap;
 
     @ManyToMany(() => Player, {eager: true})
     @JoinTable()
-    players!: Player[];
+        players!: Player[];
 
-    constructor();
-    constructor(map: GameMap, match: Match);
+    constructor ();
+    constructor (map: GameMap, match: Match);
 
-    constructor(map?: GameMap, match?: Match) {
+    constructor (map?: GameMap, match?: Match) {
         super();
 
         this.numVotes = 0;
@@ -46,7 +46,7 @@ export class MapOption extends BaseEntity {
         }
     }
 
-    updateVote(player: Player): string {
+    updateVote (player: Player): string {
         const length = this.players.length;
         this.players = this.players.filter((voter: Player) => voter.uuid !== player.uuid);
 

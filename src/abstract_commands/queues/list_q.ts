@@ -2,7 +2,6 @@ import {Queue} from "../../entities/queues/Queue";
 import {EmbedFieldData, MessageEmbed} from "discord.js";
 import {ensure} from "../../utils/general";
 
-
 /**
  * list all the queues in a server
  *
@@ -12,10 +11,8 @@ import {ensure} from "../../utils/general";
  * @param showQIds If true, show the IDs of queues
  * @param showPoolIds If true, show IDs of pools used by a queue
  */
-export async function listQ(
-    channelId: string, guildId: string, all: boolean, showQIds: boolean,
-    showPoolIds: boolean
-): Promise<string | MessageEmbed[]> {
+export async function listQ (channelId: string, guildId: string, all: boolean, showQIds: boolean,
+    showPoolIds: boolean): Promise<string | MessageEmbed[]> {
     const allQueues = await Queue.find({
         where: all ? {guild: {id: guildId}} : {channelId},
         relations: {pools: showPoolIds},
@@ -25,9 +22,9 @@ export async function listQ(
         return "No queues found. Create one using /create_q!";
     }
 
-    let embeds: MessageEmbed[] = [];
+    const embeds: MessageEmbed[] = [];
     let embed = new MessageEmbed();
-    for(let i = 0; i < allQueues.length; i+=10) {
+    for (let i = 0; i < allQueues.length; i += 10) {
         const queues = allQueues.slice(i, i + 10);
         if (i % 10 === 0) {
             embed = new MessageEmbed()
@@ -38,20 +35,20 @@ export async function listQ(
         }
 
         // this is mostly string formatting stuff:
-        let fields: EmbedFieldData[] = [
+        const fields: EmbedFieldData[] = [
             {
                 name: `${showQIds ? "ID         " : ""}Players   Name`,
                 value: queues.map(({uuid, name, numPlayers, users}) => {
                     const uuidStr = `${uuid}`.padEnd(5);
                     const numPlayersStr = `${users.length}/${numPlayers}`.padEnd(7);
-                    return (showQIds ? `\`${uuidStr}\` ` : ``) + `\`${numPlayersStr}\` ${name}`;
+                    return (showQIds ? `\`${uuidStr}\` ` : "") + `\`${numPlayersStr}\` ${name}`;
                 }).join("\n"),
                 inline: true,
             },
         ];
 
         if (showPoolIds) { // } || showLeaderboardIds) {
-            let columns = [];
+            const columns = [];
 
             // if (showLeaderboardIds) {
             //     columns.push("Leaderboard ID");
@@ -63,7 +60,7 @@ export async function listQ(
             fields.push({
                 name: columns.join("   "),
                 value: queues.map(({leaderboard, pools}) => {
-                    let strs = [];
+                    const strs = [];
 
                     // if (showLeaderboardIds) {
                     //     const uuidStr = `${ensure(leaderboard).uuid}`.padEnd(14);
@@ -71,7 +68,8 @@ export async function listQ(
                     // }
 
                     if (showPoolIds) {
-                        let poolStr = `${ensure(pools)?.map((pool) => pool.uuid).join(",")}` || `-`;
+                        let poolStr = `${ensure(pools)?.map((pool) => pool.uuid)
+                            .join(",")}` || "-";
                         poolStr = poolStr.padEnd(5);
                         strs.push(`\`${poolStr}\``);
                     }

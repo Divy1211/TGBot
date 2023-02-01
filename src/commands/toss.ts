@@ -4,10 +4,9 @@ import {ICommand} from "wokcommands";
  * Return an integer between min and max (both included)
  *
  */
-function toss(): number {
+function toss (): number {
     return Math.round(Math.random());
 }
-
 
 export default {
     category: "User",
@@ -20,7 +19,7 @@ export default {
     options: [],
 
     callback: async ({}) => {
-        let coin = toss();
+        const coin = toss();
         if (coin === 1) {
             return "heads";
         }

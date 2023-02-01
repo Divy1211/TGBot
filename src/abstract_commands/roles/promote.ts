@@ -5,7 +5,7 @@ import {Guild} from "../../entities/Guild";
  *
  * @param guildId The guildId of the server
  */
-export async function promote(guildId: string): Promise<string> {
+export async function promote (guildId: string): Promise<string> {
     const guild = await Guild.findOneBy({id: guildId});
 
     if (!guild?.promotionRoleId) {
@@ -15,7 +15,7 @@ export async function promote(guildId: string): Promise<string> {
     const now = Math.floor(Date.now() / 1000);
 
     if (now - guild.lastPromotion < guild.promotionCooldown) {
-        return `Too little time between promotions. ` +
+        return "Too little time between promotions. " +
                `The next promotion can be used <t:${guild.lastPromotion + guild.promotionCooldown}:R>.`;
     }
 

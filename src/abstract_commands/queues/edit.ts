@@ -10,11 +10,9 @@ import {Queue} from "../../entities/queues/Queue";
  * @param numPlayers The max number of players for the queue
  * @param poolUuid The ID of the pool to use for this queue
  */
-export async function editQueue(
-    uuid: number,
+export async function editQueue (uuid: number,
     channelId: string,
-    {name, numPlayers, poolUuid}: {name?: string, numPlayers?: number, poolUuid?: number} = {},
-): Promise<string> {
+    {name, numPlayers, poolUuid}: {name?: string, numPlayers?: number, poolUuid?: number} = {}): Promise<string> {
     let pool;
     if (poolUuid && poolUuid !== -1) {
         pool = await Pool.findOneBy({uuid: poolUuid});
@@ -23,7 +21,7 @@ export async function editQueue(
         }
     }
 
-    let queue = await Queue.findOneBy({uuid, channelId});
+    const queue = await Queue.findOneBy({uuid, channelId});
     if (!queue) {
         return `The queue id ${uuid} does not exist in this channel`;
     }
@@ -34,11 +32,11 @@ export async function editQueue(
     if (numPlayers) {
         queue.numPlayers = numPlayers;
     }
-    if(poolUuid === -1) {
+    if (poolUuid === -1) {
         queue.pools = [];
     }
     if (pool) {
-        queue.pools = [pool];
+        queue.pools = [pool, ];
     }
 
     if (name || numPlayers || pool || poolUuid === -1) {

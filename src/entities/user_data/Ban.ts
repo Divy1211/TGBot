@@ -7,26 +7,26 @@ import {User} from "../User";
 @Entity()
 export class Ban extends BaseEntity {
     @PrimaryGeneratedColumn()
-    uuid!: number;
+        uuid!: number;
 
     @Column()
-    reason: string;
+        reason: string;
 
     // set to -1 if permanent ban
     @Column()
-    until: number;
+        until: number;
 
     @ManyToOne(() => User, {cascade: true, onDelete: "CASCADE"})
     @JoinColumn()
-    user?: User;
+        user?: User;
 
     @ManyToOne(() => Guild, (guild: Guild) => guild.bans, {onDelete: "CASCADE"})
-    guild?: Guild;
+        guild?: Guild;
 
-    constructor();
-    constructor(user: User, reason: string, until: number, guild: Guild);
+    constructor ();
+    constructor (user: User, reason: string, until: number, guild: Guild);
 
-    constructor(user?: User, reason?: string, until?: number, guild?: Guild) {
+    constructor (user?: User, reason?: string, until?: number, guild?: Guild) {
         super();
 
         this.user = user ?? new User();
@@ -35,19 +35,20 @@ export class Ban extends BaseEntity {
         this.guild = guild ?? new Guild();
     }
 
-    get str() {
+    get str () {
         super.toString();
 
         let parts = [];
 
-        if(this.reason) {
+        if (this.reason) {
             parts.push(`for "${this.reason}"`);
         }
 
-        if(this.until !== -1) {
+        if (this.until !== -1) {
             parts.push(`until <t:${this.until}> which is <t:${this.until}:R>`);
         } else {
-            parts = ["permanently", ...parts];
+            parts = ["permanently",
+                ...parts, ];
         }
 
         return parts.join(" ");

@@ -10,13 +10,11 @@ import {PoolMap} from "../../entities/pools/PoolMap";
  * @param poolUuid The uuid of the pool
  * @param multiplier The number of players for this map
  */
-export async function addMap(
-    guildId: string,
+export async function addMap (guildId: string,
     mapUuid: number,
     poolUuid: number,
-    multiplier: number = 1
-): Promise<string> {
-    let pool = await Pool.findOneBy({
+    multiplier: number = 1): Promise<string> {
+    const pool = await Pool.findOneBy({
         uuid: poolUuid,
         guild: {id: guildId},
     });
@@ -24,7 +22,7 @@ export async function addMap(
         return `Pool with ID \`${poolUuid}\` does not exist in this server`;
     }
 
-    let map = await GameMap.findOneBy({
+    const map = await GameMap.findOneBy({
         uuid: mapUuid,
         guild: {id: guildId},
     });
@@ -32,7 +30,7 @@ export async function addMap(
         return `Map with ID \`${mapUuid}\` does not exist in this server`;
     }
 
-    let poolMap = await PoolMap.findOneBy({map: {uuid: mapUuid}, pool: {uuid: poolUuid}});
+    const poolMap = await PoolMap.findOneBy({map: {uuid: mapUuid}, pool: {uuid: poolUuid}});
     if (poolMap) {
         return `Error: Map "${poolMap.map.name}" is already in the pool!`;
     }

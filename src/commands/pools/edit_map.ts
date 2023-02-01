@@ -46,20 +46,20 @@ export default {
         if (!guild) {
             guild = new Guild(guildId);
         }
-        if(!isAdmin(member as GuildMember, guild)) {
+        if (!isAdmin(member as GuildMember, guild)) {
             await interaction.reply({
                 ephemeral: true,
-                content: "Only admins are allowed to use this command"
-            })
+                content: "Only admins are allowed to use this command",
+            });
             return;
         }
 
         // get the command parameters
         const mapUuid = ensure(options.getInteger("map_uuid"));
-        let imgLink = options.getString("img_link") ?? undefined;
+        const imgLink = options.getString("img_link") ?? undefined;
         let name = options.getString("name") ?? undefined;
 
-        if(name) {
+        if (name) {
             name = name.replace("@", "\\@");
         }
         return await editMap(guildId, mapUuid, {newName: name, newImgLink: imgLink});

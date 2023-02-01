@@ -11,8 +11,7 @@ import {ensure} from "../../utils/general";
  * @param uuid The ID queue to start the match in
  * @param users The users to start the match with
  */
-export async function startMatch(uuid: number, users: User[]): Promise<void> {
-
+export async function startMatch (uuid: number, users: User[]): Promise<void> {
     // this function should never be called with a queue uuid that is not in the DB
     const queue = ensure(await Queue.findOne({
         where: {uuid},
@@ -26,9 +25,7 @@ export async function startMatch(uuid: number, users: User[]): Promise<void> {
     if (ensure(queue.pools).length === 0) {
         const channel = await client.channels.fetch(queue.channelId);
         if (channel?.isText()) {
-            await channel.send(
-                "Error: Unable to start game, there is no pool defined for the queue. Ask an admin to make one using /create_pool!",
-            );
+            await channel.send("Error: Unable to start game, there is no pool defined for the queue. Ask an admin to make one using /create_pool!");
             return;
         }
     }
@@ -80,7 +77,7 @@ export async function startMatch(uuid: number, users: User[]): Promise<void> {
             if (channel?.isText()) {
                 await channel.send({
                     content: `Removed <@${discordId}> from "${queue.name}" since their game started on another queue.`,
-                    embeds: [queue.getPlayerEmbed()],
+                    embeds: [queue.getPlayerEmbed(), ],
                 });
             }
         }

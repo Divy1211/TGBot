@@ -47,11 +47,11 @@ export default {
 
         const resp = await listMatches(guildId, discordId, queueId, showMatchIds);
 
-        if(typeof resp === "string") {
+        if (typeof resp === "string") {
             await interaction.reply({
                 content: resp,
                 ephemeral: true,
-            })
+            });
             return;
         }
         await generatePaginatedEmbed(resp, interaction);

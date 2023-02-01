@@ -11,20 +11,16 @@ import {User} from "../../entities/User";
  * @param guildId The ID of the server in which this command is used
  * @param uuid The ID of the queue to leave
  */
-export async function leaveQueue(
-    discordId: string,
+export async function leaveQueue (discordId: string,
     channelId: string,
     guildId: string,
-    uuid?: number,
-): Promise<string | MessageEmbed> {
-
+    uuid?: number): Promise<string | MessageEmbed> {
     // a user is created when they join a queue, so if the user is not found,
     // that means that they are not in a queue
-    let user = await User.findOneBy({discordId});
+    const user = await User.findOneBy({discordId});
     if (!user) {
         return "You are not in any queues";
     }
-
 
     // If the uuid is provided, load that queue. If not,
     // load all the queues in the channel that this command is run.

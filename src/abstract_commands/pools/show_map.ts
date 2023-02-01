@@ -8,7 +8,7 @@ import {GameMap} from "../../entities/pools/GameMap";
  * @param gameMapUuid The uuid of the map
  * @param guildId The ID of the server in which the Pool is created
  */
-export async function showMap(gameMapUuid: number, guildId: string): Promise<string | MessageEmbed> {
+export async function showMap (gameMapUuid: number, guildId: string): Promise<string | MessageEmbed> {
     const gameMap = await GameMap.findOneBy({
         uuid: gameMapUuid,
         guild: {id: guildId},

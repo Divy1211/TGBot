@@ -3,7 +3,6 @@ import {Queue} from "../../entities/queues/Queue";
 import {User} from "../../entities/User";
 import {ensure} from "../../utils/general";
 
-
 /**
  * Reset ratings for playerStats
  *
@@ -12,13 +11,10 @@ import {ensure} from "../../utils/general";
  * @param channelId The ID of the channel the command is run in
  * @param queueUuid The ID of the queue to set the rating for
  */
-export async function ratingSet(
-    discordId: string,
+export async function ratingSet (discordId: string,
     rating: number,
     channelId: string,
-    queueUuid?: number,
-): Promise<string> {
-
+    queueUuid?: number): Promise<string> {
     const queues = await Queue.find({
         where: {
             uuid: queueUuid,
@@ -45,7 +41,7 @@ export async function ratingSet(
     let stats = ensure(queue.leaderboard?.playerStats)
         .find((playerStats: PlayerStats) => playerStats.user.discordId === discordId);
 
-    if(stats) {
+    if (stats) {
         stats.rating = rating;
         stats.sigma = 100;
     } else {

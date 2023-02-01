@@ -10,13 +10,11 @@ import {User} from "../entities/User";
  * @param queueUuid The ID of the queue that the phrase is set to
  * @param phrase The phrase to set
  */
-export async function setPhrase(
-    discordId: string,
+export async function setPhrase (discordId: string,
     guildId: string,
     queueUuid: number,
-    phrase: string,
-): Promise<string> {
-    let queue = await Queue.findOneBy({uuid: queueUuid, guild: {id: guildId}});
+    phrase: string): Promise<string> {
+    const queue = await Queue.findOneBy({uuid: queueUuid, guild: {id: guildId}});
     if (!queue) {
         return `The queue id ${queueUuid} does not exist in this channel`;
     }
@@ -27,7 +25,7 @@ export async function setPhrase(
         await user.save();
     }
 
-    let queueMsg = new QueueMsg(user, queue, phrase);
+    const queueMsg = new QueueMsg(user, queue, phrase);
     await queueMsg.save();
     return `<@${discordId}>'s phrase for queue with ID ${queueUuid} set to "${phrase}"`;
 }

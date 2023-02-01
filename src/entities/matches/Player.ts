@@ -8,45 +8,45 @@ import {Match} from "./Match";
 @Entity()
 export class Player extends BaseEntity {
     @PrimaryGeneratedColumn()
-    uuid!: number;
+        uuid!: number;
 
     @Column()
-    civ: Civ;
+        civ: Civ;
 
     @Column()
-    colour: number;
+        colour: number;
 
     @Column()
-    team: number;
+        team: number;
 
     @Column()
-    isCaptain: boolean;
+        isCaptain: boolean;
 
     @Column()
-    isReady: boolean;
+        isReady: boolean;
 
     @Column()
-    votedReroll: boolean;
+        votedReroll: boolean;
 
     // this is the elo BEFORE the result of this.match is taken into account
     @Column()
-    rating: number;
+        rating: number;
 
     @Column()
-    ratingDelta: number;
+        ratingDelta: number;
 
     @ManyToOne(() => User, {onDelete: "SET NULL"})
     @JoinColumn()
-    user?: User;
+        user?: User;
 
     @ManyToOne(() => Match, (match: Match) => match.players, {onDelete: "CASCADE"})
     @JoinColumn()
-    match?: Match;
+        match?: Match;
 
-    constructor();
-    constructor(playerStats: PlayerStats, match: Match, team: number, isCaptain: boolean);
+    constructor ();
+    constructor (playerStats: PlayerStats, match: Match, team: number, isCaptain: boolean);
 
-    constructor(playerStats?: PlayerStats, match?: Match, team?: number, isCaptain?: boolean) {
+    constructor (playerStats?: PlayerStats, match?: Match, team?: number, isCaptain?: boolean) {
         super();
 
         this.user = playerStats?.user;

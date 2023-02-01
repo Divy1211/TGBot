@@ -42,11 +42,11 @@ export default {
         if (!guild) {
             guild = new Guild(guildId);
         }
-        if(!isMod(member as GuildMember, guild)) {
+        if (!isMod(member as GuildMember, guild)) {
             await interaction.reply({
                 ephemeral: true,
-                content: "Only moderators are allowed to use this command"
-            })
+                content: "Only moderators are allowed to use this command",
+            });
             return;
         }
 
@@ -55,7 +55,7 @@ export default {
         const user = options.getUser("user");
 
         if (user) {
-            return await cancelMatch(guildId, uuid, [user.id]);
+            return await cancelMatch(guildId, uuid, [user.id, ]);
         }
 
         return await cancelMatch(guildId, uuid);

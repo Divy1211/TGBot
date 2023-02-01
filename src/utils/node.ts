@@ -10,9 +10,9 @@ import path from "path";
  *
  * @returns A list of file names inside the directory and subdirectories in that directory.
  */
-export function recursiveReaddir(dir: string, full_paths: boolean = false): string[] {
-    let fileNames: string[] = [];
-    let names = fs.readdirSync(dir);
+export function recursiveReaddir (dir: string, full_paths: boolean = false): string[] {
+    const fileNames: string[] = [];
+    const names = fs.readdirSync(dir);
     names.forEach((name) => {
         if (fs.lstatSync(path.join(dir, name)).isFile()) {
             fileNames.push(full_paths ? dir + "\\" + name : name);

@@ -7,7 +7,7 @@ import {Pool} from "../../entities/pools/Pool";
  * @param name The name of the pool
  * @param guildId The ID of the server in which the pool is created
  */
-export async function createPool(name: string, guildId: string): Promise<string> {
+export async function createPool (name: string, guildId: string): Promise<string> {
     let guild = await Guild.findOneBy({id: guildId});
     if (!guild) {
         guild = new Guild(guildId);

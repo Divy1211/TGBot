@@ -33,19 +33,18 @@ export const client = new Djs.Client({
  * @param commandsDir The directory that contains all the command code files.
  * @param testServers The test servers to unregister the commands from
  */
-async function unregisterRenamedCommands(commandsDir: string, testServers: string[]): Promise<void> {
+async function unregisterRenamedCommands (commandsDir: string, testServers: string[]): Promise<void> {
     const commandNames = recursiveReaddir(commandsDir).map((name) => name.replace(/\.[tj]s/g, ""));
 
-    if(testServers.length == 0) {
-        testServers.push("global")
+    if (testServers.length == 0) {
+        testServers.push("global");
     }
 
     for (const guildId of testServers) {
         console.log(`Unregistering commands from test server: ${guildId}`);
-        let guild: Djs.Guild | undefined = undefined;
-        if(guildId === "global")
-            guild = client.guilds.cache.get(guildId);
-        let commands = await ((guild) ? guild?.commands.fetch() : client?.application?.commands.fetch());
+        let guild: Djs.Guild | undefined;
+        if (guildId === "global") { guild = client.guilds.cache.get(guildId); }
+        const commands = await ((guild) ? guild?.commands.fetch() : client?.application?.commands.fetch());
 
         if (!commands) {
             return;
@@ -60,7 +59,7 @@ async function unregisterRenamedCommands(commandsDir: string, testServers: strin
     }
 }
 
-async function createTestingDatabase() {
+async function createTestingDatabase () {
     const guild = new Guild("979245239116136448");
     const queue = new Queue("test", guild, new Leaderboard(guild), 2, "979245239384539187");
     await queue.save();
@@ -71,29 +70,29 @@ async function createTestingDatabase() {
     pool.poolMaps = [];
 
     const maps = [
-        new GameMap(`Acclivity`, "https://i.imgur.com/TJx1fC7.png", ensure(queue.guild)),
-        new GameMap(`Acropolis`, "https://i.imgur.com/Bd8zKAR.png", ensure(queue.guild)),
-        new GameMap(`African Clearing`, "https://i.imgur.com/zr0qL0X.png", ensure(queue.guild)),
-        new GameMap(`Arabia`, "https://i.imgur.com/M96ubOm.png", ensure(queue.guild)),
-        new GameMap(`Arena`, "https://i.imgur.com/nVdsfeT.png", ensure(queue.guild)),
-        new GameMap(`Hideout`, "https://i.imgur.com/PEZBJbl.png", ensure(queue.guild)),
-        new GameMap(`Ravines`, "https://i.imgur.com/jEXQA8R.png", ensure(queue.guild)),
-        new GameMap(`Steppe`, "https://i.imgur.com/kYYdh0d.png", ensure(queue.guild)),
-        new GameMap(`Team Islands`, "https://i.imgur.com/r6WyUc3.png", ensure(queue.guild)),
-        new GameMap(`Water Nomad`, "https://i.imgur.com/AFNk7zC.png", ensure(queue.guild)),
-    ]
+        new GameMap("Acclivity", "https://i.imgur.com/TJx1fC7.png", ensure(queue.guild)),
+        new GameMap("Acropolis", "https://i.imgur.com/Bd8zKAR.png", ensure(queue.guild)),
+        new GameMap("African Clearing", "https://i.imgur.com/zr0qL0X.png", ensure(queue.guild)),
+        new GameMap("Arabia", "https://i.imgur.com/M96ubOm.png", ensure(queue.guild)),
+        new GameMap("Arena", "https://i.imgur.com/nVdsfeT.png", ensure(queue.guild)),
+        new GameMap("Hideout", "https://i.imgur.com/PEZBJbl.png", ensure(queue.guild)),
+        new GameMap("Ravines", "https://i.imgur.com/jEXQA8R.png", ensure(queue.guild)),
+        new GameMap("Steppe", "https://i.imgur.com/kYYdh0d.png", ensure(queue.guild)),
+        new GameMap("Team Islands", "https://i.imgur.com/r6WyUc3.png", ensure(queue.guild)),
+        new GameMap("Water Nomad", "https://i.imgur.com/AFNk7zC.png", ensure(queue.guild)),
+    ];
     await GameMap.save(maps);
 
-    for(const map of maps) {
+    for (const map of maps) {
         const poolMap = new PoolMap(map, pool, 1);
         await poolMap.save();
     }
 
-    queue.pools = [pool];
+    queue.pools = [pool, ];
     await queue.save();
 }
 
-async function main() {
+async function main () {
     client?.user?.setActivity({name: "commands (v0.0.6)", type: "LISTENING"});
     await AppDataSource.initialize();
     console.log("db connected!");
@@ -105,12 +104,10 @@ async function main() {
     // testing code end
 
     const commandDir = path.join(__dirname, "commands");
-    const testServers = !!process.env.DEV ? [ensure(process.env.TEST)] : [];
+    const testServers = process.env.DEV ? [ensure(process.env.TEST), ] : [];
 
-    await unregisterRenamedCommands(
-        commandDir,
-        testServers,
-    );
+    await unregisterRenamedCommands(commandDir,
+        testServers);
 
     new WOKC(client, {
         commandDir,
@@ -122,7 +119,4 @@ async function main() {
 
 // main();
 client.on("ready", main);
-if(!!process.env.DEV)
-    client.login(ensure(process.env.TEST_TOKEN)).then();
-else
-    client.login(ensure(process.env.TOKEN)).then();
+if (process.env.DEV) { client.login(ensure(process.env.TEST_TOKEN)).then(); } else { client.login(ensure(process.env.TOKEN)).then(); }

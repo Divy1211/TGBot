@@ -10,49 +10,49 @@ import {Ban} from "./user_data/Ban";
 @Entity()
 export class Guild extends BaseEntity {
     @PrimaryColumn()
-    id!: string;
+        id!: string;
 
     @Column({type: String, nullable: true})
-    modRoleId?: string | null;
+        modRoleId?: string | null;
 
     @Column({type: String, nullable: true})
-    adminRoleId?: string | null;
+        adminRoleId?: string | null;
 
     @Column({type: String, nullable: true})
-    promotionRoleId?: string | null;
+        promotionRoleId?: string | null;
 
     @Column({type: String, nullable: true})
-    loggingChannelId?: string | null;
+        loggingChannelId?: string | null;
 
     @Column()
-    promotionCooldown: number;
+        promotionCooldown: number;
 
     @Column()
-    lastPromotion: number;
+        lastPromotion: number;
 
     @ManyToMany(() => User, (user: User) => user.guilds)
     @JoinTable()
-    users?: User[];
+        users?: User[];
 
     @OneToMany(() => Ban, (ban: Ban) => ban.guild)
-    bans?: Ban[];
+        bans?: Ban[];
 
     @OneToMany(() => Queue, (queue: Queue) => queue.guild)
-    queues?: Queue[];
+        queues?: Queue[];
 
     @OneToMany(() => Pool, (pool: Pool) => pool.guild)
-    pools?: Pool[];
+        pools?: Pool[];
 
     @OneToMany(() => GameMap, (gameMap: GameMap) => gameMap.guild)
-    maps?: GameMap[];
+        maps?: GameMap[];
 
     @OneToMany(() => Leaderboard, (leaderboard: Leaderboard) => leaderboard.guild)
-    leaderboards?: Leaderboard[];
+        leaderboards?: Leaderboard[];
 
-    constructor();
-    constructor(id: string);
+    constructor ();
+    constructor (id: string);
 
-    constructor(id?: string) {
+    constructor (id?: string) {
         super();
 
         this.id = id ?? "";

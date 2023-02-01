@@ -11,12 +11,10 @@ import {Pool} from "../../entities/pools/Pool";
  * @param showMapIds If true, show the maps' IDs
  * @param poolUuid The uuid of the pool to show the maps for
  */
-export async function listMaps(
-    guildId: string,
+export async function listMaps (guildId: string,
     showPoolIds: boolean,
     showMapIds: boolean,
-    poolUuid?: number,
-): Promise<string | MessageEmbed[]> {
+    poolUuid?: number): Promise<string | MessageEmbed[]> {
     const pool = await Pool.findOne({
         where: {
             uuid: poolUuid,
@@ -49,17 +47,17 @@ export async function listMaps(
             new MessageEmbed()
                 .setTitle("Server Maps")
                 .setDescription("No maps found")
-                .setColor("#ED2939")
+                .setColor("#ED2939"),
         ];
     }
-    let embeds: MessageEmbed[] = [];
+    const embeds: MessageEmbed[] = [];
     let embed = new MessageEmbed();
-    for(let i = 0; i < gameMaps.length; i+=10) {
+    for (let i = 0; i < gameMaps.length; i += 10) {
         const maps = gameMaps.slice(i, i + 10);
         if (i % 10 === 0) {
             embed = new MessageEmbed()
                 .setTitle("Server Maps")
-                .setDescription(`Showing ${i+1}-${Math.min(i+11, gameMaps.length)}/${gameMaps.length} Maps`)
+                .setDescription(`Showing ${i + 1}-${Math.min(i + 11, gameMaps.length)}/${gameMaps.length} Maps`)
                 .setColor("#ED2939");
             embeds.push(embed);
         }

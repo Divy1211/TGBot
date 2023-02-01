@@ -7,7 +7,7 @@ import {client} from "./main";
 import {ensure} from "./utils/general";
 import {recursiveReaddir} from "./utils/node";
 
-export function startLogger() {
+export function startLogger () {
     const files = recursiveReaddir(path.join(__dirname, "commands"), true);
     client.on("interactionCreate", async (interaction) => {
         if (!interaction.isCommand()) {
@@ -24,7 +24,7 @@ export function startLogger() {
             return;
         }
 
-        const commandFile = ensure(files.find(((file: string) => file.endsWith(`${interaction.commandName}.ts`))));
+        const commandFile = ensure(files.find((file: string) => file.endsWith(`${interaction.commandName}.ts`)));
         const command: ICommand = (await import(commandFile)).default;
 
         const channel = await client.channels.fetch(guild.loggingChannelId);
@@ -55,8 +55,7 @@ export function startLogger() {
         }
 
         if (channel?.isText()) {
-            const msg = await channel.send(
-                `${user.username} used \`/${interaction.commandName}${args}\` in <#${channelId}>`);
+            const msg = await channel.send(`${user.username} used \`/${interaction.commandName}${args}\` in <#${channelId}>`);
             await msg.edit(`<@${user.id}> used \`/${interaction.commandName}${args}\` in <#${channelId}>`);
         }
     });

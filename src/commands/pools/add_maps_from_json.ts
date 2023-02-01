@@ -3,7 +3,6 @@ import fetch from "node-fetch";
 import {ICommand} from "wokcommands";
 import {addMap} from "../../abstract_commands/pools/add_map";
 
-
 import {ensure} from "../../utils/general";
 import {Guild} from "../../entities/Guild";
 import {isAdmin} from "../../abstract_commands/permissions";
@@ -43,11 +42,11 @@ export default {
         if (!guild) {
             guild = new Guild(guildId);
         }
-        if(!isAdmin(member as GuildMember, guild)) {
+        if (!isAdmin(member as GuildMember, guild)) {
             await interaction.reply({
                 ephemeral: true,
-                content: "Only admins are allowed to use this command"
-            })
+                content: "Only admins are allowed to use this command",
+            });
             return;
         }
         await interaction.deferReply();
@@ -63,11 +62,10 @@ export default {
             await interaction.editReply("The provided URL is either invalid or returned bad JSON");
             return;
         }
-        let responses: string[] = [];
-        for(const map of maps) {
-            if(!map["uuid"])
-                responses.push("Invalid map object, no uuid");
-            responses.push(await addMap(guildId, map["uuid"], poolUuid, map["multiplier"] ?? 1));
+        const responses: string[] = [];
+        for (const map of maps) {
+            if (!map.uuid) { responses.push("Invalid map object, no uuid"); }
+            responses.push(await addMap(guildId, map.uuid, poolUuid, map.multiplier ?? 1));
         }
         await interaction.editReply(responses.join("\n"));
     },
